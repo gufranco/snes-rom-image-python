@@ -6,7 +6,11 @@
       "the cartridges themselves, for what a retail image actually contains, which is not always what the specification asked for",
       "nothing else"
     ],
-    "why": "This is a specification issued to licensees rather than a description of silicon, so a cartridge can disagree with it and still be genuine. Where a cartridge disagrees, the cartridge is the fact and the specification is the intent, and divergences.json records which is which."
+    "why": "This is a specification issued to licensees rather than a description of silicon, so a cartridge can disagree with it and still be genuine. Where a cartridge disagrees, the cartridge is the fact and the specification is the intent, and divergences.json records which is which.",
+    "comparedAgainst": {
+      "runner": "conformance/census.py",
+      "what": "Every image in a real library, walked and measured, which is the artifact rather than a description of it."
+    }
   },
   "part": "Super NES cartridge header",
   "verified": true,
