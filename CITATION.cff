@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+title: snes-rom-image-python
+message: >-
+  If you use this work, or the header rules it was settled against, please cite it.
+type: software
+authors:
+  - given-names: Gustavo
+    family-names: Franco
+    alias: gufranco
+repository-code: https://github.com/gufranco/snes-rom-image-python
+url: https://github.com/gufranco/snes-rom-image-python
+abstract: >-
+  A model of the forms a Super Nintendo cartridge image is stored and shipped in: the registration area a cartridge carries, the size and chipset bytes a header declares, and the checksum rule that holds them together. Every field is settled against Nintendo's own development manual and measured across a retail library rather than against its author's confidence.
+keywords:
+  - snes
+  - super-nintendo
+  - rom-image
+  - cartridge
+  - checksum
+  - hardware-model
+  - conformance
+license: MIT
+version: 2.2.0
