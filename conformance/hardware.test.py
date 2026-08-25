@@ -37,10 +37,12 @@ def offset(name: str) -> int:
 
 class DocumentTest(unittest.TestCase):
     def test_the_header_is_backed_by_a_named_document(self) -> None:
-        self.assertEqual(HELD["document"]["publisher"], "Nintendo of America Inc.")
+        self.assertEqual(
+            HELD["documents"]["developmentManual"]["publisher"], "Nintendo of America Inc."
+        )
 
     def test_it_carries_a_digest_so_the_reading_can_be_repeated(self) -> None:
-        self.assertRegex(HELD["document"]["sha256"], r"^[0-9a-f]{64}$")
+        self.assertRegex(HELD["documents"]["developmentManual"]["sha256"], r"^[0-9a-f]{64}$")
 
     def test_every_field_names_the_page_it_was_read_from(self) -> None:
         missing = [

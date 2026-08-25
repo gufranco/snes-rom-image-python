@@ -25,7 +25,7 @@
   <a href="https://github.com/gufranco/snes-rom-image-python/issues">Issues</a>
 </p>
 
-**489** declarations replayed, **0** failures · **4** properties checked on every one of **7,330** cartridges · the computed checksum matches **2,768** of **2,780** retail cartridges · **381** tests · **100%** statement and branch coverage · no dependencies
+**489** declarations replayed, **0** failures · **4** properties checked on every one of **7,330** cartridges · the computed checksum matches **2,768** of **2,780** retail cartridges · **445** tests · **100%** statement and branch coverage · no dependencies
 
 ```python
 from romimage import rewrite
@@ -516,6 +516,8 @@ python3 -m coverage report
 | Census | [`conformance/census.test.py`](conformance/census.test.py) | Folders, archives, tallies, the four properties, and the observation |
 | Corpus | [`conformance/corpus.test.py`](conformance/corpus.test.py) | The whole shipped set, replayed |
 | Specification | [`conformance/hardware.test.py`](conformance/hardware.test.py) | Every field offset, value, and checksum rule against the figures Nintendo printed |
+
+`python3 romimage/doctor.py` says what is actually on this machine: the rewrite performed twice on an image built on the spot, every digest a report publishes, and whether the submodule this repository needs is checked out. It is run as a file rather than with `-m` so that it still runs when the package itself will not import, which is the case it exists for. Its report is what an issue asks for, because a report is only as good as what it says about the machine that produced it.
 
 Coverage is enforced at 100% of statements and branches by [`pyproject.toml`](pyproject.toml).
 
