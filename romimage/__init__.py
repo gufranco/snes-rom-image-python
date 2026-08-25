@@ -18,10 +18,14 @@ package depends on for finding a header, because finding one and rewriting one
 must never disagree about where to look.
 """
 
-from . import dump, identity, manifest, rewrite
-from .dump import NoParts
-from .identity import AUTHORITATIVE, NoAuthority
-from .manifest import Malformed, Manifest
+from . import dump as dump
+from . import errors as errors
+from . import identity as identity
+from . import manifest as manifest
+from . import rewrite as rewrite
+from .errors import Malformed, NoAuthority, NoParts
+from .identity import AUTHORITATIVE
+from .manifest import Manifest
 from .rewrite import CHIPSET_ROM_ONLY, COPROCESSORS, declare_rom_only, needs_rewrite
 from .version import VERSION
 
@@ -37,9 +41,5 @@ __all__ = [
     "NoParts",
     "__version__",
     "declare_rom_only",
-    "dump",
-    "identity",
-    "manifest",
     "needs_rewrite",
-    "rewrite",
 ]

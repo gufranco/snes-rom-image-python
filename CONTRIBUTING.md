@@ -42,7 +42,7 @@ The census needs a library you own, so it runs on your machine and not on a
 runner:
 
 ```bash
-python3 conformance/census.py "/path/to/your/library"
+python3 -m conformance.census "/path/to/your/library"
 ```
 
 Paste the two lines that matter. A change that leaves every test passing and

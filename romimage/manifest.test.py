@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, override
 
 from romimage import identity, manifest, rewrite
+from romimage.errors import Malformed
 
 
 def _blank(banks: int = 2, seed: int = 1) -> bytearray:
@@ -57,15 +58,15 @@ class LoadTest(unittest.TestCase):
             self.assertEqual(len(manifest.Manifest.from_path(path).artifacts), 1)
 
     def test_a_document_with_no_artifacts_is_refused(self) -> None:
-        with self.assertRaises(manifest.Malformed):
+        with self.assertRaises(Malformed):
             manifest.Manifest({"canonical": {}})
 
     def test_an_artifact_with_no_accepted_form_is_refused(self) -> None:
-        with self.assertRaises(manifest.Malformed):
+        with self.assertRaises(Malformed):
             manifest.Manifest({"artifacts": [{"name": "x", "accepted": []}]})
 
     def test_an_accepted_form_with_no_deciding_value_is_refused(self) -> None:
-        with self.assertRaises(manifest.Malformed):
+        with self.assertRaises(Malformed):
             manifest.Manifest({"artifacts": [{"name": "x", "accepted": [{"crc32": "0"}]}]})
 
 

@@ -7,6 +7,7 @@ from pathlib import Path
 from mapper import COPIER_BYTES, has_copier_stub, stub_by_length
 
 from romimage import dump
+from romimage.errors import NoParts
 
 
 def _image(banks: int = 2, seed: int = 1) -> bytes:
@@ -102,7 +103,7 @@ class SplitSetTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             (Path(folder) / "notes.txt").write_bytes(b"nothing here")
 
-            with self.assertRaises(dump.NoParts):
+            with self.assertRaises(NoParts):
                 dump.read(folder)
 
     def test_joining_nothing_gives_nothing(self) -> None:

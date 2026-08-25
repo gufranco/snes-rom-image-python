@@ -25,16 +25,13 @@ from pathlib import Path
 from typing import Any
 
 from . import dump, identity, rewrite
+from .errors import Malformed
 
 KNOWN = "known"
 REWRITTEN = "rewritten"
 BAD_DUMP = "bad dump"
 SAME_SIZE = "same size"
 UNKNOWN = "unknown"
-
-
-class Malformed(Exception):
-    pass
 
 
 def _checked(document: Mapping[str, Any]) -> Mapping[str, Any]:
@@ -56,6 +53,8 @@ def _checked(document: Mapping[str, Any]) -> Mapping[str, Any]:
 
 class Manifest:
     """The artefacts a project expects, and what it can say about a miss."""
+
+    __slots__ = ("document",)
 
     def __init__(self, document: Mapping[str, Any]) -> None:
         self.document = _checked(document)

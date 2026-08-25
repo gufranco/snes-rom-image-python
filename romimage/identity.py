@@ -30,13 +30,11 @@ import zlib
 from collections.abc import Mapping
 from typing import Any
 
+from .errors import NoAuthority
+
 AUTHORITATIVE = "sha256"
 
 INTEROPERABLE = ("crc32", "md5", "sha1")
-
-
-class NoAuthority(Exception):
-    pass
 
 
 def measure(data: bytes) -> dict[str, Any]:

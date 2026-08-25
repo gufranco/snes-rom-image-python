@@ -22,7 +22,7 @@ jobs:
 
       - uses: actions/setup-python@v7
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Install ruff
         run: pipx install ruff==0.16.3
@@ -67,7 +67,7 @@ jobs:
 
       - uses: actions/setup-python@v7
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Install the type checker
         run: pipx install mypy==1.14.1
@@ -100,7 +100,7 @@ jobs:
 
       - uses: actions/setup-python@v7
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Run every test module
         run: |
@@ -113,7 +113,7 @@ jobs:
           exit "${failed}"
 
       - name: Replay the corpus
-        run: python3 conformance/corpus.py
+        run: python -m conformance.corpus
 
       - name: Coverage, which fails below 100%
         run: |
@@ -123,6 +123,23 @@ jobs:
             python3 -m coverage run -a "${module}" >/dev/null
           done
           python3 -m coverage report
+
+  speed:
+    name: Throughput
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: .:snes-mapper-python
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: A file must still be identified faster than the floor
+        run: python -m conformance.speed
 
   release:
     name: release

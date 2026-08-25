@@ -32,6 +32,8 @@ from pathlib import Path
 
 from mapper import COPIER_BYTES, has_copier_stub, stub_by_length
 
+from .errors import NoParts
+
 PART_SUFFIX = re.compile(r"^\.\d{1,3}$")
 
 BARE = "bare"
@@ -42,10 +44,6 @@ DEFLATE_LEVEL = 6
 
 CHUNK_BYTES = 1024
 CHUNK_STRIDE = 512
-
-
-class NoParts(Exception):
-    pass
 
 
 def strip_copier_stub(data: bytes) -> bytes:

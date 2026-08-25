@@ -4,6 +4,7 @@ import unittest
 import zlib
 
 from romimage import identity
+from romimage.errors import NoAuthority
 
 
 def _image(banks: int = 1, seed: int = 1) -> bytes:
@@ -67,7 +68,7 @@ class AgreementTest(unittest.TestCase):
     def test_an_expectation_with_no_deciding_value_is_refused(self) -> None:
         found = identity.measure(_image(seed=8))
 
-        with self.assertRaises(identity.NoAuthority):
+        with self.assertRaises(NoAuthority):
             identity.agrees(found, {"crc32": found["crc32"]})
 
 
