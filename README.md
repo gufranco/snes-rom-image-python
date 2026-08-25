@@ -25,7 +25,7 @@
   <a href="https://github.com/gufranco/snes-rom-image-python/issues">Issues</a>
 </p>
 
-**489** declarations replayed, **0** failures · **4** properties checked on every one of **7,330** cartridges · the computed checksum matches **2,768** of **2,780** retail cartridges · **467** tests · **100%** statement and branch coverage · no dependencies
+**489** declarations replayed, **0** failures · **4** properties checked on every one of **7,330** cartridges · the computed checksum matches **2,768** of **2,780** retail cartridges · **468** tests · **100%** statement and branch coverage · no dependencies
 
 ```python
 from romimage import rewrite
