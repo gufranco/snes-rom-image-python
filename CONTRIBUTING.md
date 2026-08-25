@@ -10,7 +10,6 @@ run that shows it, and a claim that cannot be checked is not ready.
 Run every gate, and read the output rather than the exit code:
 
 ```bash
-export PYTHONPATH=.:snes-mapper-python
 uvx ruff@0.16.3 format --check .
 uvx ruff@0.16.3 check .
 mypy
@@ -22,8 +21,10 @@ done
 python3 -m coverage report
 ```
 
-`PYTHONPATH` matters. The header reader is a submodule on the path rather than
-an installed package, and nothing here runs without it. CI sets the same value.
+The submodule needs no `PYTHONPATH`. The header reader is put on the path by the
+modules that reach for it, so a checkout works as it stands. What it does need is
+to be there: clone with `--recurse-submodules`, or run `git submodule update
+--init` in a checkout that already exists.
 
 Coverage is a hard gate at 100% statement and branch. A branch with no test
 fails the build rather than lowering the number. `mypy` is strict and its

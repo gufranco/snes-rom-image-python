@@ -1,12 +1,19 @@
-import json
-import random
-import tempfile
-import unittest
+import sys
 from pathlib import Path
-from typing import Any, override
 
-from romimage import identity, manifest, rewrite
-from romimage.errors import Malformed
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+sys.path.append(str(ROOT / "snes-mapper-python"))
+
+import json  # noqa: E402
+import random  # noqa: E402
+import tempfile  # noqa: E402
+import unittest  # noqa: E402
+from pathlib import Path  # noqa: E402
+from typing import Any, override  # noqa: E402
+
+from romimage import identity, manifest, rewrite  # noqa: E402
+from romimage.errors import Malformed  # noqa: E402
 
 
 def _blank(banks: int = 2, seed: int = 1) -> bytearray:

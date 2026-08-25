@@ -265,7 +265,7 @@ class PublishedSurfaceTest(unittest.TestCase):
         self.assertEqual(absent, [])
 
     @unittest.skipUnless(CLOCKED, "not a clocked part")  # pragma: no cover
-    def test_the_part_a_caller_gets_back_is_called_Cpu(self) -> None:
+    def test_the_part_a_caller_gets_back_is_called_Cpu(self) -> None:  # noqa: N802
         """The class, not just the call that builds it.
 
         `Cpu(...)` is a factory in all three, and what it hands back was called
@@ -675,6 +675,22 @@ class StandardIsKeptTest(unittest.TestCase):
         from conformance import speed
 
         self.assertGreater(speed.FLOOR, 0)
+
+    def test_and_it_is_this_repository_s_floor(self) -> None:
+        """Not one belonging to a member this one consumes as a submodule.
+
+        A member with a submodule on the import path has two packages called
+        `conformance` reachable at once, and whichever sits earlier on the path
+        wins. Put the submodule first and this check imports the wrong floor,
+        finds a positive number, and passes: it was measuring a package this
+        repository does not own. That is what it did, in two members, until this
+        line existed.
+        """
+        from conformance import speed
+
+        held = Path(speed.__file__ or "").resolve()
+
+        self.assertEqual(held, ROOT / "conformance" / "speed.py", held)
 
     def test_the_floor_is_checked_outside_the_coverage_step(self) -> None:
         """Under a tracer the check measures the tracer, so it must not run there."""

@@ -43,8 +43,12 @@ the title needs no allowlist of mapping bytes, and cannot match a title that
 happens to appear in the middle of something else.
 """
 
+import sys
 from collections.abc import Sequence
+from pathlib import Path
 from typing import Any
+
+sys.path.append(str(Path(__file__).resolve().parent.parent / "snes-mapper-python"))
 
 import mapper
 from mapper.header import HEADER_BYTES, TITLE_BYTES, NoHeader

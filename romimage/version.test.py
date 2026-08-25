@@ -1,8 +1,15 @@
-import unittest
+import sys
 from pathlib import Path
 
-import romimage
-from romimage import version
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+sys.path.append(str(ROOT / "snes-mapper-python"))
+
+import unittest  # noqa: E402
+from pathlib import Path  # noqa: E402
+
+import romimage  # noqa: E402
+from romimage import version  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 

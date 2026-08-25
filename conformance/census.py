@@ -51,6 +51,7 @@ from pathlib import Path
 from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.append(str(Path(__file__).resolve().parent.parent / "snes-mapper-python"))
 
 import mapper
 from mapper import has_copier_stub

@@ -25,7 +25,7 @@
   <a href="https://github.com/gufranco/snes-rom-image-python/issues">Issues</a>
 </p>
 
-**489** declarations replayed, **0** failures · **4** properties checked on every one of **7,330** cartridges · the computed checksum matches **2,768** of **2,780** retail cartridges · **378** tests · **100%** statement and branch coverage · no dependencies
+**489** declarations replayed, **0** failures · **4** properties checked on every one of **7,330** cartridges · the computed checksum matches **2,768** of **2,780** retail cartridges · **379** tests · **100%** statement and branch coverage · no dependencies
 
 ```python
 from romimage import rewrite
@@ -60,7 +60,6 @@ it twice changes nothing, which is what makes it safe to run over a library.
 ```bash
 git clone --recurse-submodules https://github.com/gufranco/snes-rom-image-python.git
 cd snes-rom-image-python
-export PYTHONPATH=".:snes-mapper-python"
 ```
 
 Python 3.12 or newer. Nothing else at runtime.
@@ -501,7 +500,6 @@ claim rather than a measurement.
 ## Working on it
 
 ```bash
-export PYTHONPATH=".:snes-mapper-python"
 python3 -m coverage erase
 for file in $(find romimage conformance -name '*.test.py' | sort); do
   python3 -m coverage run -a "$file"

@@ -120,7 +120,6 @@ would be misleading.**
 ## Every gate, in the order to run them
 
 ```bash
-export PYTHONPATH=.:snes-mapper-python
 ruff format --check .
 ruff check .
 mypy
@@ -145,8 +144,10 @@ And, with a library present, the census that walks it:
 python3 -m conformance.census <library> conformance/corpus.json
 ```
 
-`PYTHONPATH` matters. `mapper` is a submodule on the path, not an installed
-package, and nothing here works without it. CI sets the same value.
+The submodule needs no `PYTHONPATH`. `mapper` is put on the path by the modules
+that reach for it, so a checkout works as it stands and CI sets nothing. What it
+does need is to be there: a checkout without `--recurse-submodules` fails at
+import, which is a different failure and says so.
 
 Everything under `conformance/` runs as a module. Run as a script, its own
 directory goes on the import path and a file there shadows any standard library

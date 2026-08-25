@@ -1,10 +1,17 @@
-import hashlib
-import random
-import unittest
-import zlib
+import sys
+from pathlib import Path
 
-from romimage import identity
-from romimage.errors import NoAuthority
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+sys.path.append(str(ROOT / "snes-mapper-python"))
+
+import hashlib  # noqa: E402
+import random  # noqa: E402
+import unittest  # noqa: E402
+import zlib  # noqa: E402
+
+from romimage import identity  # noqa: E402
+from romimage.errors import NoAuthority  # noqa: E402
 
 
 def _image(banks: int = 1, seed: int = 1) -> bytes:

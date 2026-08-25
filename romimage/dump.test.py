@@ -1,13 +1,19 @@
-import random
-import tempfile
-import unittest
-import zlib
+import sys
 from pathlib import Path
 
-from mapper import COPIER_BYTES, has_copier_stub, stub_by_length
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+sys.path.append(str(ROOT / "snes-mapper-python"))
 
-from romimage import dump
-from romimage.errors import NoParts
+import random  # noqa: E402
+import tempfile  # noqa: E402
+import unittest  # noqa: E402
+import zlib  # noqa: E402
+
+from mapper import COPIER_BYTES, has_copier_stub, stub_by_length  # noqa: E402
+
+from romimage import dump  # noqa: E402
+from romimage.errors import NoParts  # noqa: E402
 
 
 def _image(banks: int = 2, seed: int = 1) -> bytes:

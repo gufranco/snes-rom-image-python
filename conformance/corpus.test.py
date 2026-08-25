@@ -1,14 +1,21 @@
-import contextlib
-import io
-import json
-import tempfile
-import unittest
-from collections.abc import Mapping, Sequence
+import sys
 from pathlib import Path
-from typing import Any
 
-from conformance import corpus
-from romimage import rewrite
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+sys.path.append(str(ROOT / "snes-mapper-python"))
+
+import contextlib  # noqa: E402
+import io  # noqa: E402
+import json  # noqa: E402
+import tempfile  # noqa: E402
+import unittest  # noqa: E402
+from collections.abc import Mapping, Sequence  # noqa: E402
+from pathlib import Path  # noqa: E402
+from typing import Any  # noqa: E402
+
+from conformance import corpus  # noqa: E402
+from romimage import rewrite  # noqa: E402
 
 
 def _case(**changes: Any) -> dict[str, Any]:

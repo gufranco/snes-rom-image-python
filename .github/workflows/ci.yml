@@ -58,8 +58,6 @@ jobs:
   types:
     name: types
     runs-on: ubuntu-latest
-    env:
-      PYTHONPATH: .:snes-mapper-python
     steps:
       - uses: actions/checkout@v7
         with:
@@ -91,8 +89,6 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-26]
-    env:
-      PYTHONPATH: .:snes-mapper-python
     steps:
       - uses: actions/checkout@v7
         with:
@@ -127,8 +123,6 @@ jobs:
   speed:
     name: Throughput
     runs-on: ubuntu-latest
-    env:
-      PYTHONPATH: .:snes-mapper-python
     steps:
       - uses: actions/checkout@v7
         with:

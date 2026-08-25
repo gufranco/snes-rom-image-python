@@ -1,10 +1,17 @@
-import itertools
-import random
-import unittest
+import sys
+from pathlib import Path
 
-from mapper.header import HEADER_BYTES, NoHeader
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+sys.path.append(str(ROOT / "snes-mapper-python"))
 
-from romimage import rewrite
+import itertools  # noqa: E402
+import random  # noqa: E402
+import unittest  # noqa: E402
+
+from mapper.header import HEADER_BYTES, NoHeader  # noqa: E402
+
+from romimage import rewrite  # noqa: E402
 
 
 def _blank(banks: int = 2, seed: int = 1) -> bytearray:

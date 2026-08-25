@@ -26,9 +26,12 @@ another, which is what tells you whether a rebuild changed what it meant to.
 """
 
 import re
+import sys
 import zlib
 from collections.abc import Sequence
 from pathlib import Path
+
+sys.path.append(str(Path(__file__).resolve().parent.parent / "snes-mapper-python"))
 
 from mapper import COPIER_BYTES, has_copier_stub, stub_by_length
 
