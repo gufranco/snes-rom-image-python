@@ -1,31 +1,10 @@
-<div align="center">
+# SNES ROM Image
 
-<h1>SNES ROM Image</h1>
-
-<strong>A cartridge image as a file: what the dumper added, what it says about itself, and how to change that.</strong>
-
-<br>
-<br>
+A cartridge image as a file: what the dumper added, what it says about itself, and how to change that.
 
 [![CI](https://github.com/gufranco/snes-rom-image-python/actions/workflows/ci.yml/badge.svg)](https://github.com/gufranco/snes-rom-image-python/actions/workflows/ci.yml)
-[![Corpus](https://img.shields.io/badge/corpus-489%20%2F%20489-brightgreen)](#the-corpus-and-why-it-can-ship)
-[![Cartridges](https://img.shields.io/badge/measured%20across-7%2C317%20cartridges-blue)](#what-a-real-library-actually-contains)
-[![Coverage](https://img.shields.io/badge/coverage-100%25%20statement%20%2B%20branch-brightgreen)](#tests)
-[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-</div>
-
-<p align="center">
-  <a href="#install">Install</a> &nbsp;|&nbsp;
-  <a href="#the-interface">The interface</a> &nbsp;|&nbsp;
-  <a href="#the-mistakes-this-exists-to-stop">The mistakes</a> &nbsp;|&nbsp;
-  <a href="#is-it-right">Is it right</a> &nbsp;|&nbsp;
-  <a href="#the-corpus-and-why-it-can-ship">Why the corpus is legal</a> &nbsp;|&nbsp;
-  <a href="#what-a-real-library-actually-contains">What a library contains</a> &nbsp;|&nbsp;
-  <a href="https://github.com/gufranco/snes-rom-image-python/issues">Issues</a>
-</p>
-
-**489** declarations replayed, **0** failures · **4** properties checked on every one of **7,330** cartridges · the computed checksum matches **2,768** of **2,780** retail cartridges · **615** tests · **100%** statement and branch coverage · no dependencies
+**489** declarations replayed, **0** failures, **4** properties checked on every one of **7,330** cartridges, the computed checksum matches **2,768** of **2,780** retail cartridges, **615** tests, **100%** statement and branch coverage, no dependencies
 
 ```python
 from romimage import rewrite
@@ -53,7 +32,6 @@ The chipset byte now says the cartridge has no coprocessor, every mirror of the
 header carries the change, and the checksum was recomputed over the result. Doing
 it twice changes nothing, which is what makes it safe to run over a library.
 
----
 
 ## Install
 
