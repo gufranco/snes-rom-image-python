@@ -1,5 +1,5 @@
 {
-  "note": "What Nintendo's own developer documentation says a cartridge header is. Every figure here was read out of the document named below rather than taken from an implementation of it, and each one carries the sentence or table row it came from so a later reader can check the reading rather than trusting it. This file is the authority on what the header IS. corpus.json, measured across a library of retail cartridges, is the authority on what real cartridges DO where the document is silent or where they disagree with it.",
+  "note": "What Nintendo's own developer documentation says a cartridge header IS. corpus.json, measured across a library of retail cartridges, is the authority on what real cartridges DO where the document is silent or where they disagree with it.",
   "authority": {
     "order": [
       "hardware.json, for anything Nintendo stated: which byte holds what, what each value means, how the checksum is calculated",
