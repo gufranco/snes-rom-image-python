@@ -4,7 +4,7 @@ A cartridge image as a file: what the dumper added, what it says about itself, a
 
 [![CI](https://github.com/gufranco/snes-rom-image-python/actions/workflows/ci.yml/badge.svg)](https://github.com/gufranco/snes-rom-image-python/actions/workflows/ci.yml)
 
-**489** declarations replayed, **0** failures, **4** properties checked on every one of **7,330** cartridges, the computed checksum matches **2,768** of **2,780** retail cartridges, **616** tests, **100%** statement and branch coverage, no dependencies
+**489** declarations replayed, **0** failures, **4** properties checked on every one of **7,330** cartridges, the computed checksum matches **2,768** of **2,780** retail cartridges, **648** tests, **100%** statement and branch coverage, no dependencies
 
 ```python
 from romimage import rewrite
@@ -565,6 +565,13 @@ Nothing else is evidence. No emulator, no wiki, no other implementation of this 
 | A retail cartridge library the author owns | The 489 declarations behind [`conformance/corpus.json`](conformance/corpus.json), read across 7,330 files. Nothing from it is committed |
 | [gufranco/snes-mapper-python](https://github.com/gufranco/snes-mapper-python) | Finding a header, as a submodule pinned by commit rather than a copied file |
 
+
+Fetching it is a command rather than an exercise. [`conformance/documents.json`](conformance/documents.json) carries the full digest, the byte count and a fetchable address, and [`conformance/documents.py`](conformance/documents.py) brings it down into `docs/`, which git ignores, and refuses anything whose digest does not match.
+
+```bash
+python3 -m conformance.documents          # fetch and verify the digest
+python3 -m conformance.documents --check  # verify what is already here
+```
 ## Citing this
 
 [CITATION.cff](CITATION.cff) is kept in step with the released version by the
