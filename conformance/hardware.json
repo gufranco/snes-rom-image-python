@@ -121,7 +121,7 @@
         "offset": 30,
         "address": "FFDEH, FFDFH",
         "quote": "Check Sum (FFDEH, FFDFH). First, store 0FFH into the complement check area (FFDCH, FFDDH) and 00H into the check sum area (FFDEH, FFDFH). Then add each byte in the ROM data.",
-        "storedOrder": "Next, store the lower 2 bytes of the check sum value into the check sum area (FFDEH, FFDFH). FFDEH will contain the lower byte and FFDFH will contain the upper byte.",
+        "storedOrderQuote": "Next, store the lower 2 bytes of the check sum value into the check sum area (FFDEH, FFDFH). FFDEH will contain the lower byte and FFDFH will contain the upper byte.",
         "manualPage": "1-2-20",
         "document": "developmentManual"
       },
@@ -146,19 +146,19 @@
       "workedExamples": [
         {
           "size": "12 Mbit",
-          "rule": "(Total of first 8M bit) + [(Total of last 4M bit) x2] = Check Sum"
+          "ruleQuote": "(Total of first 8M bit) + [(Total of last 4M bit) x2] = Check Sum"
         },
         {
           "size": "10 Mbit",
-          "rule": "(Total of first 8M bit) + [(Total of last 2M bit) x4]"
+          "ruleQuote": "(Total of first 8M bit) + [(Total of last 2M bit) x4]"
         },
         {
           "size": "20 Mbit",
-          "rule": "(Total of first 16M bit) + [(Total of last 4M bit) x4]"
+          "ruleQuote": "(Total of first 16M bit) + [(Total of last 4M bit) x4]"
         },
         {
           "size": "24 Mbit",
-          "rule": "(Total of first 16M bit) + [(Total of last 8M bit) x2]"
+          "ruleQuote": "(Total of first 16M bit) + [(Total of last 8M bit) x2]"
         }
       ],
       "why": "Roughly a quarter of the retail library is not a power of two. A plain sum is wrong on all of it, and this package summed plainly until the specification was read. See divergences.json entry short-image-checksum.",

@@ -121,7 +121,7 @@ class ShortImageTest(unittest.TestCase):
     def rule(self, size: str) -> str:
         for entry in FACTS["shortImageMirroring"]["workedExamples"]:
             if entry["size"] == size:
-                return str(entry["rule"])
+                return str(entry["ruleQuote"])
         raise AssertionError(f"the specification prints no worked example for {size}")
 
     def test_a_size_the_specification_does_not_work_through_is_refused(self) -> None:
