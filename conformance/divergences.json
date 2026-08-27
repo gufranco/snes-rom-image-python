@@ -5,7 +5,7 @@
   "divergences": [
     {
       "id": "short-image-checksum",
-      "severity": "correctedDefect",
+      "severity": "medium",
       "status": "closed",
       "topic": "How the checksum is taken over an image whose length is not a power of two.",
       "documentSays": {
@@ -36,7 +36,7 @@
     },
     {
       "id": "cartridges-that-still-disagree",
-      "severity": "unresolved",
+      "severity": "high",
       "status": "open",
       "topic": "Twelve retail images whose stored checksum matches neither rule.",
       "documentSays": {
@@ -126,7 +126,7 @@
         "quote": "ROM Size (FFD7H). The program ROM size is stored at this address. Select the appropriate code from the table below.",
         "source": "SNES Development Manual Book 1, manual page 1-2-19"
       },
-      "packageFollows": "the rule the table implies",
+      "packageFollows": "document",
       "consequence": "This package computes the base two logarithm of the size in kilobytes, rounded up, which reproduces every row printed and also answers for sizes the table does not cover.",
       "why": "A table with five rows cannot be the whole rule, because cartridges smaller than 3 megabit exist and carry a size byte. Extending by the pattern the printed rows follow is a smaller invention than picking a nearest row.",
       "wouldSettleIt": [
