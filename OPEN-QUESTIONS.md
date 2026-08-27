@@ -71,8 +71,20 @@ of the smallest power of two that holds the image.
 lookup has nothing to return for them. The rule reproduces every row the table
 does print, which is the only evidence that it is the right rule.
 
+**What was searched and did not settle it.** Book I itself, on 2026-08-27, with
+the document on the machine and its pages rendered and read rather than searched
+through a text layer. The five rows are on manual page 1-2-18 and read `3 ~ 4M
+Bit`, `5 ~ 8M Bit`, `9 ~ 16M Bit`, `17 ~ 32M Bit` and `33 ~ 64M Bit`, with
+nothing below or above them and no formula beside them. The book does print a
+rounding rule for sizes that are not a power of two, and it is about the check
+sum rather than this byte: it says to compute as if the image were the next power
+of two, which is the mirroring this project already models and quotes. Reading
+that rule as a rule for the size byte is the mistake this paragraph exists to
+stop.
+
 **What would settle or reopen it.** A Nintendo document giving the rule as a
-formula, or a table with more rows.
+formula, or a table with more rows. Book II is the obvious place and is not
+pinned here.
 
 ### That an image carries several byte-identical copies of its header.
 

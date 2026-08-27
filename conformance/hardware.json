@@ -92,7 +92,8 @@
         "note": "Each row is the base two logarithm of the upper bound expressed in kilobytes: 4 Mbit is 512 KB, and 2 to the ninth is 512. That is the rule this package implements, and it agrees with every row printed.",
         "inferred": "the logarithm rule, which the manual gives as a table rather than as a formula",
         "manualPage": "1-2-19",
-        "document": "developmentManual"
+        "document": "developmentManual",
+        "verifiedOn": "2026-08-27, against the rendered page rather than against a text layer. All five rows read back with their codes: 09H is 3 ~ 4M Bit, 0AH is 5 ~ 8M Bit, 0BH is 9 ~ 16M Bit, 0CH is 17 ~ 32M Bit and 0DH is 33 ~ 64M Bit. The table had been in this record since before the document was on any machine here, and the codes are what makes the logarithm rule evidenced rather than merely consistent: it reproduces both halves of all five rows."
       },
       "ramSize": {
         "offset": 24,
