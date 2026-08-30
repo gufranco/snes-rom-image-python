@@ -75,7 +75,7 @@
     {
       "id": "mirrored-headers-undocumented",
       "severity": "unstated",
-      "status": "open",
+      "status": "notADisagreement",
       "topic": "That an image contains several byte-identical copies of its header.",
       "documentSays": {
         "rung": 1,
@@ -88,7 +88,7 @@
       "packageFollows": "cartridges",
       "consequence": "Every mirror is rewritten and every mirror's neutral bytes are set before the sum. A tool that updates one copy produces an image that works in whichever reader it was tested against.",
       "wouldSettleIt": [
-        "Nothing needed. It is a consequence of the address decoding rather than a question."
+        "Nothing. The specification and the cartridges do not disagree: a mirror is what the address decoding produces from one registration area, so both describe the same image. It is recorded because a tool that rewrote one copy would produce an image that works in whichever reader it was tested against, and that is worth a reader knowing."
       ]
     },
     {
