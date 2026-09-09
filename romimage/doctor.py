@@ -73,6 +73,34 @@ VERSION = _version()
 
 ROOT = Path(__file__).resolve().parent.parent
 
+
+def _reachable(root: Path = ROOT, path: list[str] | None = None) -> bool:
+    """Put the repository root where an import can find the package.
+
+    Running this as a file puts the directory holding it on the path, which is
+    the package's own directory rather than the one above it, so `import
+    romimage` finds nothing. It has to happen before anything reaches for the
+    package, which is why it is here rather than inside a finding.
+
+    It used to be inside one, eighty lines below a module-level import of the
+    package, so running this the way the docstring above instructs produced a
+    traceback naming a module the reader has never heard of. That is the exact
+    failure this file exists to prevent, and the whole suite passed through it,
+    because every test imports the doctor from a process that already has the
+    root on its path.
+
+    Answers whether it had to add it, so a caller can tell an already-reachable
+    root from one this put there.
+    """
+    where = sys.path if path is None else path
+    if str(root) in where:
+        return False
+    where.insert(0, str(root))
+    return True
+
+
+_reachable()
+
 from romimage import environment  # noqa: E402
 
 CORPUS = ROOT / "conformance" / "corpus.json"
@@ -154,8 +182,7 @@ def _loaded() -> Any:
     the same way when the submodule is absent and the failure is a line in the
     report rather than a traceback in place of one.
     """
-    if str(ROOT) not in sys.path:
-        sys.path.insert(0, str(ROOT))
+    _reachable()
     from romimage import identity, rewrite
 
     return identity, rewrite

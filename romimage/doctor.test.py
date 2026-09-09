@@ -1,3 +1,4 @@
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -11,6 +12,8 @@ sys.path.append(str(Path(__file__).resolve().parent.parent / "snes-mapper-python
 from mapper.header import TITLE_BYTES
 
 from romimage import doctor, identity, rewrite
+
+ROOT = Path(__file__).resolve().parent.parent
 
 
 class Complaint(Exception):
@@ -343,6 +346,59 @@ class MainTest(unittest.TestCase):
 
         self.assertIn(code, (0, 1))
         self.assertGreaterEqual(len(said), len(doctor.examine()))
+
+
+class ReachableTest(unittest.TestCase):
+    def test_a_root_that_is_not_on_the_path_is_put_there(self) -> None:
+        path: list[str] = []
+
+        added = doctor._reachable(Path("/somewhere"), path)
+
+        self.assertTrue(added)
+        self.assertEqual(path, ["/somewhere"])
+
+    def test_a_root_already_on_the_path_is_left_alone(self) -> None:
+        path = ["/somewhere"]
+
+        added = doctor._reachable(Path("/somewhere"), path)
+
+        self.assertFalse(added)
+        self.assertEqual(path, ["/somewhere"])
+
+
+class AsDocumentedTest(unittest.TestCase):
+    """That the invocation this file documents actually works.
+
+    Every other test here imports the doctor from a process that already has the
+    repository root on its path, so all of them pass whether or not a reader
+    following the docstring gets a report or a traceback. This one failed for as
+    long as the path insert lived inside a finding.
+
+    Run from somewhere else, so a root that is only reachable because the working
+    directory happens to be the repository does not stand in for one the file put
+    there itself.
+    """
+
+    def run_it(self) -> subprocess.CompletedProcess[str]:
+        with tempfile.TemporaryDirectory() as elsewhere:
+            return subprocess.run(
+                [sys.executable, str(ROOT / "romimage" / "doctor.py")],
+                capture_output=True,
+                text=True,
+                cwd=elsewhere,
+                check=False,
+            )
+
+    def test_running_it_as_a_file_prints_a_report(self) -> None:
+        finished = self.run_it()
+
+        self.assertEqual(finished.returncode, 0, finished.stdout + finished.stderr)
+        self.assertIn("checks, nothing to report", finished.stdout)
+
+    def test_it_prints_a_report_rather_than_a_traceback(self) -> None:
+        finished = self.run_it()
+
+        self.assertNotIn("Traceback", finished.stdout + finished.stderr)
 
 
 if __name__ == "__main__":
