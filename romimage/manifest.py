@@ -1,24 +1,3 @@
-"""Telling a reader which file to supply, and why the one they supplied is wrong.
-
-A project that needs a cartridge it cannot ship has one obligation to the person
-who owns one: publish enough identity for them to confirm their copy is the right
-one, and verify it in code before reading a byte. Both halves matter. A digest
-printed in a readme that nothing checks is decoration, and a check that reports
-only "digest mismatch" tells the reader nothing they can act on.
-
-So a mismatch is a diagnosis rather than a rejection. A file can miss for reasons
-that are entirely the reader's to fix and entirely invisible from a digest: a
-copier stub still attached, a split set not joined, a dump already known to be
-damaged, a different regional revision, or the right size with altered content.
-Each of those has a different next step, and naming which one it is turns a dead
-end into an instruction.
-
-The manifest carries facts about physical objects: sizes, digests, and the form
-those digests describe. It carries no content, and nothing here reads a byte
-outside the file it was handed. That is the line this module is built along:
-publish behaviour and identity, never the work itself.
-"""
-
 import json
 from collections.abc import Mapping
 from pathlib import Path
@@ -52,8 +31,6 @@ def _checked(document: Mapping[str, Any]) -> Mapping[str, Any]:
 
 
 class Manifest:
-    """The artefacts a project expects, and what it can say about a miss."""
-
     __slots__ = ("document",)
 
     def __init__(self, document: Mapping[str, Any]) -> None:
@@ -69,7 +46,6 @@ class Manifest:
         return held
 
     def by_digest(self, found: Mapping[str, Any]) -> Mapping[str, Any] | None:
-        """Which artefact a measurement is, and in which of its forms."""
         for artifact in self.artifacts:
             for accepted in artifact["accepted"]:
                 if identity.agrees(found, accepted):
@@ -83,7 +59,6 @@ class Manifest:
         return None
 
     def by_size(self, size: int) -> tuple[Mapping[str, Any], ...]:
-        """Every artefact that expects a file of exactly this length."""
         return tuple(
             artifact
             for artifact in self.artifacts
@@ -92,12 +67,6 @@ class Manifest:
         )
 
     def diagnose(self, data: bytes, form: str | None = None) -> Mapping[str, Any]:
-        """What this file is, and when it is not what was wanted, what went wrong.
-
-        The stub comes off first, because a dump that carries one is the right
-        cartridge in the wrong form, which is a different problem from the wrong
-        cartridge and has a different fix.
-        """
         held = dump.strip_copier_stub(data)
         found = identity.measure(held)
         matched = self.by_digest(found)
@@ -115,7 +84,6 @@ class Manifest:
         }
 
     def explain(self, found: Mapping[str, Any]) -> str:
-        """The diagnosis as a reader reads it, with what to do about it."""
         lines = [
             f"  size    {found['size']:,} bytes, read as {found['form']}",
             f"  crc32   {found['identity']['crc32']}",

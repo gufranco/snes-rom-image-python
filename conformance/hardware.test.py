@@ -1,15 +1,3 @@
-"""Hold this package's constants and its checksum rule to what Nintendo specified.
-
-A figure quoted in a docstring rots and cannot fail. This file is what turns
-hardware.json from a record of a reading into a gate.
-
-The checksum cases are the four worked examples the specification prints, driven
-through this package's own function rather than through a copy of the arithmetic.
-They are the cases that were wrong until the specification was read: this package
-summed every byte once, and roughly a quarter of the retail library is not a
-power of two.
-"""
-
 import json
 import sys
 import unittest
@@ -30,7 +18,6 @@ FIELDS = FACTS["fields"]
 
 
 def offset(name: str) -> int:
-    """Where the specification puts one field, relative to the base this package uses."""
     value: int = FIELDS[name]["offset"]
     return value
 
@@ -53,8 +40,6 @@ class DocumentTest(unittest.TestCase):
 
 
 class FieldOffsetTest(unittest.TestCase):
-    """Each constant against the address the specification prints beside its name."""
-
     def test_the_map_mode_byte_sits_where_the_specification_puts_it(self) -> None:
         self.assertEqual(rewrite.MAP_MODE, offset("mapMode"))
 
@@ -112,12 +97,6 @@ class NeutralBytesTest(unittest.TestCase):
 
 
 class ShortImageTest(unittest.TestCase):
-    """Nintendo's four worked examples, through this package's own function.
-
-    Each names the megabit size the specification uses, and each is the arithmetic
-    that specification prints for it.
-    """
-
     def rule(self, size: str) -> str:
         for entry in FACTS["shortImageMirroring"]["workedExamples"]:
             if entry["size"] == size:
@@ -185,8 +164,6 @@ class ShortImageTest(unittest.TestCase):
 
 
 class SizeByteTest(unittest.TestCase):
-    """The declared size, against every row the specification prints."""
-
     def test_every_printed_row_is_reproduced(self) -> None:
         upper = {"0x09": 4, "0x0A": 8, "0x0B": 16, "0x0C": 32, "0x0D": 64}
 

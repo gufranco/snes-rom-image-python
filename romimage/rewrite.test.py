@@ -26,7 +26,6 @@ def _stamp(
     chipset: int = 0x43,
     mapping: int = 0x20,
 ) -> None:
-    """Write a whole header, because a real mirror is byte-identical to the first."""
     block = bytearray(HEADER_BYTES)
     block[: len(title)] = title
     block[rewrite.MAP_MODE] = mapping
@@ -167,14 +166,6 @@ class DescribeTest(unittest.TestCase):
 
 
 class MirroredSumTest(unittest.TestCase):
-    """The rule Nintendo prints for an image that is not a power of two.
-
-    "If ROM size cannot be expressed evenly in 2nM bit, such as 10M or 20M bit,
-    add the remainder until a total of 2nM bit is reached." The four worked
-    examples in the manual are four of the cases below, and they are the reason a
-    plain sum is wrong on a quarter of the retail library.
-    """
-
     def test_a_power_of_two_is_summed_once(self) -> None:
         data = bytes(range(256)) * 4
 
@@ -245,16 +236,6 @@ class ChecksumTest(unittest.TestCase):
 
 
 class SmallCartridgeTest(unittest.TestCase):
-    """A cartridge too small for the map's plausible-size band.
-
-    The map awards a point for a declared size between eight and fourteen, which
-    is two hundred and fifty six kilobytes and up. A thirty two kilobyte cartridge
-    declares five and never earns it, so it survives on the other three signals.
-    Correcting its size byte mid-rewrite therefore costs nothing it had, but
-    clearing the checksum agreement costs a point it did have, and for the moment
-    before the new checksum is written the header is no longer placeable.
-    """
-
     def _small(self) -> bytes:
         image = _blank(banks=1, seed=31)
         _stamp(image, 0x007FC0)

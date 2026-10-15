@@ -333,13 +333,6 @@ class MainTest(unittest.TestCase):
         self.assertTrue(any("nothing to report" in one for one in said))
 
     def test_it_runs_end_to_end_whatever_this_machine_holds(self) -> None:
-        """A report, not a verdict that the machine is well.
-
-        Asserting a clean exit here would make the suite require exactly the
-        machine the doctor exists to report on. CI has no cartridges, and a
-        doctor that says so is working. What has to hold on every machine is
-        that it examines everything and prints a line for each finding.
-        """
         said: list[str] = []
 
         code = doctor.main((), doctor.examine, said.append)
@@ -367,18 +360,6 @@ class ReachableTest(unittest.TestCase):
 
 
 class AsDocumentedTest(unittest.TestCase):
-    """That the invocation this file documents actually works.
-
-    Every other test here imports the doctor from a process that already has the
-    repository root on its path, so all of them pass whether or not a reader
-    following the docstring gets a report or a traceback. This one failed for as
-    long as the path insert lived inside a finding.
-
-    Run from somewhere else, so a root that is only reachable because the working
-    directory happens to be the repository does not stand in for one the file put
-    there itself.
-    """
-
     def run_it(self) -> subprocess.CompletedProcess[str]:
         with tempfile.TemporaryDirectory() as elsewhere:
             return subprocess.run(

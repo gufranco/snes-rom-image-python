@@ -1,47 +1,3 @@
-"""Take a census of a cartridge library you own, and check the rewrite on all of it.
-
-A cartridge header is thirty two bytes in which the cartridge describes how it is
-built: which layout it declares, which coprocessor is fitted, how much ROM and
-save memory it carries. Those are facts about a physical object. They are not
-authored, they carry none of the game, and a count of how many cartridges share a
-combination is a measurement rather than a copy.
-
-So this reads those bytes from every cartridge in a library and writes down the
-distinct combinations it found. It records no title, because a title is the one
-header field that is a name rather than a measurement, and the corpus it produces
-contains nothing from which any part of any cartridge could be reconstructed.
-
-It also asks the header reader the same question and counts the disagreements.
-Two packages that both decide whether a file carries a header, and disagree about
-it, are two answers where there should be one, and the count is the only way to
-know before a user finds out.
-
-While it is there, it does the harder thing too. For every cartridge it runs the
-whole rewrite and checks four properties that must hold on every real image:
-
-- the value written and its complement are complements of each other
-- recomputing the checksum over the result gives back the value that was written
-- nothing outside a header changed
-- rewriting an already rewritten image changes nothing
-
-Beside them it measures one thing that is not a property: whether the checksum
-this package computes is the one the cartridge already carries. That is the only
-check which asks the artefact rather than asking the code whether it agrees with
-itself, and it is the one that would have caught a checksum rule that was wrong
-the same way every time. It is reported rather than enforced, because a hack that
-changed content without recomputing its checksum is not a defect here.
-
-Those checks need the cartridges, so they run here rather than in the test suite,
-and their result is a count in the corpus rather than a claim the suite can
-verify on its own. What the suite verifies is the part that replays from the
-corpus alone: given a size and the four declared bytes, the size exponent and the
-rewrite verdict.
-
-A cartridge whose header cannot be found is counted as refused rather than
-guessed at. Prototypes and unfinished dumps often carry a blank one, and
-inventing a header for them would put fiction into a corpus of facts.
-"""
-
 import collections
 import json
 import sys
@@ -62,31 +18,11 @@ from romimage import dump, rewrite
 SUFFIXES = (".sfc", ".smc", ".fig", ".swc")
 
 PROPERTIES = ("complement", "recompute", "confined", "settled")
-"""What must hold on every image, whatever it is. A failure here is a defect."""
 
 OBSERVATIONS = ("carried",)
-"""What is measured and reported without gating the verdict.
-
-Whether this package computes the checksum a cartridge already carries is a
-statement about the cartridge as much as about the code. It holds on a retail
-image and does not hold on a hack that changed content without recomputing, and
-a library of several thousand contains a great many of those. Making it a
-property would turn every hack into a failure and drown the handful of retail
-cartridges that genuinely disagree.
-
-It is still the most valuable thing the census measures, because it is the only
-check that asks the artefact instead of asking the code whether it agrees with
-itself. The four properties above are all internal, and a checksum rule wrong the
-same way every time passed all four for as long as it existed.
-"""
 
 
 def images(source: Path | str, limit: int | None = None) -> Iterator[tuple[str, bytes]]:
-    """Every cartridge in a library, whether it is a folder or one archive.
-
-    An eight gigabyte archive is read member by member rather than unpacked,
-    because a census does not need a second copy of the library on disk.
-    """
     source = Path(source)
     if source.is_dir():
         found = sorted(
@@ -104,18 +40,6 @@ def images(source: Path | str, limit: int | None = None) -> Iterator[tuple[str, 
 
 
 def agrees_with_the_cartridge(image: bytes, places: Sequence[int]) -> bool | None:
-    """Whether this package's checksum is the one the cartridge already carries.
-
-    The four properties beside this one are all internal: they check that the
-    package agrees with itself. A checksum rule that was wrong the same way every
-    time would pass all four, and one did. It summed a short image once where
-    Nintendo specifies the remainder be repeated until the total reaches a power
-    of two, and that is roughly a quarter of the retail library.
-
-    This is the only check here that asks the artefact rather than the code. It
-    answers None for a cartridge whose own stored pair does not agree, because
-    such a header is not a subject: there is nothing to be right about.
-    """
     at = places[0]
     stored = image[at + rewrite.CHECKSUM] | (image[at + rewrite.CHECKSUM + 1] << 8)
     complement = image[at + rewrite.CHECKSUM_COMPLEMENT] | (
@@ -127,7 +51,6 @@ def agrees_with_the_cartridge(image: bytes, places: Sequence[int]) -> bool | Non
 
 
 def properties_of(image: bytes, places: Sequence[int]) -> dict[str, bool]:
-    """The things that must be true of every rewrite, on this cartridge."""
     written = rewrite.declare_rom_only(image)
     at = places[0]
 
@@ -149,7 +72,6 @@ def properties_of(image: bytes, places: Sequence[int]) -> dict[str, bool]:
 
 
 def failed(name: str, properties: Mapping[str, bool]) -> list[dict[str, str]]:
-    """The properties that did not hold on one cartridge, named with it."""
     return [
         {"file": name, "property": property_name}
         for property_name, ok in properties.items()
@@ -158,7 +80,6 @@ def failed(name: str, properties: Mapping[str, bool]) -> list[dict[str, str]]:
 
 
 def survey(library: Path | str, limit: int | None = None) -> dict[str, Any]:
-    """What the library is made of, and how the rewrite behaved on all of it."""
     cases: collections.Counter[str] = collections.Counter()
     mapping: collections.Counter[int] = collections.Counter()
     chipset: collections.Counter[int] = collections.Counter()
@@ -240,7 +161,6 @@ def survey(library: Path | str, limit: int | None = None) -> dict[str, Any]:
 
 
 def corpus(found: Mapping[str, Any]) -> dict[str, Any]:
-    """The replayable part: every distinct case, with what it must produce."""
     cases: list[dict[str, Any]] = []
     for encoded, count in sorted(found["cases"].items()):
         declared = json.loads(encoded)
@@ -262,7 +182,6 @@ def corpus(found: Mapping[str, Any]) -> dict[str, Any]:
 
 
 def report(found: Mapping[str, Any]) -> None:
-    """What the census saw, said in the order a reader needs it."""
     print(f"  {found['read']} cartridges read, {found['refused']} refused")
     print(f"  {found['disagreed_with_the_map']} disagreed with the map about having a header")
     print(f"  {len(found['cases'])} distinct declarations")
@@ -278,7 +197,6 @@ def report(found: Mapping[str, Any]) -> None:
 
 
 def verdict(found: Mapping[str, Any]) -> int:
-    """Zero when every property held on every cartridge, one when any did not."""
     return 1 if found["failures"] else 0
 
 

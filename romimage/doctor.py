@@ -1,48 +1,3 @@
-"""Look at this machine and say what is actually here, so a report can be believed.
-
-What goes wrong with this package is rarely a defect in it. It is a submodule
-that was never checked out, a corpus that is not beside the package, or a library
-somebody pointed the census at that holds nothing it reads. All three look the
-same from outside: the run is green and it proved less than the reader thinks.
-
-The submodule is the sharp one. Where a header sits is not this package's claim;
-it is `snes-mapper-python`, carried here as a submodule and imported by name. A
-checkout without `--recurse-submodules` leaves the directory there and empty, and
-what fails is an import rather than a check, which reads as a broken package
-rather than an incomplete checkout.
-
-Unlike its siblings this package locates no library of its own. The census takes
-the directory to walk as an argument, so there is no variable to be set wrongly
-and nothing to report about where cartridges are looked for. What is reported
-instead is the corpus, which is what runs when nobody supplies a library.
-
-Two rules shape it, and they are the whole point.
-
-Nothing is hidden. A check that fails says what it saw, and a check that itself
-throws is caught and reported as what it threw, named by its type. An absent
-library is reported as absent rather than as a failure, because a fresh checkout
-has none and that is the normal state, but it is never reported as nothing at all.
-
-Nothing is imported from the package at the top of this file, and that is
-deliberate rather than tidy. This package imports `snes-mapper-python` by name,
-so on the machine this exists to diagnose, a checkout with no submodule,
-importing it here would fail before a single finding was printed. The reader
-would get a traceback naming a module they have never heard of instead of a line
-telling them to fetch the submodule.
-
-Which is also why this is run as a file rather than with `-m`. Either form has to
-read the package's `__init__` first, and that is the import that fails. Run it as
-
-    python3 romimage/doctor.py
-
-and everything that can fail happens inside a finding, where its failure is the
-report rather than the end of it.
-
-Nothing is inferred. Every line is something looked at on this machine just now,
-including a rewrite actually performed twice on an image assembled here rather
-than a claim that the rewriter imports.
-"""
-
 from __future__ import annotations
 
 import json
@@ -57,11 +12,6 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 def _version(where: Path | None = None) -> str:
-    """The package version, read out of the file beside this one.
-
-    Read rather than imported. Importing it would go through the package, and
-    the package is what fails on the machine this exists to diagnose.
-    """
     found = re.search(
         r"""VERSION\s*[:=][^"']*["']([^"']+)["']""",
         (where or Path(__file__).resolve().parent / "version.py").read_text(),
@@ -75,23 +25,6 @@ ROOT = Path(__file__).resolve().parent.parent
 
 
 def _reachable(root: Path = ROOT, path: list[str] | None = None) -> bool:
-    """Put the repository root where an import can find the package.
-
-    Running this as a file puts the directory holding it on the path, which is
-    the package's own directory rather than the one above it, so `import
-    romimage` finds nothing. It has to happen before anything reaches for the
-    package, which is why it is here rather than inside a finding.
-
-    It used to be inside one, eighty lines below a module-level import of the
-    package, so running this the way the docstring above instructs produced a
-    traceback naming a module the reader has never heard of. That is the exact
-    failure this file exists to prevent, and the whole suite passed through it,
-    because every test imports the doctor from a process that already has the
-    root on its path.
-
-    Answers whether it had to add it, so a caller can tell an already-reachable
-    root from one this put there.
-    """
     where = sys.path if path is None else path
     if str(root) in where:
         return False
@@ -110,31 +43,17 @@ SUBMODULES = ("snes-mapper-python",)
 OLDEST_PYTHON = (3, 12)
 
 TITLE = b"DOCTOR SYNTHETIC IMAGE"
-"""Cut, where it is used, to the width the header reader publishes.
-
-Cut rather than counted here, because a copy of a width is a second place for it
-to be wrong and this one was wrong the first time it was written. The cutting
-happens inside the finding rather than here, since the reader that publishes the
-width lives in a submodule that may not be present."""
 
 HEADER_AT = 0x7FC0
 
 CHIPSET_AT = 0x16
-"""Where the chipset byte sits inside the header, for the report line only.
-
-The rewrite reads it from the header reader; this is the offset the report
-prints, and it is checked against the reader's own constant by the tests."""
 
 CHIPSET = 0x03
-"""A coprocessor byte, so the image starts out needing the rewrite it is given."""
 
 IMAGE_BYTES = 0x10000
-"""Small enough to build in memory, and a whole number of the blocks a sum walks."""
 
 
 class Finding:
-    """One thing that was looked at, and what was there."""
-
     __slots__ = ("advice", "detail", "name", "ok")
 
     def __init__(self, name: str, ok: bool, detail: str, advice: str | None = None) -> None:
@@ -145,12 +64,10 @@ class Finding:
 
     @property
     def line(self) -> str:
-        """The one-line form, which is what a reader scans."""
         return f"  {'ok  ' if self.ok else '   !'}  {self.name}: {self.detail}"
 
     @property
     def report(self) -> str:
-        """The same, with what to do about it when there is something to do."""
         if self.ok or not self.advice:
             return self.line
         return f"{self.line}\n         {self.advice}"
@@ -174,14 +91,6 @@ def _package() -> Finding:
 
 
 def _loaded() -> Any:
-    """The package, imported now rather than when this file was read.
-
-    Imported by name rather than relatively, and with the repository put on the
-    path first, because this file is run as a script and a relative import has
-    no package to be relative to. A single place for it, so every finding fails
-    the same way when the submodule is absent and the failure is a line in the
-    report rather than a traceback in place of one.
-    """
     _reachable()
     from romimage import identity, rewrite
 
@@ -189,17 +98,6 @@ def _loaded() -> Any:
 
 
 def _synthetic(chipset: int = CHIPSET) -> bytes:
-    """An image correct in every field but the one being probed.
-
-    Written rather than borrowed, because an image taken from a cartridge would
-    put a fragment of somebody's ROM in this file.
-
-    The size byte and the checksum pair are computed here rather than left at
-    zero, and that is the whole point of the probe. An image wrong in three
-    fields needs the rewrite whichever one you ask about, so a finding built on
-    one would report a pass no matter what the coprocessor byte said. Correct
-    everywhere else, the answer is about the coprocessor and nothing else.
-    """
     _, rewrite = _loaded()
     title = TITLE[: rewrite.TITLE_BYTES]
     rom = bytearray(b"\x00" * IMAGE_BYTES)
@@ -216,7 +114,6 @@ def _synthetic(chipset: int = CHIPSET) -> bytes:
 
 
 def _asking(build: Callable[[], bytes] = _synthetic) -> Finding:
-    """That an image declaring a chip is recognised as needing the rewrite."""
     try:
         _, rewrite = _loaded()
         held = rewrite.needs_rewrite(build())
@@ -240,11 +137,6 @@ def _asking(build: Callable[[], bytes] = _synthetic) -> Finding:
 
 
 def _rewriting(build: Callable[[], bytes] = _synthetic) -> Finding:
-    """That the rewrite lands and leaves nothing behind for a second pass.
-
-    Running it twice is the line that matters. A rewrite that is not idempotent
-    is one nobody can safely re-run, and the failure is invisible after one pass.
-    """
     try:
         _, rewrite = _loaded()
         once = rewrite.declare_rom_only(build())
@@ -267,12 +159,6 @@ def _rewriting(build: Callable[[], bytes] = _synthetic) -> Finding:
 
 
 def _identifying(build: Callable[[], bytes] = _synthetic) -> Finding:
-    """That every digest a report publishes is actually computed here.
-
-    All of them rather than the one that decides. A report publishing a crc32
-    beside a sha256 and computing only the sha256 is publishing decoration, and
-    the four are checked together so that cannot pass unnoticed.
-    """
     try:
         identity, _ = _loaded()
         wanted = (identity.AUTHORITATIVE, *identity.INTEROPERABLE)
@@ -296,12 +182,6 @@ def _identifying(build: Callable[[], bytes] = _synthetic) -> Finding:
 
 
 def _submodule(name: str, root: Path = ROOT) -> Finding:
-    """Whether a submodule is checked out, since its absence is silent otherwise.
-
-    The marker is the manifest rather than the directory. Git creates the empty
-    directory for a submodule it has not fetched, so a check on the path alone
-    reports a present submodule on exactly the machine where it is missing.
-    """
     where = root / name
     if (where / "pyproject.toml").is_file():
         return Finding(f"submodule {name}", True, f"checked out at {where}")
@@ -315,7 +195,6 @@ def _submodule(name: str, root: Path = ROOT) -> Finding:
 
 
 def _corpus(path: Path | str = CORPUS) -> Finding:
-    """The recording, which is what runs when nobody supplies a library."""
     try:
         held = json.loads(Path(path).read_text())
     except OSError as trouble:
@@ -339,12 +218,6 @@ def _corpus(path: Path | str = CORPUS) -> Finding:
 
 
 def _census() -> Finding:
-    """That the library is supplied per run rather than located, said out loud.
-
-    Its siblings look in a fixed place and can therefore look in the wrong one.
-    This one cannot, and saying so stops a reader hunting for a variable that
-    does not exist.
-    """
     return Finding(
         "library",
         True,
@@ -357,7 +230,6 @@ def examine(
     corpus: Path | str = CORPUS,
     root: Path = ROOT,
 ) -> list[Finding]:
-    """Everything worth looking at on this machine, in the order a reader wants it."""
     return [
         _python(),
         _package(),
@@ -371,7 +243,6 @@ def examine(
 
 
 def report(found: Sequence[Finding]) -> list[str]:
-    """The lines a person pastes into an issue."""
     unwell = [one for one in found if not one.ok]
     lines = [f"romimage {VERSION} on {platform.python_version()}, {platform.system()}", ""]
     lines.append("  the machine")

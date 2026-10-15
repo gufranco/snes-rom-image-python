@@ -1,48 +1,3 @@
-"""Changing what a cartridge says about itself, and keeping it consistent.
-
-Removing a coprocessor from a cartridge is mostly a question of code. The last
-step is not: the header still declares the chip, and a machine that reads a
-declaration the board cannot honour does not behave like one reading the truth.
-So the header has to be rewritten, and rewriting it is where the mistakes are,
-because three things have to stay consistent at once.
-
-**The header is mirrored.** A cartridge image usually holds several byte-for-byte
-copies of its header, because the same bank appears at several addresses. Tools
-tend to read the first one they find, and they do not all agree about which that
-is. Updating one copy produces an image that works in the tool it was tested in
-and not on the machine it was built for.
-
-**The checksum covers the fields that hold it.** The sixteen-bit sum is taken over
-the whole image, including the four bytes storing the checksum and its complement,
-which cannot be known before the sum. The convention resolves the circularity:
-those four bytes count as `FF FF 00 00` whatever they actually hold, which is
-`0x01FE` per header. Zero them, add `0x01FE` once per mirror, and the result is
-the value to write.
-
-**The size byte is an exponent, not a size.** It is the base-two logarithm of the
-image in kilobytes, rounded up. An image that grew past a power of two and kept
-its old byte declares itself smaller than it is, and a machine that trusts the
-declaration never reads the rest.
-
-Everything here returns a new image. Nothing is written in place, because a
-half-rewritten header is worse than an unrewritten one, and a failure partway
-through should leave nothing behind.
-
-Finding the header is not this module's job, and an earlier version of it tried
-anyway. It kept its own list of plausible mapping bytes, and a real library
-disagreed with that list on six hundred cartridges: Contra III declares `53`,
-HAL's Hole in One Golf declares `46`, and neither is in any table anyone has
-written down. `mapper` decides by scoring four independent signals against that
-same library, so the anchor comes from there and the disagreement cannot exist.
-
-What is left here is the definition of a mirror, and it is simpler than the rule
-it replaces. A mirror exists because the same bank is visible at two addresses,
-so the bytes are literally the same bytes: every copy of the header is
-byte-identical to the first. Searching for all thirty two of them rather than for
-the title needs no allowlist of mapping bytes, and cannot match a title that
-happens to appear in the middle of something else.
-"""
-
 import sys
 from collections.abc import Sequence
 from pathlib import Path
@@ -64,13 +19,6 @@ CHIPSET_ROM_ONLY = 0x00
 CHECKSUM_FIELD_SUM = 0x01FE
 CHECKSUM_FIELD_BYTES = 4
 CHECKSUM_FIELD_NEUTRAL = b"\xff\xff\x00\x00"
-"""What the four bytes count as while their own sum is being taken.
-
-Nintendo names the values rather than the total: the complement is set to FFFF
-and the checksum to 0000 before the sum begins. They add up to CHECKSUM_FIELD_SUM
-per header, which is the same thing on an image whose length is a power of two
-and is not on one that is short.
-"""
 
 KILOBYTE = 1024
 
@@ -99,7 +47,6 @@ COPROCESSORS = {
 
 
 def size_byte(length: int) -> int:
-    """The exponent a header uses to declare its own size in kilobytes."""
     kilobytes = max(1, (length + KILOBYTE - 1) // KILOBYTE)
     exponent = 0
     while (1 << exponent) < kilobytes:
@@ -108,18 +55,10 @@ def size_byte(length: int) -> int:
 
 
 def identifies(block: bytes | bytearray) -> bool:
-    """Whether a run of bytes can be searched for, or is only padding.
-
-    A header made entirely of spaces, zeroes or `FF` is rare and real, and
-    searching an image for it matches every run of padding in the file, including
-    every position inside one long run. Those overlap each other and are one
-    blank region rather than many headers.
-    """
     return bool(set(block) - PADDING)
 
 
 def anchor_of(image: bytes | bytearray) -> int | None:
-    """Where the header is, decided by the package that decides that."""
     try:
         at: int = mapper.read(image).at
         return at
@@ -128,17 +67,6 @@ def anchor_of(image: bytes | bytearray) -> int | None:
 
 
 def mirrors(image: bytes | bytearray) -> list[int]:
-    """Every place this image repeats its header, in the order they appear.
-
-    A mirror exists because the same bank is visible at more than one address, so
-    every copy is byte-identical to the first. That makes the search exact: look
-    for the whole thirty two bytes rather than for the title, and a run of text
-    that merely resembles a title cannot match.
-
-    Two headers cannot overlap, so the search resumes a whole header past each
-    match. Matches that overlap are one region seen many times, and rewriting all
-    of them corrupts the bytes the later ones were found by.
-    """
     anchor = anchor_of(image)
     if anchor is None:
         return []
@@ -156,7 +84,6 @@ def mirrors(image: bytes | bytearray) -> list[int]:
 
 
 def describe(image: bytes | bytearray) -> list[dict[str, Any]]:
-    """What every mirror declares, in the words a report prints."""
     return [
         {
             "at": at,
@@ -173,20 +100,6 @@ def describe(image: bytes | bytearray) -> list[dict[str, Any]]:
 
 
 def mirrored_sum(data: bytes | bytearray) -> int:
-    """The sum Nintendo specifies, with a short image counted up to a power of two.
-
-    A cartridge whose size is not a power of two does not stop at its last byte
-    as far as the checksum is concerned. Nintendo: "If ROM size cannot be
-    expressed evenly in 2nM bit, such as 10M or 20M bit, add the remainder until
-    a total of 2nM bit is reached", with worked examples for 12, 10, 20 and 24
-    megabit. The remainder is repeated until it fills out the next power of two,
-    which is what the address decoding does to it on the board.
-
-    A remainder that is not itself a power of two is folded the same way before
-    being repeated, which the manual does not spell out and which follows from
-    the same decoding. Roughly a quarter of the retail library is not a power of
-    two, so a plain sum is not a small error.
-    """
     length = len(data)
     if length == 0:
         return 0
@@ -203,21 +116,6 @@ def mirrored_sum(data: bytes | bytearray) -> int:
 
 
 def checksum(image: bytes | bytearray, places: Sequence[int] | None = None) -> int:
-    """The sixteen-bit sum, with the fields that store it set as the manual says.
-
-    Nintendo: "First, store 0FFH into the complement check area (FFDCH, FFDDH)
-    and 00H into the check sum area (FFDEH, FFDFH). Then add each byte in the ROM
-    data." Writing those four bytes rather than zeroing them and adding a
-    constant afterwards is the difference that matters on a short image, where
-    the tail is counted more than once and a constant added once would be wrong.
-
-    The mirrors can be supplied, and a rewrite in progress must supply them. A
-    header with its coprocessor byte cleared and its size byte corrected is, for
-    the moment before the checksum is written, less recognisable as a header than
-    it was: two of the four signals the map scores are the checksum agreeing with
-    its complement and a plausible declared size, and the rewrite disturbs both.
-    Re-deriving the mirrors from that intermediate finds none of them.
-    """
     places = mirrors(image) if places is None else places
     neutral = bytearray(image)
     for at in places:
@@ -227,13 +125,6 @@ def checksum(image: bytes | bytearray, places: Sequence[int] | None = None) -> i
 
 
 def declare_rom_only(image: bytes | bytearray) -> bytes:
-    """A copy declaring no coprocessor, its real size, and a matching checksum.
-
-    Every mirror is rewritten, and the checksum is computed after the other fields
-    change, because it covers them. It is computed over the mirrors already found
-    rather than over the mirrors of the half-written image, which are not always
-    the same set.
-    """
     places = mirrors(image)
     if not places:
         raise NoHeader("no cartridge header at any documented position")
@@ -255,7 +146,6 @@ def declare_rom_only(image: bytes | bytearray) -> bytes:
 
 
 def needs_rewrite(image: bytes | bytearray) -> bool:
-    """Whether any mirror still declares a coprocessor or the wrong size."""
     places = mirrors(image)
     if not places:
         raise NoHeader("no cartridge header at any documented position")
@@ -272,14 +162,6 @@ BLOCK_BYTES = 0x1000
 def changes(
     before: bytes | bytearray, after: bytes | bytearray, block: int = BLOCK_BYTES
 ) -> list[int]:
-    """Every position at which two images of the same length differ.
-
-    A rewrite touches a few dozen bytes of a file that runs to millions, so the
-    comparison is done a block at a time and only blocks that differ are walked
-    byte by byte. Comparing whole slices happens below the interpreter; walking
-    every byte of a four megabyte cartridge does not, and doing that across a
-    library turns a survey into an overnight job.
-    """
     found: list[int] = []
     for start in range(0, len(before), block):
         stop = start + block
