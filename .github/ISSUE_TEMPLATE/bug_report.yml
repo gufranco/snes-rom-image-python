@@ -1,5 +1,8 @@
+---
 name: Something is wrong
-description: A header reads the wrong thing, a rewrite produced the wrong bytes, or nothing works at all
+description: >-
+  A header reads the wrong thing, a rewrite produced the wrong bytes, or
+  nothing works at all
 labels: ["bug"]
 body:
   - type: textarea

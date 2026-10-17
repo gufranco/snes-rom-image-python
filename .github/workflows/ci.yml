@@ -1,3 +1,4 @@
+---
 name: CI
 
 on:
@@ -49,6 +50,11 @@ jobs:
       - name: Lint the workflows
         uses: raven-actions/actionlint@v2
 
+      - name: Lint every YAML file
+        run: |
+          pipx install yamllint==1.38.0
+          yamllint --strict .
+
       - name: Lint the shell scripts
         run: |
           sudo apt-get update
@@ -70,15 +76,6 @@ jobs:
       - name: Install the type checker
         run: pipx install mypy==1.14.1
 
-      # Strict, with every optional error class the version offers turned on. The
-      # errors that matter in a package that rewrites bytes inside somebody's
-      # cartridge image are the ones where an offset, a width or a None crosses a
-      # boundary, and those are exactly what the optional classes catch. The
-      # settings live in pyproject.toml so a local run and this one agree.
-      #
-      # The submodule is on the path rather than checked here. It is a separate
-      # repository with its own gate, and checking it twice would mean this one
-      # goes red for a change nobody made in it.
       - name: Every annotation has to hold
         run: mypy
 
@@ -120,10 +117,6 @@ jobs:
       - name: Coverage must be total
         run: python -m coverage report
 
-      # No document is redistributable, so none is here and this checks nothing
-      # on a runner. It says so rather than reporting a pass: the value is that
-      # somebody running it with the manual on disk gets a real answer, and that
-      # a run without it cannot be mistaken for one.
       - name: Every quoted sentence, against the document it came from
         run: python -m conformance.quotes
 
@@ -168,10 +161,6 @@ jobs:
       - name: Install release tooling
         run: pnpm install --frozen-lockfile
 
-      # pnpm has no equivalent of `npm audit signatures`, which verified registry
-      # provenance attestations. This checks the tooling for known advisories
-      # instead. It is a narrower guarantee and is here so the gap is visible
-      # rather than silently dropped along with the command that used to fill it.
       - name: Check the release tooling for known advisories
         run: pnpm audit --audit-level=high
 
