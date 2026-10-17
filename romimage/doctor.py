@@ -11,7 +11,7 @@ if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Callable, Sequence
 
 
-def _version(where: Path | None = None) -> str:
+def installed_version(where: Path | None = None) -> str:
     found = re.search(
         r"""VERSION\s*[:=][^"']*["']([^"']+)["']""",
         (where or Path(__file__).resolve().parent / "version.py").read_text(),
@@ -19,12 +19,12 @@ def _version(where: Path | None = None) -> str:
     return found.group(1) if found else "unknown"
 
 
-VERSION = _version()
+VERSION = installed_version()
 
 ROOT = Path(__file__).resolve().parent.parent
 
 
-def _reachable(root: Path = ROOT, path: list[str] | None = None) -> bool:
+def reachable(root: Path = ROOT, path: list[str] | None = None) -> bool:
     where = sys.path if path is None else path
     if str(root) in where:
         return False
@@ -32,7 +32,7 @@ def _reachable(root: Path = ROOT, path: list[str] | None = None) -> bool:
     return True
 
 
-_reachable()
+reachable()
 
 from romimage import environment  # noqa: E402
 
@@ -77,7 +77,7 @@ class Finding:
         return f"<Finding {self.name} {'ok' if self.ok else 'not ok'}>"
 
 
-def _python() -> Finding:
+def check_python() -> Finding:
     return Finding(
         "python",
         sys.version_info[:2] >= OLDEST_PYTHON,
@@ -86,19 +86,19 @@ def _python() -> Finding:
     )
 
 
-def _package() -> Finding:
+def check_package() -> Finding:
     return Finding("romimage", True, f"version {VERSION}")
 
 
-def _loaded() -> Any:
-    _reachable()
+def load_package() -> Any:
+    reachable()
     from romimage import identity, rewrite
 
     return identity, rewrite
 
 
-def _synthetic(chipset: int = CHIPSET) -> bytes:
-    _, rewrite = _loaded()
+def synthetic_image(chipset: int = CHIPSET) -> bytes:
+    _, rewrite = load_package()
     title = TITLE[: rewrite.TITLE_BYTES]
     rom = bytearray(b"\x00" * IMAGE_BYTES)
     rom[HEADER_AT : HEADER_AT + len(title)] = title
@@ -113,9 +113,9 @@ def _synthetic(chipset: int = CHIPSET) -> bytes:
     return bytes(rom)
 
 
-def _asking(build: Callable[[], bytes] = _synthetic) -> Finding:
+def check_asking(build: Callable[[], bytes] = synthetic_image) -> Finding:
     try:
-        _, rewrite = _loaded()
+        _, rewrite = load_package()
         held = rewrite.needs_rewrite(build())
     except Exception as trouble:
         return Finding(
@@ -136,9 +136,9 @@ def _asking(build: Callable[[], bytes] = _synthetic) -> Finding:
     )
 
 
-def _rewriting(build: Callable[[], bytes] = _synthetic) -> Finding:
+def check_rewriting(build: Callable[[], bytes] = synthetic_image) -> Finding:
     try:
-        _, rewrite = _loaded()
+        _, rewrite = load_package()
         once = rewrite.declare_rom_only(build())
         twice = rewrite.declare_rom_only(once)
     except Exception as trouble:
@@ -158,9 +158,9 @@ def _rewriting(build: Callable[[], bytes] = _synthetic) -> Finding:
     )
 
 
-def _identifying(build: Callable[[], bytes] = _synthetic) -> Finding:
+def check_identifying(build: Callable[[], bytes] = synthetic_image) -> Finding:
     try:
-        identity, _ = _loaded()
+        identity, _ = load_package()
         wanted = (identity.AUTHORITATIVE, *identity.INTEROPERABLE)
         held = identity.measure(build())
     except Exception as trouble:
@@ -181,7 +181,7 @@ def _identifying(build: Callable[[], bytes] = _synthetic) -> Finding:
     )
 
 
-def _submodule(name: str, root: Path = ROOT) -> Finding:
+def check_submodule(name: str, root: Path = ROOT) -> Finding:
     where = root / name
     if (where / "pyproject.toml").is_file():
         return Finding(f"submodule {name}", True, f"checked out at {where}")
@@ -194,7 +194,7 @@ def _submodule(name: str, root: Path = ROOT) -> Finding:
     )
 
 
-def _corpus(path: Path | str = CORPUS) -> Finding:
+def check_corpus(path: Path | str = CORPUS) -> Finding:
     try:
         held = json.loads(Path(path).read_text())
     except OSError as trouble:
@@ -217,7 +217,7 @@ def _corpus(path: Path | str = CORPUS) -> Finding:
     )
 
 
-def _census() -> Finding:
+def check_census() -> Finding:
     return Finding(
         "library",
         True,
@@ -231,14 +231,14 @@ def examine(
     root: Path = ROOT,
 ) -> list[Finding]:
     return [
-        _python(),
-        _package(),
-        _asking(),
-        _rewriting(),
-        _identifying(),
-        *(_submodule(name, root) for name in SUBMODULES),
-        _corpus(corpus),
-        _census(),
+        check_python(),
+        check_package(),
+        check_asking(),
+        check_rewriting(),
+        check_identifying(),
+        *(check_submodule(name, root) for name in SUBMODULES),
+        check_corpus(corpus),
+        check_census(),
     ]
 
 

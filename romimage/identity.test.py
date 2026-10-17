@@ -10,8 +10,7 @@ import random  # noqa: E402
 import unittest  # noqa: E402
 import zlib  # noqa: E402
 
-from romimage import identity  # noqa: E402
-from romimage.errors import NoAuthority  # noqa: E402
+from romimage import AUTHORITATIVE, NoAuthority, identity  # noqa: E402
 
 
 def _image(banks: int = 1, seed: int = 1) -> bytes:
@@ -21,62 +20,121 @@ def _image(banks: int = 1, seed: int = 1) -> bytes:
 
 class MeasureTest(unittest.TestCase):
     def test_the_size_is_the_length_in_bytes(self) -> None:
-        self.assertEqual(identity.measure(_image(banks=2))["size"], 0x20000)
+        # Arrange
+        image = _image(banks=2)
+
+        # Act
+        found = identity.measure(image)
+
+        # Assert
+        self.assertEqual(found["size"], 0x20000)
 
     def test_every_published_value_is_present(self) -> None:
-        found = identity.measure(_image())
+        # Arrange
+        image = _image()
 
+        # Act
+        found = identity.measure(image)
+
+        # Assert
         self.assertEqual(set(found), {"size", "crc32", "md5", "sha1", "sha256"})
 
     def test_the_deciding_value_is_the_one_it_names(self) -> None:
-        self.assertEqual(identity.AUTHORITATIVE, "sha256")
+        # Arrange
+        image = _image(seed=9)
 
-    def test_the_digests_are_of_the_bytes_given(self) -> None:
-        image = _image(seed=2)
+        # Act
         found = identity.measure(image)
 
-        self.assertEqual(found["crc32"], f"{zlib.crc32(image):08X}")
-        self.assertEqual(found["sha256"], hashlib.sha256(image).hexdigest())
-        self.assertEqual(found["sha1"], hashlib.sha1(image).hexdigest())
-        self.assertEqual(found["md5"], hashlib.md5(image).hexdigest())
-
-    def test_two_images_that_differ_by_one_byte_measure_differently(self) -> None:
-        first = bytearray(_image(seed=3))
-        second = bytearray(first)
-        second[0] ^= 0xFF
-
-        self.assertNotEqual(
-            identity.measure(bytes(first))["sha256"],
-            identity.measure(bytes(second))["sha256"],
+        # Assert
+        self.assertEqual(
+            (AUTHORITATIVE, found[AUTHORITATIVE]), ("sha256", hashlib.sha256(image).hexdigest())
         )
 
+    def test_the_digests_are_of_the_bytes_given(self) -> None:
+        # Arrange
+        image = _image(seed=2)
+
+        # Act
+        found = identity.measure(image)
+
+        # Assert
+        self.assertEqual(
+            [found["crc32"], found["sha256"], found["sha1"], found["md5"]],
+            [
+                f"{zlib.crc32(image):08X}",
+                hashlib.sha256(image).hexdigest(),
+                hashlib.sha1(image).hexdigest(),
+                hashlib.md5(image).hexdigest(),
+            ],
+        )
+
+    def test_two_images_that_differ_by_one_byte_measure_differently(self) -> None:
+        # Arrange
+        first = _image(seed=3)
+        second = bytes([first[0] ^ 0xFF]) + first[1:]
+
+        # Act
+        found = identity.measure(second)
+
+        # Assert
+        self.assertNotEqual(found["sha256"], hashlib.sha256(first).hexdigest())
+
     def test_an_empty_image_measures_rather_than_failing(self) -> None:
-        self.assertEqual(identity.measure(b"")["size"], 0)
+        # Arrange
+        image = b""
+
+        # Act
+        found = identity.measure(image)
+
+        # Assert
+        self.assertEqual(found["size"], 0)
 
 
 class AgreementTest(unittest.TestCase):
     def test_a_measurement_agrees_with_itself(self) -> None:
+        # Arrange
         found = identity.measure(_image(seed=4))
 
-        self.assertTrue(identity.agrees(found, found))
+        # Act
+        agreed = identity.agrees(found, found)
+
+        # Assert
+        self.assertTrue(agreed)
 
     def test_the_deciding_value_settles_it_even_when_another_disagrees(self) -> None:
+        # Arrange
         found = identity.measure(_image(seed=5))
         loose = dict(found, crc32="00000000")
 
-        self.assertTrue(identity.agrees(found, loose))
+        # Act
+        agreed = identity.agrees(found, loose)
+
+        # Assert
+        self.assertTrue(agreed)
 
     def test_a_different_deciding_value_is_a_different_file(self) -> None:
+        # Arrange
         first = identity.measure(_image(seed=6))
         second = identity.measure(_image(seed=7))
 
-        self.assertFalse(identity.agrees(first, second))
+        # Act
+        agreed = identity.agrees(first, second)
+
+        # Assert
+        self.assertFalse(agreed)
 
     def test_an_expectation_with_no_deciding_value_is_refused(self) -> None:
+        # Arrange
         found = identity.measure(_image(seed=8))
+        expected = {"crc32": found["crc32"]}
 
-        with self.assertRaises(NoAuthority):
-            identity.agrees(found, {"crc32": found["crc32"]})
+        # Act
+        with self.assertRaises(NoAuthority) as refused:
+            identity.agrees(found, expected)
+
+        # Assert
+        self.assertIn("cannot accept or reject", str(refused.exception))
 
 
 if __name__ == "__main__":
