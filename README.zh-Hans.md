@@ -8,7 +8,7 @@
 [![Release](https://img.shields.io/github/v/release/gufranco/snes-rom-image-python)](https://github.com/gufranco/snes-rom-image-python/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-重放 **489** 个声明，**0** 个失败，在全部 **7,330** 个卡带上逐一检查 **4** 项属性，计算出的校验和与 **2,780** 个零售版卡带中的 **2,768** 个一致，在手册中定位到 **20** 处引文，**751** 个测试，**100%** 语句与分支覆盖率，无依赖
+重放 **489** 个声明，**0** 个失败，在全部 **7,330** 个卡带上逐一检查 **4** 项属性，计算出的校验和与 **2,780** 个零售版卡带中的 **2,768** 个一致，在手册中定位到 **20** 处引文，**753** 个测试，**100%** 语句与分支覆盖率，无依赖
 
 ```python
 from romimage import rewrite
