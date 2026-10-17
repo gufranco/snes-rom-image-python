@@ -1,8 +1,8 @@
-[English](README.md) | 日本語 | [简体中文](README.zh-Hans.md) | [繁體中文（香港）](README.zh-HK.md)
-
 # SNES ROM Image
 
 スーパーファミコンのカートリッジイメージをPythonでファイルとして扱います。ダンプ機器が付け加えたもの、ヘッダーが宣言している内容、コプロセッサの宣言を消す方法を扱い、NintendoのSNES Development Manualと7,330本のカートリッジのライブラリに照らして検証しています。
+
+[English](README.md) &nbsp;|&nbsp; 日本語 &nbsp;|&nbsp; [简体中文](README.zh-Hans.md) &nbsp;|&nbsp; [繁體中文（香港）](README.zh-HK.md)
 
 [![CI](https://github.com/gufranco/snes-rom-image-python/actions/workflows/ci.yml/badge.svg)](https://github.com/gufranco/snes-rom-image-python/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/gufranco/snes-rom-image-python)](https://github.com/gufranco/snes-rom-image-python/releases)

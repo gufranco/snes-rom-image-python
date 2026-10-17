@@ -1,8 +1,8 @@
-[English](README.md) | [日本語](README.ja.md) | [简体中文](README.zh-Hans.md) | 繁體中文（香港）
-
 # SNES ROM 映像檔
 
 以 Python 檔案形式處理 Super NES 卡帶映像檔：傾印裝置加入了甚麼、標頭聲明了甚麼，以及如何清除協處理器聲明。一切以 Nintendo 的 SNES Development Manual 及一個收錄 7,330 盒卡帶的資料庫為準。
+
+[English](README.md) &nbsp;|&nbsp; [日本語](README.ja.md) &nbsp;|&nbsp; [简体中文](README.zh-Hans.md) &nbsp;|&nbsp; 繁體中文（香港）
 
 [![CI](https://github.com/gufranco/snes-rom-image-python/actions/workflows/ci.yml/badge.svg)](https://github.com/gufranco/snes-rom-image-python/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/gufranco/snes-rom-image-python)](https://github.com/gufranco/snes-rom-image-python/releases)
