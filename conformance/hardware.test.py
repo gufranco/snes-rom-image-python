@@ -1,4 +1,6 @@
 import json
+import random
+import re
 import sys
 import unittest
 from pathlib import Path
@@ -7,6 +9,10 @@ from typing import Any, override
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from romimage import rewrite
+
+sys.path.append(str(Path(__file__).resolve().parent.parent / "snes-mapper-python"))
+
+from mapper.header import HEADER_BYTES
 
 HELD = json.loads((Path(__file__).resolve().parent / "hardware.json").read_text())
 
@@ -20,6 +26,74 @@ FIELDS = FACTS["fields"]
 def offset(name: str) -> int:
     value: int = FIELDS[name]["offset"]
     return value
+
+
+SEED = 1
+
+OTHER_SEED = 2
+
+BANK = 0x10000
+
+LOROM_ANCHOR = 0x7FC0
+
+TITLE = b"A CARTRIDGE          "
+
+MBIT = 0x20000
+
+CHOSEN = {
+    "mapMode": ("values", "0x30"),
+    "cartridgeType": ("withoutCoprocessor", "0x02"),
+    "romSize": ("table", "0x0A"),
+    "ramSize": ("table", "0x03"),
+}
+
+RULE = re.compile(r"first (\d+)M bit\) \+ \[\(Total of last (\d+)M bit\) x(\d+)\]")
+
+FIRST_ADDRESS = re.compile(r"([0-9A-F]{6})H ~")
+
+ALL_ONES = re.compile(r"= ([0-9A-F]+)H")
+
+
+def printed_code(name: str) -> int:
+    table, code = CHOSEN[name]
+    assert code in FIELDS[name][table], f"{code} is not a code the record prints for {name}"
+    return int(code, 16)
+
+
+def a_header() -> dict[int, int]:
+    block = dict(enumerate(TITLE))
+    return {
+        **block,
+        offset("mapMode"): 0x20,
+        offset("cartridgeType"): FIELDS["cartridgeType"]["romOnly"],
+        offset("romSize"): 0x09,
+        offset("ramSize"): 0x00,
+        offset("fixedValue"): FIELDS["fixedValue"]["value"],
+    }
+
+
+def a_cartridge(writes: dict[int, int] | None = None, seed: int = SEED) -> bytes:
+    generator = random.Random(seed)
+    image = bytearray(generator.randrange(256) for _ in range(2 * BANK))
+    for where, byte in {**a_header(), **(writes or {})}.items():
+        image[LOROM_ANCHOR + where] = byte
+    return bytes(image)
+
+
+def word_at(image: bytes, where: int) -> int:
+    return image[where] | (image[where + 1] << 8)
+
+
+def neutralised(image: bytes, where: int, neutral: bytes) -> bytes:
+    return image[:where] + neutral + image[where + len(neutral) :]
+
+
+def worked(rule: str) -> tuple[bytes, int]:
+    found = RULE.search(rule)
+    assert found is not None, f"{rule} is not a rule this file can read"
+    first, last, times = (int(group) for group in found.groups())
+    head, tail = bytes([1]) * first * MBIT, bytes([2]) * last * MBIT
+    return head + tail, sum(head) + sum(tail) * times
 
 
 class DocumentTest(unittest.TestCase):
@@ -195,6 +269,158 @@ class CartridgeTypeTest(unittest.TestCase):
         named = {entry["id"] for entry in DIVERGENCES["divergences"]}
 
         self.assertIn("coprocessor-nibbles-outside-the-table", named)
+
+
+class PrintedBehaviourTest(unittest.TestCase):
+    def test_only_the_registration_area_decides_what_the_header_says(self) -> None:
+        # Arrange
+        image = a_cartridge()
+        start = LOROM_ANCHOR + HEADER_BYTES - FACTS["registrationArea"]["value"]
+        other = bytearray(a_cartridge(seed=OTHER_SEED))
+        end = LOROM_ANCHOR + HEADER_BYTES
+        other[start:end] = image[start:end]
+
+        # Act
+        described = [rewrite.describe(one) for one in (image, bytes(other))]
+
+        # Assert
+        self.assertEqual(described[0], described[1])
+
+    def test_a_mode_20_header_is_found_where_the_printed_area_puts_it(self) -> None:
+        # Arrange
+        printed = FIRST_ADDRESS.search(FACTS["mapModeAddresses"]["quote"])
+        assert printed is not None, "the record no longer prints the mode 20 address"
+        before_base = FACTS["registrationArea"]["value"] - HEADER_BYTES
+
+        # Act
+        found = rewrite.anchor_of(a_cartridge())
+
+        # Assert
+        self.assertEqual(found, int(printed.group(1), 16) + before_base)
+
+    def test_the_map_mode_is_read_from_the_printed_byte(self) -> None:
+        # Arrange
+        image = a_cartridge({offset("mapMode"): printed_code("mapMode")})
+
+        # Act
+        described = rewrite.describe(image)
+
+        # Assert
+        self.assertEqual(described[0]["map"], printed_code("mapMode"))
+
+    def test_the_cartridge_type_is_read_from_the_printed_byte(self) -> None:
+        # Arrange
+        image = a_cartridge({offset("cartridgeType"): printed_code("cartridgeType")})
+
+        # Act
+        described = rewrite.describe(image)
+
+        # Assert
+        self.assertEqual(described[0]["chipset"], printed_code("cartridgeType"))
+
+    def test_the_rom_size_is_read_from_the_printed_byte(self) -> None:
+        # Arrange
+        image = a_cartridge({offset("romSize"): printed_code("romSize")})
+
+        # Act
+        described = rewrite.describe(image)
+
+        # Assert
+        self.assertEqual(described[0]["size"], printed_code("romSize"))
+
+    def test_the_ram_size_is_read_from_the_printed_byte(self) -> None:
+        # Arrange
+        image = a_cartridge({offset("ramSize"): printed_code("ramSize")})
+
+        # Act
+        described = rewrite.describe(image)
+
+        # Assert
+        self.assertEqual(described[0]["sram"], printed_code("ramSize"))
+
+    def test_a_rewritten_header_stores_the_complement_where_the_record_says(self) -> None:
+        # Arrange
+        relation = ALL_ONES.search(FIELDS["complementCheck"]["relation"])
+        assert relation is not None, "the record no longer prints the relation"
+
+        # Act
+        declared = rewrite.declare_rom_only(a_cartridge())
+
+        # Assert
+        self.assertEqual(
+            word_at(declared, LOROM_ANCHOR + offset("complementCheck"))
+            + word_at(declared, LOROM_ANCHOR + offset("checkSum")),
+            int(relation.group(1), 16),
+        )
+
+    def test_a_rewritten_header_stores_the_printed_sum_low_byte_first(self) -> None:
+        # Arrange
+        image = a_cartridge()
+        neutral_at = LOROM_ANCHOR + offset("complementCheck")
+        neutral = bytes.fromhex(FACTS["checksumNeutralBytes"]["value"])
+
+        # Act
+        declared = rewrite.declare_rom_only(image)
+
+        # Assert
+        self.assertEqual(
+            word_at(declared, LOROM_ANCHOR + offset("checkSum")),
+            sum(neutralised(declared, neutral_at, neutral)) & 0xFFFF,
+        )
+
+    def test_a_rewritten_header_keeps_the_printed_fixed_value(self) -> None:
+        # Arrange
+        image = a_cartridge()
+
+        # Act
+        declared = rewrite.declare_rom_only(image)
+
+        # Assert
+        self.assertEqual(
+            declared[LOROM_ANCHOR + offset("fixedValue")], FIELDS["fixedValue"]["value"]
+        )
+
+    def test_the_checksum_counts_its_own_bytes_as_the_printed_neutral_values(self) -> None:
+        # Arrange
+        image = a_cartridge()
+        neutral_at = LOROM_ANCHOR + offset("complementCheck")
+        neutral = bytes.fromhex(FACTS["checksumNeutralBytes"]["value"])
+        expected = sum(neutralised(image, neutral_at, neutral)) & 0xFFFF
+
+        # Act
+        computed = rewrite.checksum(image)
+
+        # Assert
+        self.assertEqual(computed, expected)
+
+    def test_a_short_image_sums_as_every_printed_worked_example_says(self) -> None:
+        # Arrange
+        examples = FACTS["shortImageMirroring"]["workedExamples"]
+        cases = [worked(example["ruleQuote"]) for example in examples]
+
+        # Act
+        sums = [rewrite.mirrored_sum(data) for data, _ in cases]
+
+        # Assert
+        self.assertEqual(
+            (sums, [len(data) // MBIT for data, _ in cases]),
+            (
+                [total for _, total in cases],
+                [int(example["size"].split()[0]) for example in examples],
+            ),
+        )
+
+    def test_the_header_checksum_is_not_the_plain_sum_the_submission_sheet_uses(self) -> None:
+        # Arrange
+        stated = FACTS["submissionChecksumIsADifferentThing"]["quote"]
+        data, _ = worked(FACTS["shortImageMirroring"]["workedExamples"][1]["ruleQuote"])
+
+        # Act
+        mirrored = rewrite.mirrored_sum(data)
+
+        # Assert
+        self.assertIn("different from the check sum", stated)
+        self.assertNotEqual(mirrored, sum(data))
 
 
 class DivergenceTest(unittest.TestCase):

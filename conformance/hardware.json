@@ -19,7 +19,11 @@
       "value": 48,
       "quote": "The ROM Registration Data area is 48 bytes from address 00:FFB0H ~ 00:FFDFH in Super NES Memory.",
       "manualPage": "1-2-14",
-      "document": "developmentManual"
+      "document": "developmentManual",
+      "heldBy": [
+        "conformance/hardware.test.py::FieldOffsetTest.test_every_offset_falls_inside_the_registration_area",
+        "conformance/hardware.test.py::PrintedBehaviourTest.test_only_the_registration_area_decides_what_the_header_says"
+      ]
     },
     "headerBase": {
       "value": 65472,
@@ -30,7 +34,10 @@
       "quote": "The address in ROM for registration data, using Map Mode 20, is 007FB0H ~ 007FDFH.",
       "corroboration": "The same passage gives 00FFB0H for Map Mode 21, 007FB0H for Map Mode 23 (SA-1), and 40FFB0H for Map Mode 25.",
       "manualPage": "1-2-14",
-      "document": "developmentManual"
+      "document": "developmentManual",
+      "heldBy": [
+        "conformance/hardware.test.py::PrintedBehaviourTest.test_a_mode_20_header_is_found_where_the_printed_area_puts_it"
+      ]
     },
     "fields": {
       "note": "Offsets are from FFC0H, which is how this package addresses them. The manual prints the absolute address in each heading, quoted beside it.",
@@ -49,7 +56,11 @@
           "0x35": "Mode 25, 3.58 MHz"
         },
         "manualPage": "1-2-17",
-        "document": "developmentManual"
+        "document": "developmentManual",
+        "heldBy": [
+          "conformance/hardware.test.py::FieldOffsetTest.test_the_map_mode_byte_sits_where_the_specification_puts_it",
+          "conformance/hardware.test.py::PrintedBehaviourTest.test_the_map_mode_is_read_from_the_printed_byte"
+        ]
       },
       "cartridgeType": {
         "offset": 22,
@@ -76,7 +87,11 @@
         },
         "romOnly": 0,
         "manualPage": "1-2-18",
-        "document": "developmentManual"
+        "document": "developmentManual",
+        "heldBy": [
+          "conformance/hardware.test.py::FieldOffsetTest.test_and_the_cartridge_type_byte",
+          "conformance/hardware.test.py::PrintedBehaviourTest.test_the_cartridge_type_is_read_from_the_printed_byte"
+        ]
       },
       "romSize": {
         "offset": 23,
@@ -93,7 +108,11 @@
         "inferred": "the logarithm rule, which the manual gives as a table rather than as a formula",
         "manualPage": "1-2-19",
         "document": "developmentManual",
-        "verifiedOn": "2026-08-27, against the rendered page rather than against a text layer. All five rows read back with their codes: 09H is 3 ~ 4M Bit, 0AH is 5 ~ 8M Bit, 0BH is 9 ~ 16M Bit, 0CH is 17 ~ 32M Bit and 0DH is 33 ~ 64M Bit. The table had been in this record since before the document was on any machine here, and the codes are what makes the logarithm rule evidenced rather than merely consistent: it reproduces both halves of all five rows."
+        "verifiedOn": "2026-08-27, against the rendered page rather than against a text layer. All five rows read back with their codes: 09H is 3 ~ 4M Bit, 0AH is 5 ~ 8M Bit, 0BH is 9 ~ 16M Bit, 0CH is 17 ~ 32M Bit and 0DH is 33 ~ 64M Bit. The table had been in this record since before the document was on any machine here, and the codes are what makes the logarithm rule evidenced rather than merely consistent: it reproduces both halves of all five rows.",
+        "heldBy": [
+          "conformance/hardware.test.py::FieldOffsetTest.test_and_the_rom_size_byte",
+          "conformance/hardware.test.py::PrintedBehaviourTest.test_the_rom_size_is_read_from_the_printed_byte"
+        ]
       },
       "ramSize": {
         "offset": 24,
@@ -108,7 +127,11 @@
           "0x07": "1 Mbit"
         },
         "manualPage": "1-2-19",
-        "document": "developmentManual"
+        "document": "developmentManual",
+        "heldBy": [
+          "conformance/hardware.test.py::FieldOffsetTest.test_and_the_ram_size_byte",
+          "conformance/hardware.test.py::PrintedBehaviourTest.test_the_ram_size_is_read_from_the_printed_byte"
+        ]
       },
       "complementCheck": {
         "offset": 28,
@@ -116,7 +139,11 @@
         "quote": "Complement Check (FFDCH, FFDDH). Store the 1's complement of the lower 2 bytes of the program check sum in the order of; FFDCH, lower and FFDDH, upper.",
         "relation": "(FFDEH. FFDFH) + (FFDCH. FFDDH) = FFFFH",
         "manualPage": "1-2-20",
-        "document": "developmentManual"
+        "document": "developmentManual",
+        "heldBy": [
+          "conformance/hardware.test.py::FieldOffsetTest.test_and_the_complement",
+          "conformance/hardware.test.py::PrintedBehaviourTest.test_a_rewritten_header_stores_the_complement_where_the_record_says"
+        ]
       },
       "checkSum": {
         "offset": 30,
@@ -124,7 +151,11 @@
         "quote": "Check Sum (FFDEH, FFDFH). First, store 0FFH into the complement check area (FFDCH, FFDDH) and 00H into the check sum area (FFDEH, FFDFH). Then add each byte in the ROM data.",
         "storedOrderQuote": "Next, store the lower 2 bytes of the check sum value into the check sum area (FFDEH, FFDFH). FFDEH will contain the lower byte and FFDFH will contain the upper byte.",
         "manualPage": "1-2-20",
-        "document": "developmentManual"
+        "document": "developmentManual",
+        "heldBy": [
+          "conformance/hardware.test.py::FieldOffsetTest.test_and_the_checksum",
+          "conformance/hardware.test.py::PrintedBehaviourTest.test_a_rewritten_header_stores_the_printed_sum_low_byte_first"
+        ]
       },
       "fixedValue": {
         "offset": 26,
@@ -132,7 +163,10 @@
         "value": 51,
         "quote": "Fixed Value (FFDAH). Store fixed value 33H at address FFDAH.",
         "manualPage": "1-2-20",
-        "document": "developmentManual"
+        "document": "developmentManual",
+        "heldBy": [
+          "conformance/hardware.test.py::PrintedBehaviourTest.test_a_rewritten_header_keeps_the_printed_fixed_value"
+        ]
       }
     },
     "checksumNeutralBytes": {
@@ -140,37 +174,59 @@
       "quote": "First, store 0FFH into the complement check area (FFDCH, FFDDH) and 00H into the check sum area (FFDEH, FFDFH). Then add each byte in the ROM data.",
       "why": "The four bytes that store the sum are inside the region being summed, which is circular. The specification resolves it by naming what those bytes count as while the sum is taken. They total 0x01FE per header, which is the same thing as writing them only while the image is a power of two.",
       "manualPage": "1-2-20",
-      "document": "developmentManual"
+      "document": "developmentManual",
+      "heldBy": [
+        "conformance/hardware.test.py::NeutralBytesTest.test_and_the_specification_names_those_values",
+        "conformance/hardware.test.py::PrintedBehaviourTest.test_the_checksum_counts_its_own_bytes_as_the_printed_neutral_values"
+      ]
     },
     "shortImageMirroring": {
       "quote": "If ROM size cannot be expressed evenly in 2nM bit, such as 10M or 20M bit, add the remainder until a total of 2nM bit is reached.",
       "workedExamples": [
         {
           "size": "12 Mbit",
-          "ruleQuote": "(Total of first 8M bit) + [(Total of last 4M bit) x2] = Check Sum"
+          "ruleQuote": "(Total of first 8M bit) + [(Total of last 4M bit) x2] = Check Sum",
+          "heldBy": [
+            "conformance/hardware.test.py::PrintedBehaviourTest.test_a_short_image_sums_as_every_printed_worked_example_says"
+          ]
         },
         {
           "size": "10 Mbit",
-          "ruleQuote": "(Total of first 8M bit) + [(Total of last 2M bit) x4]"
+          "ruleQuote": "(Total of first 8M bit) + [(Total of last 2M bit) x4]",
+          "heldBy": [
+            "conformance/hardware.test.py::PrintedBehaviourTest.test_a_short_image_sums_as_every_printed_worked_example_says"
+          ]
         },
         {
           "size": "20 Mbit",
-          "ruleQuote": "(Total of first 16M bit) + [(Total of last 4M bit) x4]"
+          "ruleQuote": "(Total of first 16M bit) + [(Total of last 4M bit) x4]",
+          "heldBy": [
+            "conformance/hardware.test.py::PrintedBehaviourTest.test_a_short_image_sums_as_every_printed_worked_example_says"
+          ]
         },
         {
           "size": "24 Mbit",
-          "ruleQuote": "(Total of first 16M bit) + [(Total of last 8M bit) x2]"
+          "ruleQuote": "(Total of first 16M bit) + [(Total of last 8M bit) x2]",
+          "heldBy": [
+            "conformance/hardware.test.py::PrintedBehaviourTest.test_a_short_image_sums_as_every_printed_worked_example_says"
+          ]
         }
       ],
       "why": "Roughly a quarter of the retail library is not a power of two. A plain sum is wrong on all of it, and this package summed plainly until the specification was read. See divergences.json entry short-image-checksum.",
       "manualPage": "1-2-20",
-      "document": "developmentManual"
+      "document": "developmentManual",
+      "heldBy": [
+        "conformance/hardware.test.py::PrintedBehaviourTest.test_a_short_image_sums_as_every_printed_worked_example_says"
+      ]
     },
     "submissionChecksumIsADifferentThing": {
       "quote": "To calculate the check sum, add each byte in the ROM data. The lower 2 bytes of the resulting value is the check sum. ... This method of calculation is different from the check sum on the ROM Registration Specification.",
       "why": "The manual carries two checksums with the same name. The one on the submission sheet is a plain sum with no mirroring and no neutral bytes, and the manual says outright that it is not the one in the header. Reading the wrong section is how a plain sum gets written.",
       "manualPage": "1-2-9",
-      "document": "developmentManual"
+      "document": "developmentManual",
+      "heldBy": [
+        "conformance/hardware.test.py::PrintedBehaviourTest.test_the_header_checksum_is_not_the_plain_sum_the_submission_sheet_uses"
+      ]
     }
   },
   "notStated": {
