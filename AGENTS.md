@@ -174,6 +174,26 @@ module of the same name.
 | Only retail dumps | A hack is somebody's edit. It is fine as a census subject and it is not evidence about what a cartridge is |
 | The dependency | A submodule pinned by commit, never a copied file. See [FAMILY.md](FAMILY.md) |
 
+The settings in [`pyproject.toml`](pyproject.toml) carry no comments, so their
+reasons live here:
+
+- `BLE001` and `T201` in `environment.py` and the doctor: a check that throws
+  has to become a line in the report rather than end the run, and printing is
+  their output.
+- `T201` in `conformance/`: the census is a command line tool, and printing is
+  its output.
+- `RUF100` in [conformance/family.test.py](conformance/family.test.py): the
+  shared file carries directives for rules a member may have off. The reference
+  copy catches a stale one.
+- `N999` and `PLR2004` in tests: a test file is named after its module with a
+  dot, and its literals are the expected values.
+- The `mapper.*` override in mypy: the submodule is checked in its own
+  repository, against its own gate.
+- The `__main__` guard in coverage: it hands argv to a function that is itself
+  tested.
+- `TYPE_CHECKING` blocks and bare `...` bodies in coverage: they never run, and
+  Python 3.14 drops them before coverage sees them while 3.12 does not.
+
 ## Layout
 
 ```
