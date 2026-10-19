@@ -39,7 +39,7 @@ them later or assigned the codes without doing so.
 **The document says.** Six upper nibbles: 0 for DSP, 1 for Super FX, 2 for OBC1,
 3 for SA-1, E for Other and F for Custom Chip.
 
-Source: Nintendo, *SNES Development Manual, Book 1*, manual page 1-2-18.
+Source: Nintendo, _SNES Development Manual, Book 1_, manual page 1-2-18.
 
 **What the cartridges do.** Carry `43H` and `45H` for the S-DD1 and `55H` for the
 S-RTC, whose upper nibbles are 4 and 5. Neither appears in the table. Star Ocean
@@ -62,7 +62,7 @@ table, or a Nintendo licensee bulletin assigning the codes.
 **The document says.** A five row table covering 3 to 64 megabit, and nothing
 below or above it.
 
-Source: Nintendo, *SNES Development Manual, Book 1*, manual page 1-2-18.
+Source: Nintendo, _SNES Development Manual, Book 1_, manual page 1-2-18.
 
 **What this project follows.** The rule the table implies, which is the exponent
 of the smallest power of two that holds the image.

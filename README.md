@@ -36,10 +36,10 @@ The example builds a 512 KB image whose header at `0x7FC0` declares chipset `0x0
 
 ## Install
 
-| Requirement | Version |
-|:--|:--|
-| Python | 3.12 or newer |
-| git | Any, to fetch the submodule |
+| Requirement | Version                     |
+| :---------- | :-------------------------- |
+| Python      | 3.12 or newer               |
+| git         | Any, to fetch the submodule |
 
 ```bash
 git clone --recurse-submodules https://github.com/gufranco/snes-rom-image-python.git
@@ -63,38 +63,38 @@ Releases follow [Semantic Versioning](https://semver.org/) and are cut from the 
 
 Four modules, each answering one question about a file.
 
-| Module | Question |
-|:--|:--|
-| [`dump`](romimage/dump.py) | What did the dumping device add or split off |
-| [`identity`](romimage/identity.py) | Which digests identify the file, and which one decides |
-| [`rewrite`](romimage/rewrite.py) | What the header declares, and how to clear a coprocessor from it |
+| Module                             | Question                                                               |
+| :--------------------------------- | :--------------------------------------------------------------------- |
+| [`dump`](romimage/dump.py)         | What did the dumping device add or split off                           |
+| [`identity`](romimage/identity.py) | Which digests identify the file, and which one decides                 |
+| [`rewrite`](romimage/rewrite.py)   | What the header declares, and how to clear a coprocessor from it       |
 | [`manifest`](romimage/manifest.py) | When a supplied file is not the expected one, which kind of miss it is |
 
 ### Calls
 
-| Call | Effect |
-|:--|:--|
-| `dump.read(path)` | Returns the image bytes. A file loses its copier stub. A folder of numbered parts is joined in name order. Raises `NoParts` for a folder with none |
-| `dump.form(path)` | `"bare"` or `"copier header"` for a file, judged by length, and `"N part set"` for a folder |
-| `dump.strip_copier_stub(data)` | Drops the leading 512 bytes when the length says a stub is there |
-| `dump.parts_in(folder)` | Files with a numeric suffix of one to three digits, sorted by upper-cased name |
-| `dump.join(parts)` | Concatenates the parts after stripping the stub from the first |
-| `dump.deflate_ratio(block)` | Compressed size over raw size at deflate level 6, 0.0 for an empty block |
-| `dump.block_ratios(data, block=0x10000)` | `deflate_ratio` of each whole 64 KB block |
-| `dump.measure_reuse(source, target, chunk=1024, stride=512)` | `(found, total)`: how many 1 KB chunks of `source` occur in `target` |
-| `dump.chunk_index(data, chunk=1024, stride=512)` | The chunk-to-offset index `measure_reuse` searches |
-| `identity.measure(data)` | `size`, `crc32`, `md5`, `sha1` and `sha256` of the bytes |
-| `identity.agrees(found, expected)` | True when the `sha256` values match. Raises `NoAuthority` when `expected` has no `sha256` |
-| `rewrite.anchor_of(image)` | Offset of the header the reader finds, or `None` |
-| `rewrite.mirrors(image)` | Offsets of every byte-identical copy of that header |
-| `rewrite.describe(image)` | One dictionary per copy: `at`, `title`, `map`, `chipset`, `coprocessor`, `size`, `sram`, `checksum` |
-| `rewrite.needs_rewrite(image)` | True when any copy declares a chipset other than `0x00` or a size byte other than the image's own. Raises `NoHeader` when there is no header |
-| `rewrite.declare_rom_only(image)` | Returns new bytes with chipset `0x00`, the right size byte and a recomputed checksum in every copy. Raises `NoHeader` when there is no header |
-| `rewrite.checksum(image, places=None)` | The header checksum, with the four checksum bytes of every copy counted as `FF FF 00 00`. `places` defaults to `mirrors(image)` |
-| `rewrite.mirrored_sum(data)` | The byte sum with a length that is not a power of two mirrored up to one |
-| `rewrite.size_byte(length)` | The size exponent: the power of two of the size in kilobytes, rounded up |
-| `rewrite.identifies(block)` | True when the block holds a byte other than `0x00`, `0x20` or `0xFF` |
-| `rewrite.changes(before, after, block=0x1000)` | Every offset whose byte differs |
+| Call                                                         | Effect                                                                                                                                             |
+| :----------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `dump.read(path)`                                            | Returns the image bytes. A file loses its copier stub. A folder of numbered parts is joined in name order. Raises `NoParts` for a folder with none |
+| `dump.form(path)`                                            | `"bare"` or `"copier header"` for a file, judged by length, and `"N part set"` for a folder                                                        |
+| `dump.strip_copier_stub(data)`                               | Drops the leading 512 bytes when the length says a stub is there                                                                                   |
+| `dump.parts_in(folder)`                                      | Files with a numeric suffix of one to three digits, sorted by upper-cased name                                                                     |
+| `dump.join(parts)`                                           | Concatenates the parts after stripping the stub from the first                                                                                     |
+| `dump.deflate_ratio(block)`                                  | Compressed size over raw size at deflate level 6, 0.0 for an empty block                                                                           |
+| `dump.block_ratios(data, block=0x10000)`                     | `deflate_ratio` of each whole 64 KB block                                                                                                          |
+| `dump.measure_reuse(source, target, chunk=1024, stride=512)` | `(found, total)`: how many 1 KB chunks of `source` occur in `target`                                                                               |
+| `dump.chunk_index(data, chunk=1024, stride=512)`             | The chunk-to-offset index `measure_reuse` searches                                                                                                 |
+| `identity.measure(data)`                                     | `size`, `crc32`, `md5`, `sha1` and `sha256` of the bytes                                                                                           |
+| `identity.agrees(found, expected)`                           | True when the `sha256` values match. Raises `NoAuthority` when `expected` has no `sha256`                                                          |
+| `rewrite.anchor_of(image)`                                   | Offset of the header the reader finds, or `None`                                                                                                   |
+| `rewrite.mirrors(image)`                                     | Offsets of every byte-identical copy of that header                                                                                                |
+| `rewrite.describe(image)`                                    | One dictionary per copy: `at`, `title`, `map`, `chipset`, `coprocessor`, `size`, `sram`, `checksum`                                                |
+| `rewrite.needs_rewrite(image)`                               | True when any copy declares a chipset other than `0x00` or a size byte other than the image's own. Raises `NoHeader` when there is no header       |
+| `rewrite.declare_rom_only(image)`                            | Returns new bytes with chipset `0x00`, the right size byte and a recomputed checksum in every copy. Raises `NoHeader` when there is no header      |
+| `rewrite.checksum(image, places=None)`                       | The header checksum, with the four checksum bytes of every copy counted as `FF FF 00 00`. `places` defaults to `mirrors(image)`                    |
+| `rewrite.mirrored_sum(data)`                                 | The byte sum with a length that is not a power of two mirrored up to one                                                                           |
+| `rewrite.size_byte(length)`                                  | The size exponent: the power of two of the size in kilobytes, rounded up                                                                           |
+| `rewrite.identifies(block)`                                  | True when the block holds a byte other than `0x00`, `0x20` or `0xFF`                                                                               |
+| `rewrite.changes(before, after, block=0x1000)`               | Every offset whose byte differs                                                                                                                    |
 
 `declare_rom_only`, `needs_rewrite`, `AUTHORITATIVE`, `CHIPSET_ROM_ONLY` and `COPROCESSORS` are also published at the top of the package.
 
@@ -152,22 +152,22 @@ The census uses these two to describe a library: how much of each 64 KB block co
 
 `Manifest(document)` takes a mapping with an `artifacts` list. Each artifact has a `name`, an `accepted` list of measured forms, and optionally a `rewritten` form and a `bad` list whose entries carry a `why`. Every accepted form needs a `sha256`. `Manifest.from_path(path)` reads the same document from a JSON file.
 
-| Call | Effect |
-|:--|:--|
-| `document` | The mapping it was built from, after the checks above |
-| `artifacts` | The artifacts, as a tuple |
-| `by_digest(found)` | The first artifact whose accepted, rewritten or bad form agrees with `found`, with its state, or `None` |
-| `by_size(size)` | Every artifact with an accepted form of that size |
+| Call                        | Effect                                                                                                                 |
+| :-------------------------- | :--------------------------------------------------------------------------------------------------------------------- |
+| `document`                  | The mapping it was built from, after the checks above                                                                  |
+| `artifacts`                 | The artifacts, as a tuple                                                                                              |
+| `by_digest(found)`          | The first artifact whose accepted, rewritten or bad form agrees with `found`, with its state, or `None`                |
+| `by_size(size)`             | Every artifact with an accepted form of that size                                                                      |
 | `diagnose(data, form=None)` | Strips a stub, measures, and returns `form`, `size`, `identity`, `state`, `artifact`, `why`, `same_size` and `headers` |
-| `explain(found)` | The lines a person reads for a `diagnose` result, ending with what to do |
+| `explain(found)`            | The lines a person reads for a `diagnose` result, ending with what to do                                               |
 
-| State | Meaning |
-|:--|:--|
-| `known` | The `sha256` matches an accepted form |
-| `rewritten` | It matches the artifact's rewritten form |
-| `bad dump` | It matches a known bad dump, and `why` says what is wrong with it |
-| `same size` | No digest matches, and an accepted form has the same size |
-| `unknown` | Nothing matches |
+| State       | Meaning                                                           |
+| :---------- | :---------------------------------------------------------------- |
+| `known`     | The `sha256` matches an accepted form                             |
+| `rewritten` | It matches the artifact's rewritten form                          |
+| `bad dump`  | It matches a known bad dump, and `why` says what is wrong with it |
+| `same size` | No digest matches, and an accepted form has the same size         |
+| `unknown`   | Nothing matches                                                   |
 
 ```python
 from romimage import Manifest, identity, rewrite
@@ -215,34 +215,34 @@ The stubbed copy is still `known`, because the stub is stripped before measuring
 
 ### Constants
 
-| Name | Value |
-|:--|:--|
-| `identity.AUTHORITATIVE` | `"sha256"`, the one digest that accepts or rejects |
-| `identity.INTEROPERABLE` | `("crc32", "md5", "sha1")`, published for database lookups and never used to decide |
-| `rewrite.CHIPSET_ROM_ONLY` | `0x00` |
-| `rewrite.COPROCESSORS` | Chipset byte to coprocessor name for the 18 codes the package knows, from `0x03` DSP to `0xF9` SPC7110 |
-| `rewrite.MAP_MODE`, `CHIPSET`, `ROM_SIZE`, `SRAM_SIZE` | Header offsets `0x15` to `0x18` |
-| `rewrite.CHECKSUM_COMPLEMENT`, `CHECKSUM` | Header offsets `0x1C` and `0x1E` |
-| `rewrite.CHECKSUM_FIELD_NEUTRAL` | `FF FF 00 00`, what the four checksum bytes count as |
-| `rewrite.CHECKSUM_FIELD_BYTES`, `CHECKSUM_FIELD_SUM` | `4` and `0x01FE`, the length of those neutral bytes and their sum |
-| `rewrite.PADDING` | `0x00`, `0x20` and `0xFF`, the bytes `identifies` treats as filler |
-| `rewrite.KILOBYTE` | `1024`, the unit `size_byte` rounds up to |
-| `rewrite.BLOCK_BYTES` | `0x1000`, the block `changes` compares before it looks at single bytes |
-| `dump.BARE`, `dump.COPIER` | The two names `form` returns for a file |
-| `dump.PART_SUFFIX` | The pattern a numbered part's suffix matches: a dot and one to three digits |
-| `dump.BLOCK_BYTES`, `DEFLATE_LEVEL` | `0x10000` and `6`, the defaults of `block_ratios` and `deflate_ratio` |
-| `dump.CHUNK_BYTES`, `CHUNK_STRIDE` | `1024` and `512`, the defaults of `measure_reuse` and `chunk_index` |
-| `manifest.KNOWN`, `REWRITTEN`, `BAD_DUMP`, `SAME_SIZE`, `UNKNOWN` | The five states |
-| `romimage.__version__` | The installed version |
+| Name                                                              | Value                                                                                                  |
+| :---------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------- |
+| `identity.AUTHORITATIVE`                                          | `"sha256"`, the one digest that accepts or rejects                                                     |
+| `identity.INTEROPERABLE`                                          | `("crc32", "md5", "sha1")`, published for database lookups and never used to decide                    |
+| `rewrite.CHIPSET_ROM_ONLY`                                        | `0x00`                                                                                                 |
+| `rewrite.COPROCESSORS`                                            | Chipset byte to coprocessor name for the 18 codes the package knows, from `0x03` DSP to `0xF9` SPC7110 |
+| `rewrite.MAP_MODE`, `CHIPSET`, `ROM_SIZE`, `SRAM_SIZE`            | Header offsets `0x15` to `0x18`                                                                        |
+| `rewrite.CHECKSUM_COMPLEMENT`, `CHECKSUM`                         | Header offsets `0x1C` and `0x1E`                                                                       |
+| `rewrite.CHECKSUM_FIELD_NEUTRAL`                                  | `FF FF 00 00`, what the four checksum bytes count as                                                   |
+| `rewrite.CHECKSUM_FIELD_BYTES`, `CHECKSUM_FIELD_SUM`              | `4` and `0x01FE`, the length of those neutral bytes and their sum                                      |
+| `rewrite.PADDING`                                                 | `0x00`, `0x20` and `0xFF`, the bytes `identifies` treats as filler                                     |
+| `rewrite.KILOBYTE`                                                | `1024`, the unit `size_byte` rounds up to                                                              |
+| `rewrite.BLOCK_BYTES`                                             | `0x1000`, the block `changes` compares before it looks at single bytes                                 |
+| `dump.BARE`, `dump.COPIER`                                        | The two names `form` returns for a file                                                                |
+| `dump.PART_SUFFIX`                                                | The pattern a numbered part's suffix matches: a dot and one to three digits                            |
+| `dump.BLOCK_BYTES`, `DEFLATE_LEVEL`                               | `0x10000` and `6`, the defaults of `block_ratios` and `deflate_ratio`                                  |
+| `dump.CHUNK_BYTES`, `CHUNK_STRIDE`                                | `1024` and `512`, the defaults of `measure_reuse` and `chunk_index`                                    |
+| `manifest.KNOWN`, `REWRITTEN`, `BAD_DUMP`, `SAME_SIZE`, `UNKNOWN` | The five states                                                                                        |
+| `romimage.__version__`                                            | The installed version                                                                                  |
 
 ### Errors
 
-| Error | Raised when |
-|:--|:--|
-| `NoParts` | `dump.read` is given a folder with no numbered parts |
-| `NoAuthority` | `identity.agrees` is given an expectation with no `sha256` |
-| `Malformed` | `Manifest` is given no artifacts, an artifact with no accepted form, or an accepted form with no `sha256` |
-| `NoHeader` | `rewrite.needs_rewrite` or `rewrite.declare_rom_only` finds no header. It belongs to the header reader and is reachable as `rewrite.NoHeader` |
+| Error         | Raised when                                                                                                                                   |
+| :------------ | :-------------------------------------------------------------------------------------------------------------------------------------------- |
+| `NoParts`     | `dump.read` is given a folder with no numbered parts                                                                                          |
+| `NoAuthority` | `identity.agrees` is given an expectation with no `sha256`                                                                                    |
+| `Malformed`   | `Manifest` is given no artifacts, an artifact with no accepted form, or an accepted form with no `sha256`                                     |
+| `NoHeader`    | `rewrite.needs_rewrite` or `rewrite.declare_rom_only` finds no header. It belongs to the header reader and is reachable as `rewrite.NoHeader` |
 
 The first three live in [`romimage/errors.py`](romimage/errors.py) and are published at the top of the package.
 
@@ -284,15 +284,15 @@ Two matching CRC32 values are refused rather than accepted, because only `sha256
 
 ### Command-line tools
 
-| Command | Arguments | Exit codes |
-|:--|:--|:--|
-| `python3 romimage/doctor.py` | None | 0 when every check passes, 1 otherwise |
-| `python3 -m conformance.corpus` | An optional corpus path | 0 when every declaration agrees, 1 when one does not, 2 for wrong arguments |
-| `python3 -m conformance.census` | `<library> <out.json> [limit]`. The library is a folder or a zip archive | 0 when the four properties hold on every image, 1 when one fails, 2 for wrong arguments |
-| `python3 -m conformance.documents` | `--check` to verify without fetching, `--only SUBSTRING` to pick a file | 0 when every document verifies, 1 otherwise |
-| `python3 -m conformance.quotes` | None | 0 when every quote is located or no document is present, 1 otherwise |
-| `python3 -m conformance.speed` | None | 0 at or above 200 identifications per second, 1 below |
-| `python3 -m conformance.links` | None | 1 when an address in this file answers 404 or 410, 0 otherwise |
+| Command                            | Arguments                                                                | Exit codes                                                                              |
+| :--------------------------------- | :----------------------------------------------------------------------- | :-------------------------------------------------------------------------------------- |
+| `python3 romimage/doctor.py`       | None                                                                     | 0 when every check passes, 1 otherwise                                                  |
+| `python3 -m conformance.corpus`    | An optional corpus path                                                  | 0 when every declaration agrees, 1 when one does not, 2 for wrong arguments             |
+| `python3 -m conformance.census`    | `<library> <out.json> [limit]`. The library is a folder or a zip archive | 0 when the four properties hold on every image, 1 when one fails, 2 for wrong arguments |
+| `python3 -m conformance.documents` | `--check` to verify without fetching, `--only SUBSTRING` to pick a file  | 0 when every document verifies, 1 otherwise                                             |
+| `python3 -m conformance.quotes`    | None                                                                     | 0 when every quote is located or no document is present, 1 otherwise                    |
+| `python3 -m conformance.speed`     | None                                                                     | 0 at or above 200 identifications per second, 1 below                                   |
+| `python3 -m conformance.links`     | None                                                                     | 1 when an address in this file answers 404 or 410, 0 otherwise                          |
 
 ## The mistakes this exists to stop
 
@@ -469,28 +469,28 @@ CRC32 is a 32-bit error-detecting code, and MD5 and SHA-1 have published collisi
 
 Measured across **7,330** cartridges, with 249 more refused for carrying no readable header:
 
-| Measurement | Value |
-|:--|--:|
-| Distinct declarations | 489 |
-| Distinct image sizes | 108 |
-| Distinct chipset bytes | 36 |
-| Cartridges that would need rewriting | 3,799 |
-| Disagreements with the header reader about having a header | 0 |
+| Measurement                                                | Value |
+| :--------------------------------------------------------- | ----: |
+| Distinct declarations                                      |   489 |
+| Distinct image sizes                                       |   108 |
+| Distinct chipset bytes                                     |    36 |
+| Cartridges that would need rewriting                       | 3,799 |
+| Disagreements with the header reader about having a header |     0 |
 
 Four properties are checked on every cartridge, not on a sample:
 
-| Property | Held on |
-|:--|--:|
+| Property                                                |        Held on |
+| :------------------------------------------------------ | -------------: |
 | The written checksum and its complement are complements | 7,330 of 7,330 |
-| Recomputing over the result returns the written value | 7,330 of 7,330 |
-| Nothing outside a header changed | 7,330 of 7,330 |
-| A second rewrite changes nothing | 7,330 of 7,330 |
+| Recomputing over the result returns the written value   | 7,330 of 7,330 |
+| Nothing outside a header changed                        | 7,330 of 7,330 |
+| A second rewrite changes nothing                        | 7,330 of 7,330 |
 
 One observation is measured and gates nothing: whether the checksum this package computes is the one already written on the cartridge.
 
-| Population | Agrees |
-|:--|--:|
-| Licensed retail cartridges with a self-consistent header | 2,768 of 2,780 |
+| Population                                                |         Agrees |
+| :-------------------------------------------------------- | -------------: |
+| Licensed retail cartridges with a self-consistent header  | 2,768 of 2,780 |
 | Every image with a self-consistent header, hacks included | 4,502 of 7,167 |
 
 A hack that changed content without recomputing its checksum is not a defect in this package, so the observation reports rather than fails. The four properties ask whether the code agrees with itself. The observation asks the cartridge, and a checksum rule that was wrong the same way on every image passes all four properties while failing it. [`conformance/divergences.json`](conformance/divergences.json) names the twelve retail cartridges that still disagree and what is known about each.
@@ -501,14 +501,14 @@ A file with no readable header is counted as refused, and the census does not in
 
 [`conformance/corpus.json`](conformance/corpus.json) holds the 489 distinct declarations and how many cartridges carry each.
 
-| Field | What it is | In the corpus |
-|:--|:--|:--|
-| Size, mapping, chipset, ROM and RAM size | Facts about a physical object | Yes |
-| Count of cartridges sharing a combination | A measurement | Yes |
-| The title | A name | No |
-| Anything outside the header | The game | Never read |
+| Field                                     | What it is                    | In the corpus |
+| :---------------------------------------- | :---------------------------- | :------------ |
+| Size, mapping, chipset, ROM and RAM size  | Facts about a physical object | Yes           |
+| Count of cartridges sharing a combination | A measurement                 | Yes           |
+| The title                                 | A name                        | No            |
+| Anything outside the header               | The game                      | Never read    |
 
-Facts and functional elements sit outside what copyright reaches, per [17 U.S.C. 102(b)](https://www.law.cornell.edu/uscode/text/17/102) and *Feist*. [`conformance/census.py`](conformance/census.py) records no title, and nothing in the corpus could rebuild any part of any cartridge. This is how the repository is built, not legal advice.
+Facts and functional elements sit outside what copyright reaches, per [17 U.S.C. 102(b)](https://www.law.cornell.edu/uscode/text/17/102) and _Feist_. [`conformance/census.py`](conformance/census.py) records no title, and nothing in the corpus could rebuild any part of any cartridge. This is how the repository is built, not legal advice.
 
 Two claims replay from the corpus alone. The size byte recorded for each declaration must be the one `size_byte` derives from its size. A declaration with a coprocessor, or with a size byte that is not its own, must be one the census marked as needing a rewrite. That second claim runs one way only: a clean first header can still need a rewrite because a later copy disagrees, and the corpus records the first copy.
 
@@ -543,13 +543,13 @@ Where the manual is silent, a retail cartridge decides, and nothing else is evid
 
 ## Working on it
 
-| Need | Where |
-|:--|:--|
-| Every gate and the order to run them | [CONTRIBUTING.md](CONTRIBUTING.md) |
-| The same material for a coding agent | [AGENTS.md](AGENTS.md) |
-| The standard this repository shares with the rest of the family | [FAMILY.md](FAMILY.md) |
-| Bug reports | [GitHub Issues](https://github.com/gufranco/snes-rom-image-python/issues) |
-| Security reports | [SECURITY.md](SECURITY.md) |
+| Need                                                            | Where                                                                     |
+| :-------------------------------------------------------------- | :------------------------------------------------------------------------ |
+| Every gate and the order to run them                            | [CONTRIBUTING.md](CONTRIBUTING.md)                                        |
+| The same material for a coding agent                            | [AGENTS.md](AGENTS.md)                                                    |
+| The standard this repository shares with the rest of the family | [FAMILY.md](FAMILY.md)                                                    |
+| Bug reports                                                     | [GitHub Issues](https://github.com/gufranco/snes-rom-image-python/issues) |
+| Security reports                                                | [SECURITY.md](SECURITY.md)                                                |
 
 ```bash
 uvx ruff@0.16.3 format --check .
@@ -572,7 +572,7 @@ python3 -m coverage report
 
 ## References
 
-- *SNES Development Manual, Book 1*, Nintendo of America Inc. 240 pages, 21,022,582 bytes, SHA-256 `f1405241000046abba7849376d2ec53cf85f1ad2e9950d69a7c2cf1f3ff6b791`. It decides what each header byte means and how the checksum is calculated. Page 1-2-20 defines the header checksum. Page 1-2-9 defines a different, plain sum for the submission sheet and says so: "This method of calculation is different from the check sum on the ROM Registration Specification." The manual is not redistributable and is not in this repository. `python3 -m conformance.documents` downloads it from https://archive.org/download/SNESDevManual/book1_text.pdf into `docs/`, which git ignores, and refuses any other file. `python3 -m conformance.documents --check` verifies a copy already there.
+- _SNES Development Manual, Book 1_, Nintendo of America Inc. 240 pages, 21,022,582 bytes, SHA-256 `f1405241000046abba7849376d2ec53cf85f1ad2e9950d69a7c2cf1f3ff6b791`. It decides what each header byte means and how the checksum is calculated. Page 1-2-20 defines the header checksum. Page 1-2-9 defines a different, plain sum for the submission sheet and says so: "This method of calculation is different from the check sum on the ROM Registration Specification." The manual is not redistributable and is not in this repository. `python3 -m conformance.documents` downloads it from https://archive.org/download/SNESDevManual/book1_text.pdf into `docs/`, which git ignores, and refuses any other file. `python3 -m conformance.documents --check` verifies a copy already there.
 - A retail cartridge library the author owns, for the 489 declarations in [`conformance/corpus.json`](conformance/corpus.json), read across 7,330 files. Nothing from it is committed.
 - [gufranco/snes-mapper-python](https://github.com/gufranco/snes-mapper-python), for finding the header, carried as a submodule pinned by commit.
 

@@ -36,10 +36,10 @@ True
 
 ## インストール
 
-| 要件 | バージョン |
-|:--|:--|
-| Python | 3.12以降 |
-| git | 任意。サブモジュールの取得に使います |
+| 要件   | バージョン                           |
+| :----- | :----------------------------------- |
+| Python | 3.12以降                             |
+| git    | 任意。サブモジュールの取得に使います |
 
 ```bash
 git clone --recurse-submodules https://github.com/gufranco/snes-rom-image-python.git
@@ -63,38 +63,38 @@ python3 romimage/doctor.py
 
 4つのモジュールがあり、それぞれがファイルについての1つの問いに答えます。
 
-| モジュール | 問い |
-|:--|:--|
-| [`dump`](romimage/dump.py) | ダンプ機器は何を付け加え、何を分割したか |
-| [`identity`](romimage/identity.py) | どのダイジェストがファイルを識別し、どれが判定を下すか |
-| [`rewrite`](romimage/rewrite.py) | ヘッダーは何を宣言しているか、そこからコプロセッサをどう消すか |
+| モジュール                         | 問い                                                               |
+| :--------------------------------- | :----------------------------------------------------------------- |
+| [`dump`](romimage/dump.py)         | ダンプ機器は何を付け加え、何を分割したか                           |
+| [`identity`](romimage/identity.py) | どのダイジェストがファイルを識別し、どれが判定を下すか             |
+| [`rewrite`](romimage/rewrite.py)   | ヘッダーは何を宣言しているか、そこからコプロセッサをどう消すか     |
 | [`manifest`](romimage/manifest.py) | 渡されたファイルが期待したものでないとき、それはどの種類の不一致か |
 
 ### 呼び出し
 
-| 呼び出し | 効果 |
-|:--|:--|
-| `dump.read(path)` | イメージのバイト列を返します。ファイルからはコピー機のスタブを取り除きます。番号付きパートのフォルダは名前順に連結します。パートが1つもないフォルダには`NoParts`を送出します |
-| `dump.form(path)` | ファイルには長さで判断した`"bare"`または`"copier header"`を、フォルダには`"N part set"`を返します |
-| `dump.strip_copier_stub(data)` | 長さからスタブがあると判断できるとき、先頭の512バイトを取り除きます |
-| `dump.parts_in(folder)` | 1桁から3桁の数字のサフィックスを持つファイルを、大文字化した名前順に並べて返します |
-| `dump.join(parts)` | 最初のパートからスタブを取り除いたうえで、パートを連結します |
-| `dump.deflate_ratio(block)` | deflateレベル6での圧縮後サイズを元のサイズで割った値です。空のブロックでは0.0です |
-| `dump.block_ratios(data, block=0x10000)` | 64 KBの完全なブロックそれぞれの`deflate_ratio`です |
-| `dump.measure_reuse(source, target, chunk=1024, stride=512)` | `(found, total)`です。`source`の1 KBチャンクのうち、いくつが`target`に現れるかを示します |
-| `dump.chunk_index(data, chunk=1024, stride=512)` | `measure_reuse`が検索する、チャンクからオフセットへのインデックスです |
-| `identity.measure(data)` | バイト列の`size`、`crc32`、`md5`、`sha1`、`sha256`です |
-| `identity.agrees(found, expected)` | `sha256`の値が一致するときTrueです。`expected`に`sha256`がないときは`NoAuthority`を送出します |
-| `rewrite.anchor_of(image)` | リーダーが見つけたヘッダーのオフセット、または`None`です |
-| `rewrite.mirrors(image)` | そのヘッダーとバイト単位で同一なすべてのコピーのオフセットです |
-| `rewrite.describe(image)` | コピーごとに1つの辞書です。`at`、`title`、`map`、`chipset`、`coprocessor`、`size`、`sram`、`checksum`を持ちます |
-| `rewrite.needs_rewrite(image)` | いずれかのコピーが`0x00`以外のチップセット、またはイメージ自身のものと異なるサイズバイトを宣言しているときTrueです。ヘッダーがないときは`NoHeader`を送出します |
-| `rewrite.declare_rom_only(image)` | すべてのコピーでチップセットを`0x00`、サイズバイトを正しい値にし、チェックサムを再計算した新しいバイト列を返します。ヘッダーがないときは`NoHeader`を送出します |
-| `rewrite.checksum(image, places=None)` | ヘッダーのチェックサムです。すべてのコピーの4つのチェックサムバイトを`FF FF 00 00`として数えます。`places`のデフォルトは`mirrors(image)`です |
-| `rewrite.mirrored_sum(data)` | バイトの合計です。長さが2の累乗でない場合は、2の累乗になるまでミラーします |
-| `rewrite.size_byte(length)` | サイズ指数です。キロバイト単位のサイズを2の累乗で表した指数を、切り上げて返します |
-| `rewrite.identifies(block)` | ブロックに`0x00`、`0x20`、`0xFF`以外のバイトが含まれるときTrueです |
-| `rewrite.changes(before, after, block=0x1000)` | バイトが異なるすべてのオフセットです |
+| 呼び出し                                                     | 効果                                                                                                                                                                         |
+| :----------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `dump.read(path)`                                            | イメージのバイト列を返します。ファイルからはコピー機のスタブを取り除きます。番号付きパートのフォルダは名前順に連結します。パートが1つもないフォルダには`NoParts`を送出します |
+| `dump.form(path)`                                            | ファイルには長さで判断した`"bare"`または`"copier header"`を、フォルダには`"N part set"`を返します                                                                            |
+| `dump.strip_copier_stub(data)`                               | 長さからスタブがあると判断できるとき、先頭の512バイトを取り除きます                                                                                                          |
+| `dump.parts_in(folder)`                                      | 1桁から3桁の数字のサフィックスを持つファイルを、大文字化した名前順に並べて返します                                                                                           |
+| `dump.join(parts)`                                           | 最初のパートからスタブを取り除いたうえで、パートを連結します                                                                                                                 |
+| `dump.deflate_ratio(block)`                                  | deflateレベル6での圧縮後サイズを元のサイズで割った値です。空のブロックでは0.0です                                                                                            |
+| `dump.block_ratios(data, block=0x10000)`                     | 64 KBの完全なブロックそれぞれの`deflate_ratio`です                                                                                                                           |
+| `dump.measure_reuse(source, target, chunk=1024, stride=512)` | `(found, total)`です。`source`の1 KBチャンクのうち、いくつが`target`に現れるかを示します                                                                                     |
+| `dump.chunk_index(data, chunk=1024, stride=512)`             | `measure_reuse`が検索する、チャンクからオフセットへのインデックスです                                                                                                        |
+| `identity.measure(data)`                                     | バイト列の`size`、`crc32`、`md5`、`sha1`、`sha256`です                                                                                                                       |
+| `identity.agrees(found, expected)`                           | `sha256`の値が一致するときTrueです。`expected`に`sha256`がないときは`NoAuthority`を送出します                                                                                |
+| `rewrite.anchor_of(image)`                                   | リーダーが見つけたヘッダーのオフセット、または`None`です                                                                                                                     |
+| `rewrite.mirrors(image)`                                     | そのヘッダーとバイト単位で同一なすべてのコピーのオフセットです                                                                                                               |
+| `rewrite.describe(image)`                                    | コピーごとに1つの辞書です。`at`、`title`、`map`、`chipset`、`coprocessor`、`size`、`sram`、`checksum`を持ちます                                                              |
+| `rewrite.needs_rewrite(image)`                               | いずれかのコピーが`0x00`以外のチップセット、またはイメージ自身のものと異なるサイズバイトを宣言しているときTrueです。ヘッダーがないときは`NoHeader`を送出します               |
+| `rewrite.declare_rom_only(image)`                            | すべてのコピーでチップセットを`0x00`、サイズバイトを正しい値にし、チェックサムを再計算した新しいバイト列を返します。ヘッダーがないときは`NoHeader`を送出します               |
+| `rewrite.checksum(image, places=None)`                       | ヘッダーのチェックサムです。すべてのコピーの4つのチェックサムバイトを`FF FF 00 00`として数えます。`places`のデフォルトは`mirrors(image)`です                                 |
+| `rewrite.mirrored_sum(data)`                                 | バイトの合計です。長さが2の累乗でない場合は、2の累乗になるまでミラーします                                                                                                   |
+| `rewrite.size_byte(length)`                                  | サイズ指数です。キロバイト単位のサイズを2の累乗で表した指数を、切り上げて返します                                                                                            |
+| `rewrite.identifies(block)`                                  | ブロックに`0x00`、`0x20`、`0xFF`以外のバイトが含まれるときTrueです                                                                                                           |
+| `rewrite.changes(before, after, block=0x1000)`               | バイトが異なるすべてのオフセットです                                                                                                                                         |
 
 `declare_rom_only`、`needs_rewrite`、`AUTHORITATIVE`、`CHIPSET_ROM_ONLY`、`COPROCESSORS`はパッケージのトップレベルでも公開しています。
 
@@ -152,22 +152,22 @@ print(dump.measure_reuse(varied, empty))
 
 `Manifest(document)`は`artifacts`リストを持つマッピングを受け取ります。各アーティファクトは`name`と、計測済みの形式を並べた`accepted`リストを持ち、省略可能な項目として`rewritten`形式と、各エントリが`why`を持つ`bad`リストがあります。受け入れる形式にはすべて`sha256`が必要です。`Manifest.from_path(path)`は同じドキュメントをJSONファイルから読み込みます。
 
-| 呼び出し | 効果 |
-|:--|:--|
-| `document` | 上記の確認を経た、構築元のマッピングです |
-| `artifacts` | アーティファクトのタプルです |
-| `by_digest(found)` | accepted、rewritten、badのいずれかの形式が`found`と一致する最初のアーティファクトとその状態、または`None`です |
-| `by_size(size)` | そのサイズのaccepted形式を持つすべてのアーティファクトです |
+| 呼び出し                    | 効果                                                                                                               |
+| :-------------------------- | :----------------------------------------------------------------------------------------------------------------- |
+| `document`                  | 上記の確認を経た、構築元のマッピングです                                                                           |
+| `artifacts`                 | アーティファクトのタプルです                                                                                       |
+| `by_digest(found)`          | accepted、rewritten、badのいずれかの形式が`found`と一致する最初のアーティファクトとその状態、または`None`です      |
+| `by_size(size)`             | そのサイズのaccepted形式を持つすべてのアーティファクトです                                                         |
 | `diagnose(data, form=None)` | スタブを取り除いて計測し、`form`、`size`、`identity`、`state`、`artifact`、`why`、`same_size`、`headers`を返します |
-| `explain(found)` | `diagnose`の結果について人が読む行です。最後にすべきことを示します |
+| `explain(found)`            | `diagnose`の結果について人が読む行です。最後にすべきことを示します                                                 |
 
-| 状態 | 意味 |
-|:--|:--|
-| `known` | `sha256`がaccepted形式と一致します |
-| `rewritten` | アーティファクトのrewritten形式と一致します |
-| `bad dump` | 既知の不良ダンプと一致し、`why`がその問題を説明します |
+| 状態        | 意味                                                           |
+| :---------- | :------------------------------------------------------------- |
+| `known`     | `sha256`がaccepted形式と一致します                             |
+| `rewritten` | アーティファクトのrewritten形式と一致します                    |
+| `bad dump`  | 既知の不良ダンプと一致し、`why`がその問題を説明します          |
 | `same size` | どのダイジェストも一致せず、同じサイズのaccepted形式があります |
-| `unknown` | 何も一致しません |
+| `unknown`   | 何も一致しません                                               |
 
 ```python
 from romimage import Manifest, identity, rewrite
@@ -215,34 +215,34 @@ bare | same size | ['worked example']
 
 ### 定数
 
-| 名前 | 値 |
-|:--|:--|
-| `identity.AUTHORITATIVE` | `"sha256"`。受け入れと拒否を決める唯一のダイジェストです |
-| `identity.INTEROPERABLE` | `("crc32", "md5", "sha1")`。データベース検索のために公開しており、判定には一切使いません |
-| `rewrite.CHIPSET_ROM_ONLY` | `0x00` |
-| `rewrite.COPROCESSORS` | パッケージが知っている18個のコードについて、チップセットバイトからコプロセッサ名への対応です。`0x03`のDSPから`0xF9`のSPC7110まであります |
-| `rewrite.MAP_MODE`、`CHIPSET`、`ROM_SIZE`、`SRAM_SIZE` | ヘッダーオフセット`0x15`から`0x18` |
-| `rewrite.CHECKSUM_COMPLEMENT`、`CHECKSUM` | ヘッダーオフセット`0x1C`と`0x1E` |
-| `rewrite.CHECKSUM_FIELD_NEUTRAL` | `FF FF 00 00`。4つのチェックサムバイトをこの値として数えます |
-| `rewrite.CHECKSUM_FIELD_BYTES`、`CHECKSUM_FIELD_SUM` | `4`と`0x01FE`。その中立バイトの長さと合計です |
-| `rewrite.PADDING` | `0x00`、`0x20`、`0xFF`。`identifies`が埋め草として扱うバイトです |
-| `rewrite.KILOBYTE` | `1024`。`size_byte`が切り上げる単位です |
-| `rewrite.BLOCK_BYTES` | `0x1000`。`changes`が個々のバイトを見る前に比較するブロックです |
-| `dump.BARE`、`dump.COPIER` | `form`がファイルに対して返す2つの名前です |
-| `dump.PART_SUFFIX` | 番号付きパートのサフィックスが一致するパターンです。ドットと1桁から3桁の数字です |
-| `dump.BLOCK_BYTES`、`DEFLATE_LEVEL` | `0x10000`と`6`。`block_ratios`と`deflate_ratio`のデフォルトです |
-| `dump.CHUNK_BYTES`、`CHUNK_STRIDE` | `1024`と`512`。`measure_reuse`と`chunk_index`のデフォルトです |
-| `manifest.KNOWN`、`REWRITTEN`、`BAD_DUMP`、`SAME_SIZE`、`UNKNOWN` | 5つの状態です |
-| `romimage.__version__` | インストールされているバージョンです |
+| 名前                                                              | 値                                                                                                                                       |
+| :---------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- |
+| `identity.AUTHORITATIVE`                                          | `"sha256"`。受け入れと拒否を決める唯一のダイジェストです                                                                                 |
+| `identity.INTEROPERABLE`                                          | `("crc32", "md5", "sha1")`。データベース検索のために公開しており、判定には一切使いません                                                 |
+| `rewrite.CHIPSET_ROM_ONLY`                                        | `0x00`                                                                                                                                   |
+| `rewrite.COPROCESSORS`                                            | パッケージが知っている18個のコードについて、チップセットバイトからコプロセッサ名への対応です。`0x03`のDSPから`0xF9`のSPC7110まであります |
+| `rewrite.MAP_MODE`、`CHIPSET`、`ROM_SIZE`、`SRAM_SIZE`            | ヘッダーオフセット`0x15`から`0x18`                                                                                                       |
+| `rewrite.CHECKSUM_COMPLEMENT`、`CHECKSUM`                         | ヘッダーオフセット`0x1C`と`0x1E`                                                                                                         |
+| `rewrite.CHECKSUM_FIELD_NEUTRAL`                                  | `FF FF 00 00`。4つのチェックサムバイトをこの値として数えます                                                                             |
+| `rewrite.CHECKSUM_FIELD_BYTES`、`CHECKSUM_FIELD_SUM`              | `4`と`0x01FE`。その中立バイトの長さと合計です                                                                                            |
+| `rewrite.PADDING`                                                 | `0x00`、`0x20`、`0xFF`。`identifies`が埋め草として扱うバイトです                                                                         |
+| `rewrite.KILOBYTE`                                                | `1024`。`size_byte`が切り上げる単位です                                                                                                  |
+| `rewrite.BLOCK_BYTES`                                             | `0x1000`。`changes`が個々のバイトを見る前に比較するブロックです                                                                          |
+| `dump.BARE`、`dump.COPIER`                                        | `form`がファイルに対して返す2つの名前です                                                                                                |
+| `dump.PART_SUFFIX`                                                | 番号付きパートのサフィックスが一致するパターンです。ドットと1桁から3桁の数字です                                                         |
+| `dump.BLOCK_BYTES`、`DEFLATE_LEVEL`                               | `0x10000`と`6`。`block_ratios`と`deflate_ratio`のデフォルトです                                                                          |
+| `dump.CHUNK_BYTES`、`CHUNK_STRIDE`                                | `1024`と`512`。`measure_reuse`と`chunk_index`のデフォルトです                                                                            |
+| `manifest.KNOWN`、`REWRITTEN`、`BAD_DUMP`、`SAME_SIZE`、`UNKNOWN` | 5つの状態です                                                                                                                            |
+| `romimage.__version__`                                            | インストールされているバージョンです                                                                                                     |
 
 ### エラー
 
-| エラー | 送出される条件 |
-|:--|:--|
-| `NoParts` | `dump.read`に番号付きパートのないフォルダが渡されたとき |
-| `NoAuthority` | `identity.agrees`に`sha256`のない期待値が渡されたとき |
-| `Malformed` | `Manifest`にアーティファクトがない、accepted形式のないアーティファクトがある、または`sha256`のないaccepted形式が渡されたとき |
-| `NoHeader` | `rewrite.needs_rewrite`または`rewrite.declare_rom_only`がヘッダーを見つけられないとき。ヘッダーリーダーに属するエラーで、`rewrite.NoHeader`として参照できます |
+| エラー        | 送出される条件                                                                                                                                                |
+| :------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `NoParts`     | `dump.read`に番号付きパートのないフォルダが渡されたとき                                                                                                       |
+| `NoAuthority` | `identity.agrees`に`sha256`のない期待値が渡されたとき                                                                                                         |
+| `Malformed`   | `Manifest`にアーティファクトがない、accepted形式のないアーティファクトがある、または`sha256`のないaccepted形式が渡されたとき                                  |
+| `NoHeader`    | `rewrite.needs_rewrite`または`rewrite.declare_rom_only`がヘッダーを見つけられないとき。ヘッダーリーダーに属するエラーで、`rewrite.NoHeader`として参照できます |
 
 最初の3つは[`romimage/errors.py`](romimage/errors.py)にあり、パッケージのトップレベルで公開しています。
 
@@ -284,15 +284,15 @@ NoHeader: no cartridge header at any documented position
 
 ### コマンドラインツール
 
-| コマンド | 引数 | 終了コード |
-|:--|:--|:--|
-| `python3 romimage/doctor.py` | なし | すべての確認が通れば0、それ以外は1 |
-| `python3 -m conformance.corpus` | 省略可能なコーパスのパス | すべての宣言が一致すれば0、1つでも一致しなければ1、引数が誤っていれば2 |
-| `python3 -m conformance.census` | `<library> <out.json> [limit]`。ライブラリはフォルダまたはzipアーカイブです | すべてのイメージで4つの性質が成り立てば0、1つでも失敗すれば1、引数が誤っていれば2 |
-| `python3 -m conformance.documents` | 取得せずに検証する`--check`、ファイルを選ぶ`--only SUBSTRING` | すべてのドキュメントが検証を通れば0、それ以外は1 |
-| `python3 -m conformance.quotes` | なし | すべての引用が見つかるか、ドキュメントが1つもなければ0、それ以外は1 |
-| `python3 -m conformance.speed` | なし | 毎秒200件以上の識別で0、それ未満で1 |
-| `python3 -m conformance.links` | なし | このファイル内のアドレスが404または410を返せば1、それ以外は0 |
+| コマンド                           | 引数                                                                        | 終了コード                                                                        |
+| :--------------------------------- | :-------------------------------------------------------------------------- | :-------------------------------------------------------------------------------- |
+| `python3 romimage/doctor.py`       | なし                                                                        | すべての確認が通れば0、それ以外は1                                                |
+| `python3 -m conformance.corpus`    | 省略可能なコーパスのパス                                                    | すべての宣言が一致すれば0、1つでも一致しなければ1、引数が誤っていれば2            |
+| `python3 -m conformance.census`    | `<library> <out.json> [limit]`。ライブラリはフォルダまたはzipアーカイブです | すべてのイメージで4つの性質が成り立てば0、1つでも失敗すれば1、引数が誤っていれば2 |
+| `python3 -m conformance.documents` | 取得せずに検証する`--check`、ファイルを選ぶ`--only SUBSTRING`               | すべてのドキュメントが検証を通れば0、それ以外は1                                  |
+| `python3 -m conformance.quotes`    | なし                                                                        | すべての引用が見つかるか、ドキュメントが1つもなければ0、それ以外は1               |
+| `python3 -m conformance.speed`     | なし                                                                        | 毎秒200件以上の識別で0、それ未満で1                                               |
+| `python3 -m conformance.links`     | なし                                                                        | このファイル内のアドレスが404または410を返せば1、それ以外は0                      |
 
 ## このパッケージが防ぐ間違い
 
@@ -469,28 +469,28 @@ CRC32は32ビットの誤り検出符号で、MD5とSHA-1には衝突が公表�
 
 **7,330**本のカートリッジで計測しました。このほか249本は読めるヘッダーがないため拒否しました。
 
-| 計測項目 | 値 |
-|:--|--:|
-| 異なる宣言の数 | 489 |
-| 異なるイメージサイズの数 | 108 |
-| 異なるチップセットバイトの数 | 36 |
-| 書き換えが必要になるカートリッジ | 3,799 |
-| ヘッダーの有無についてヘッダーリーダーと食い違った数 | 0 |
+| 計測項目                                             |    値 |
+| :--------------------------------------------------- | ----: |
+| 異なる宣言の数                                       |   489 |
+| 異なるイメージサイズの数                             |   108 |
+| 異なるチップセットバイトの数                         |    36 |
+| 書き換えが必要になるカートリッジ                     | 3,799 |
+| ヘッダーの有無についてヘッダーリーダーと食い違った数 |     0 |
 
 4つの性質は、サンプルではなくすべてのカートリッジで確認しています。
 
-| 性質 | 成り立った数 |
-|:--|--:|
+| 性質                                                     |     成り立った数 |
+| :------------------------------------------------------- | ---------------: |
 | 書き込んだチェックサムとその補数が互いに補数になっている | 7,330本中7,330本 |
-| 結果に対して再計算すると書き込んだ値が返る | 7,330本中7,330本 |
-| ヘッダーの外側は何も変わっていない | 7,330本中7,330本 |
-| 2回目の書き換えでは何も変わらない | 7,330本中7,330本 |
+| 結果に対して再計算すると書き込んだ値が返る               | 7,330本中7,330本 |
+| ヘッダーの外側は何も変わっていない                       | 7,330本中7,330本 |
+| 2回目の書き換えでは何も変わらない                        | 7,330本中7,330本 |
 
 1つの観測は計測するだけで、何のゲートにもなりません。このパッケージが計算したチェックサムが、カートリッジにすでに書かれているものと同じかどうかです。
 
-| 母集団 | 一致 |
-|:--|--:|
-| 自己矛盾のないヘッダーを持つライセンス済み市販カートリッジ | 2,780本中2,768本 |
+| 母集団                                                       |             一致 |
+| :----------------------------------------------------------- | ---------------: |
+| 自己矛盾のないヘッダーを持つライセンス済み市販カートリッジ   | 2,780本中2,768本 |
 | 自己矛盾のないヘッダーを持つすべてのイメージ（ハックを含む） | 7,167本中4,502本 |
 
 内容を変えてチェックサムを再計算しなかったハックは、このパッケージの欠陥ではありません。そのため、この観測は失敗とせず報告するだけです。4つの性質は、コードが自分自身と一致するかを問います。観測はカートリッジに問います。すべてのイメージで同じように誤っているチェックサム規則は、4つの性質をすべて通りながら、この観測では失敗します。[`conformance/divergences.json`](conformance/divergences.json)は、まだ一致しない12本の市販カートリッジと、それぞれについてわかっていることを挙げています。
@@ -501,12 +501,12 @@ CRC32は32ビットの誤り検出符号で、MD5とSHA-1には衝突が公表�
 
 [`conformance/corpus.json`](conformance/corpus.json)は、489件の異なる宣言と、それぞれを持つカートリッジの数を保持しています。
 
-| フィールド | 内容 | コーパスに含むか |
-|:--|:--|:--|
-| サイズ、マッピング、チップセット、ROMとRAMのサイズ | 物理的な物体についての事実 | はい |
-| ある組み合わせを共有するカートリッジの数 | 計測値 | はい |
-| タイトル | 名前 | いいえ |
-| ヘッダーの外側すべて | ゲームそのもの | 一切読みません |
+| フィールド                                         | 内容                       | コーパスに含むか |
+| :------------------------------------------------- | :------------------------- | :--------------- |
+| サイズ、マッピング、チップセット、ROMとRAMのサイズ | 物理的な物体についての事実 | はい             |
+| ある組み合わせを共有するカートリッジの数           | 計測値                     | はい             |
+| タイトル                                           | 名前                       | いいえ           |
+| ヘッダーの外側すべて                               | ゲームそのもの             | 一切読みません   |
 
 事実と機能的要素は、[17 U.S.C. 102(b)](https://www.law.cornell.edu/uscode/text/17/102)と*Feist*により、著作権の及ぶ範囲の外にあります。[`conformance/census.py`](conformance/census.py)はタイトルを記録せず、コーパスのどの部分からもカートリッジのいかなる部分も再構築できません。これはこのリポジトリの作り方の説明であり、法的助言ではありません。
 
@@ -543,13 +543,13 @@ python3 -m conformance.corpus
 
 ## 開発に参加する
 
-| 必要なもの | 場所 |
-|:--|:--|
-| すべてのゲートとその実行順序 | [CONTRIBUTING.md](CONTRIBUTING.md) |
-| コーディングエージェント向けの同じ内容 | [AGENTS.md](AGENTS.md) |
-| このリポジトリがファミリーの他のリポジトリと共有する基準 | [FAMILY.md](FAMILY.md) |
-| バグ報告 | [GitHub Issues](https://github.com/gufranco/snes-rom-image-python/issues) |
-| セキュリティ報告 | [SECURITY.md](SECURITY.md) |
+| 必要なもの                                               | 場所                                                                      |
+| :------------------------------------------------------- | :------------------------------------------------------------------------ |
+| すべてのゲートとその実行順序                             | [CONTRIBUTING.md](CONTRIBUTING.md)                                        |
+| コーディングエージェント向けの同じ内容                   | [AGENTS.md](AGENTS.md)                                                    |
+| このリポジトリがファミリーの他のリポジトリと共有する基準 | [FAMILY.md](FAMILY.md)                                                    |
+| バグ報告                                                 | [GitHub Issues](https://github.com/gufranco/snes-rom-image-python/issues) |
+| セキュリティ報告                                         | [SECURITY.md](SECURITY.md)                                                |
 
 ```bash
 uvx ruff@0.16.3 format --check .
@@ -572,7 +572,7 @@ python3 -m coverage report
 
 ## 参考資料
 
-- *SNES Development Manual, Book 1*、Nintendo of America Inc.。240ページ、21,022,582バイト、SHA-256 `f1405241000046abba7849376d2ec53cf85f1ad2e9950d69a7c2cf1f3ff6b791`。各ヘッダーバイトの意味と、チェックサムの計算方法を決めるものです。1-2-20ページがヘッダーのチェックサムを定義しています。1-2-9ページは提出用シートのための別の単純な合計を定義しており、そのことを明記しています。「This method of calculation is different from the check sum on the ROM Registration Specification.」このマニュアルは再配布できず、このリポジトリには含まれていません。`python3 -m conformance.documents`は https://archive.org/download/SNESDevManual/book1_text.pdf からgitが無視する`docs/`にダウンロードし、それ以外のファイルは拒否します。`python3 -m conformance.documents --check`は、すでにあるコピーを検証します。
+- _SNES Development Manual, Book 1_、Nintendo of America Inc.。240ページ、21,022,582バイト、SHA-256 `f1405241000046abba7849376d2ec53cf85f1ad2e9950d69a7c2cf1f3ff6b791`。各ヘッダーバイトの意味と、チェックサムの計算方法を決めるものです。1-2-20ページがヘッダーのチェックサムを定義しています。1-2-9ページは提出用シートのための別の単純な合計を定義しており、そのことを明記しています。「This method of calculation is different from the check sum on the ROM Registration Specification.」このマニュアルは再配布できず、このリポジトリには含まれていません。`python3 -m conformance.documents`は https://archive.org/download/SNESDevManual/book1_text.pdf からgitが無視する`docs/`にダウンロードし、それ以外のファイルは拒否します。`python3 -m conformance.documents --check`は、すでにあるコピーを検証します。
 - 作者が所有する市販カートリッジのライブラリ。[`conformance/corpus.json`](conformance/corpus.json)の489件の宣言の元になったもので、7,330ファイルにわたって読み込みました。そこからは何もコミットしていません。
 - [gufranco/snes-mapper-python](https://github.com/gufranco/snes-mapper-python)。ヘッダーを見つけるためのもので、コミットで固定したサブモジュールとして取り込んでいます。
 

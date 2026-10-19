@@ -36,10 +36,10 @@ True
 
 ## 安裝
 
-| 要求 | 版本 |
-|:--|:--|
-| Python | 3.12 或更新 |
-| git | 任何版本，用於取得子模組 |
+| 要求   | 版本                     |
+| :----- | :----------------------- |
+| Python | 3.12 或更新              |
+| git    | 任何版本，用於取得子模組 |
 
 ```bash
 git clone --recurse-submodules https://github.com/gufranco/snes-rom-image-python.git
@@ -63,38 +63,38 @@ python3 romimage/doctor.py
 
 四個模組，各自回答關於檔案的一個問題。
 
-| 模組 | 問題 |
-|:--|:--|
-| [`dump`](romimage/dump.py) | 傾印裝置加入或分拆了甚麼 |
-| [`identity`](romimage/identity.py) | 哪些摘要可識別該檔案，以及由哪一個決定 |
-| [`rewrite`](romimage/rewrite.py) | 標頭聲明了甚麼，以及如何從中清除協處理器 |
+| 模組                               | 問題                                         |
+| :--------------------------------- | :------------------------------------------- |
+| [`dump`](romimage/dump.py)         | 傾印裝置加入或分拆了甚麼                     |
+| [`identity`](romimage/identity.py) | 哪些摘要可識別該檔案，以及由哪一個決定       |
+| [`rewrite`](romimage/rewrite.py)   | 標頭聲明了甚麼，以及如何從中清除協處理器     |
 | [`manifest`](romimage/manifest.py) | 當提供的檔案並非預期的檔案時，屬於哪一種不符 |
 
 ### 呼叫
 
-| 呼叫 | 作用 |
-|:--|:--|
-| `dump.read(path)` | 傳回映像檔位元組。檔案會去除其複製機前置段。由編號分段組成的資料夾按名稱順序合併。資料夾內沒有分段時引發 `NoParts` |
-| `dump.form(path)` | 對檔案按長度判斷，傳回 `"bare"` 或 `"copier header"`，對資料夾則傳回 `"N part set"` |
-| `dump.strip_copier_stub(data)` | 當長度顯示存在前置段時，捨棄開頭的 512 個位元組 |
-| `dump.parts_in(folder)` | 帶一至三位數字後綴的檔案，按轉為大寫後的名稱排序 |
-| `dump.join(parts)` | 去除第一個分段的前置段後，將各分段串接 |
-| `dump.deflate_ratio(block)` | 以 deflate 等級 6 壓縮後的大小除以原始大小，空區塊為 0.0 |
-| `dump.block_ratios(data, block=0x10000)` | 每個完整 64 KB 區塊的 `deflate_ratio` |
-| `dump.measure_reuse(source, target, chunk=1024, stride=512)` | `(found, total)`：`source` 中有多少個 1 KB 區段出現在 `target` 中 |
-| `dump.chunk_index(data, chunk=1024, stride=512)` | `measure_reuse` 搜尋所用的區段至偏移索引 |
-| `identity.measure(data)` | 位元組的 `size`、`crc32`、`md5`、`sha1` 及 `sha256` |
-| `identity.agrees(found, expected)` | `sha256` 值相符時為 True。`expected` 沒有 `sha256` 時引發 `NoAuthority` |
-| `rewrite.anchor_of(image)` | 讀取器找到的標頭的偏移，或 `None` |
-| `rewrite.mirrors(image)` | 該標頭每一份逐位元組相同的副本的偏移 |
-| `rewrite.describe(image)` | 每份副本一個字典：`at`、`title`、`map`、`chipset`、`coprocessor`、`size`、`sram`、`checksum` |
-| `rewrite.needs_rewrite(image)` | 任何副本聲明的晶片組不是 `0x00`，或容量位元組與映像檔本身不符時為 True。沒有標頭時引發 `NoHeader` |
-| `rewrite.declare_rom_only(image)` | 傳回新的位元組，每份副本都帶晶片組 `0x00`、正確的容量位元組及重新計算的校驗和。沒有標頭時引發 `NoHeader` |
-| `rewrite.checksum(image, places=None)` | 標頭校驗和，每份副本的四個校驗和位元組均按 `FF FF 00 00` 計算。`places` 預設為 `mirrors(image)` |
-| `rewrite.mirrored_sum(data)` | 位元組總和，長度不是 2 的冪時鏡像補足至 2 的冪 |
-| `rewrite.size_byte(length)` | 容量指數：以千位元組計的容量向上取整後的 2 的冪次 |
-| `rewrite.identifies(block)` | 區塊含有 `0x00`、`0x20` 或 `0xFF` 以外的位元組時為 True |
-| `rewrite.changes(before, after, block=0x1000)` | 每個位元組不同的偏移 |
+| 呼叫                                                         | 作用                                                                                                               |
+| :----------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------- |
+| `dump.read(path)`                                            | 傳回映像檔位元組。檔案會去除其複製機前置段。由編號分段組成的資料夾按名稱順序合併。資料夾內沒有分段時引發 `NoParts` |
+| `dump.form(path)`                                            | 對檔案按長度判斷，傳回 `"bare"` 或 `"copier header"`，對資料夾則傳回 `"N part set"`                                |
+| `dump.strip_copier_stub(data)`                               | 當長度顯示存在前置段時，捨棄開頭的 512 個位元組                                                                    |
+| `dump.parts_in(folder)`                                      | 帶一至三位數字後綴的檔案，按轉為大寫後的名稱排序                                                                   |
+| `dump.join(parts)`                                           | 去除第一個分段的前置段後，將各分段串接                                                                             |
+| `dump.deflate_ratio(block)`                                  | 以 deflate 等級 6 壓縮後的大小除以原始大小，空區塊為 0.0                                                           |
+| `dump.block_ratios(data, block=0x10000)`                     | 每個完整 64 KB 區塊的 `deflate_ratio`                                                                              |
+| `dump.measure_reuse(source, target, chunk=1024, stride=512)` | `(found, total)`：`source` 中有多少個 1 KB 區段出現在 `target` 中                                                  |
+| `dump.chunk_index(data, chunk=1024, stride=512)`             | `measure_reuse` 搜尋所用的區段至偏移索引                                                                           |
+| `identity.measure(data)`                                     | 位元組的 `size`、`crc32`、`md5`、`sha1` 及 `sha256`                                                                |
+| `identity.agrees(found, expected)`                           | `sha256` 值相符時為 True。`expected` 沒有 `sha256` 時引發 `NoAuthority`                                            |
+| `rewrite.anchor_of(image)`                                   | 讀取器找到的標頭的偏移，或 `None`                                                                                  |
+| `rewrite.mirrors(image)`                                     | 該標頭每一份逐位元組相同的副本的偏移                                                                               |
+| `rewrite.describe(image)`                                    | 每份副本一個字典：`at`、`title`、`map`、`chipset`、`coprocessor`、`size`、`sram`、`checksum`                       |
+| `rewrite.needs_rewrite(image)`                               | 任何副本聲明的晶片組不是 `0x00`，或容量位元組與映像檔本身不符時為 True。沒有標頭時引發 `NoHeader`                  |
+| `rewrite.declare_rom_only(image)`                            | 傳回新的位元組，每份副本都帶晶片組 `0x00`、正確的容量位元組及重新計算的校驗和。沒有標頭時引發 `NoHeader`           |
+| `rewrite.checksum(image, places=None)`                       | 標頭校驗和，每份副本的四個校驗和位元組均按 `FF FF 00 00` 計算。`places` 預設為 `mirrors(image)`                    |
+| `rewrite.mirrored_sum(data)`                                 | 位元組總和，長度不是 2 的冪時鏡像補足至 2 的冪                                                                     |
+| `rewrite.size_byte(length)`                                  | 容量指數：以千位元組計的容量向上取整後的 2 的冪次                                                                  |
+| `rewrite.identifies(block)`                                  | 區塊含有 `0x00`、`0x20` 或 `0xFF` 以外的位元組時為 True                                                            |
+| `rewrite.changes(before, after, block=0x1000)`               | 每個位元組不同的偏移                                                                                               |
 
 `declare_rom_only`、`needs_rewrite`、`AUTHORITATIVE`、`CHIPSET_ROM_ONLY` 及 `COPROCESSORS` 亦在套件頂層公開。
 
@@ -152,22 +152,22 @@ print(dump.measure_reuse(varied, empty))
 
 `Manifest(document)` 接受一個帶 `artifacts` 列表的映射。每個工件有一個 `name`、一個由已量度形式組成的 `accepted` 列表，並可選擇帶一個 `rewritten` 形式及一個 `bad` 列表，其條目帶有 `why`。每個已接受形式都需要 `sha256`。`Manifest.from_path(path)` 從 JSON 檔案讀取同樣的文件。
 
-| 呼叫 | 作用 |
-|:--|:--|
-| `document` | 建立它所用的映射，已通過上述檢查 |
-| `artifacts` | 各工件，以元組形式 |
-| `by_digest(found)` | 第一個其已接受、已改寫或損壞形式與 `found` 相符的工件及其狀態，或 `None` |
-| `by_size(size)` | 每個帶有該大小的已接受形式的工件 |
+| 呼叫                        | 作用                                                                                                      |
+| :-------------------------- | :-------------------------------------------------------------------------------------------------------- |
+| `document`                  | 建立它所用的映射，已通過上述檢查                                                                          |
+| `artifacts`                 | 各工件，以元組形式                                                                                        |
+| `by_digest(found)`          | 第一個其已接受、已改寫或損壞形式與 `found` 相符的工件及其狀態，或 `None`                                  |
+| `by_size(size)`             | 每個帶有該大小的已接受形式的工件                                                                          |
 | `diagnose(data, form=None)` | 去除前置段、量度，並傳回 `form`、`size`、`identity`、`state`、`artifact`、`why`、`same_size` 及 `headers` |
-| `explain(found)` | 供人閱讀的 `diagnose` 結果各行，最後說明應如何處理 |
+| `explain(found)`            | 供人閱讀的 `diagnose` 結果各行，最後說明應如何處理                                                        |
 
-| 狀態 | 意思 |
-|:--|:--|
-| `known` | `sha256` 與某個已接受形式相符 |
-| `rewritten` | 與該工件的已改寫形式相符 |
-| `bad dump` | 與某個已知的損壞傾印相符，`why` 說明其問題所在 |
-| `same size` | 沒有摘要相符，而某個已接受形式的大小相同 |
-| `unknown` | 甚麼都不相符 |
+| 狀態        | 意思                                           |
+| :---------- | :--------------------------------------------- |
+| `known`     | `sha256` 與某個已接受形式相符                  |
+| `rewritten` | 與該工件的已改寫形式相符                       |
+| `bad dump`  | 與某個已知的損壞傾印相符，`why` 說明其問題所在 |
+| `same size` | 沒有摘要相符，而某個已接受形式的大小相同       |
+| `unknown`   | 甚麼都不相符                                   |
 
 ```python
 from romimage import Manifest, identity, rewrite
@@ -215,34 +215,34 @@ bare | same size | ['worked example']
 
 ### 常數
 
-| 名稱 | 值 |
-|:--|:--|
-| `identity.AUTHORITATIVE` | `"sha256"`，唯一用於接受或拒絕的摘要 |
-| `identity.INTEROPERABLE` | `("crc32", "md5", "sha1")`，供數據庫查詢而公開，從不用於決定 |
-| `rewrite.CHIPSET_ROM_ONLY` | `0x00` |
-| `rewrite.COPROCESSORS` | 晶片組位元組至協處理器名稱，涵蓋套件已知的 18 個代碼，由 `0x03` DSP 至 `0xF9` SPC7110 |
-| `rewrite.MAP_MODE`、`CHIPSET`、`ROM_SIZE`、`SRAM_SIZE` | 標頭偏移 `0x15` 至 `0x18` |
-| `rewrite.CHECKSUM_COMPLEMENT`、`CHECKSUM` | 標頭偏移 `0x1C` 及 `0x1E` |
-| `rewrite.CHECKSUM_FIELD_NEUTRAL` | `FF FF 00 00`，四個校驗和位元組按此計算 |
-| `rewrite.CHECKSUM_FIELD_BYTES`、`CHECKSUM_FIELD_SUM` | `4` 及 `0x01FE`，這些中性位元組的長度及其總和 |
-| `rewrite.PADDING` | `0x00`、`0x20` 及 `0xFF`，`identifies` 視為填充的位元組 |
-| `rewrite.KILOBYTE` | `1024`，`size_byte` 向上取整所用的單位 |
-| `rewrite.BLOCK_BYTES` | `0x1000`，`changes` 在逐個位元組比較前先比較的區塊 |
-| `dump.BARE`、`dump.COPIER` | `form` 對檔案傳回的兩個名稱 |
-| `dump.PART_SUFFIX` | 編號分段後綴所匹配的模式：一個句點加一至三位數字 |
-| `dump.BLOCK_BYTES`、`DEFLATE_LEVEL` | `0x10000` 及 `6`，`block_ratios` 及 `deflate_ratio` 的預設值 |
-| `dump.CHUNK_BYTES`、`CHUNK_STRIDE` | `1024` 及 `512`，`measure_reuse` 及 `chunk_index` 的預設值 |
-| `manifest.KNOWN`、`REWRITTEN`、`BAD_DUMP`、`SAME_SIZE`、`UNKNOWN` | 五種狀態 |
-| `romimage.__version__` | 已安裝的版本 |
+| 名稱                                                              | 值                                                                                    |
+| :---------------------------------------------------------------- | :------------------------------------------------------------------------------------ |
+| `identity.AUTHORITATIVE`                                          | `"sha256"`，唯一用於接受或拒絕的摘要                                                  |
+| `identity.INTEROPERABLE`                                          | `("crc32", "md5", "sha1")`，供數據庫查詢而公開，從不用於決定                          |
+| `rewrite.CHIPSET_ROM_ONLY`                                        | `0x00`                                                                                |
+| `rewrite.COPROCESSORS`                                            | 晶片組位元組至協處理器名稱，涵蓋套件已知的 18 個代碼，由 `0x03` DSP 至 `0xF9` SPC7110 |
+| `rewrite.MAP_MODE`、`CHIPSET`、`ROM_SIZE`、`SRAM_SIZE`            | 標頭偏移 `0x15` 至 `0x18`                                                             |
+| `rewrite.CHECKSUM_COMPLEMENT`、`CHECKSUM`                         | 標頭偏移 `0x1C` 及 `0x1E`                                                             |
+| `rewrite.CHECKSUM_FIELD_NEUTRAL`                                  | `FF FF 00 00`，四個校驗和位元組按此計算                                               |
+| `rewrite.CHECKSUM_FIELD_BYTES`、`CHECKSUM_FIELD_SUM`              | `4` 及 `0x01FE`，這些中性位元組的長度及其總和                                         |
+| `rewrite.PADDING`                                                 | `0x00`、`0x20` 及 `0xFF`，`identifies` 視為填充的位元組                               |
+| `rewrite.KILOBYTE`                                                | `1024`，`size_byte` 向上取整所用的單位                                                |
+| `rewrite.BLOCK_BYTES`                                             | `0x1000`，`changes` 在逐個位元組比較前先比較的區塊                                    |
+| `dump.BARE`、`dump.COPIER`                                        | `form` 對檔案傳回的兩個名稱                                                           |
+| `dump.PART_SUFFIX`                                                | 編號分段後綴所匹配的模式：一個句點加一至三位數字                                      |
+| `dump.BLOCK_BYTES`、`DEFLATE_LEVEL`                               | `0x10000` 及 `6`，`block_ratios` 及 `deflate_ratio` 的預設值                          |
+| `dump.CHUNK_BYTES`、`CHUNK_STRIDE`                                | `1024` 及 `512`，`measure_reuse` 及 `chunk_index` 的預設值                            |
+| `manifest.KNOWN`、`REWRITTEN`、`BAD_DUMP`、`SAME_SIZE`、`UNKNOWN` | 五種狀態                                                                              |
+| `romimage.__version__`                                            | 已安裝的版本                                                                          |
 
 ### 錯誤
 
-| 錯誤 | 引發時機 |
-|:--|:--|
-| `NoParts` | `dump.read` 收到一個沒有編號分段的資料夾 |
-| `NoAuthority` | `identity.agrees` 收到一個沒有 `sha256` 的預期值 |
-| `Malformed` | `Manifest` 收到的內容沒有工件、有工件沒有已接受形式，或有已接受形式沒有 `sha256` |
-| `NoHeader` | `rewrite.needs_rewrite` 或 `rewrite.declare_rom_only` 找不到標頭。它屬於標頭讀取器，可經 `rewrite.NoHeader` 取得 |
+| 錯誤          | 引發時機                                                                                                         |
+| :------------ | :--------------------------------------------------------------------------------------------------------------- |
+| `NoParts`     | `dump.read` 收到一個沒有編號分段的資料夾                                                                         |
+| `NoAuthority` | `identity.agrees` 收到一個沒有 `sha256` 的預期值                                                                 |
+| `Malformed`   | `Manifest` 收到的內容沒有工件、有工件沒有已接受形式，或有已接受形式沒有 `sha256`                                 |
+| `NoHeader`    | `rewrite.needs_rewrite` 或 `rewrite.declare_rom_only` 找不到標頭。它屬於標頭讀取器，可經 `rewrite.NoHeader` 取得 |
 
 前三個位於 [`romimage/errors.py`](romimage/errors.py)，並在套件頂層公開。
 
@@ -284,15 +284,15 @@ NoHeader: no cartridge header at any documented position
 
 ### 命令列工具
 
-| 命令 | 參數 | 結束代碼 |
-|:--|:--|:--|
-| `python3 romimage/doctor.py` | 無 | 每項檢查都通過時為 0，否則為 1 |
-| `python3 -m conformance.corpus` | 可選的語料庫路徑 | 每項聲明都相符時為 0，有一項不符時為 1，參數錯誤時為 2 |
-| `python3 -m conformance.census` | `<library> <out.json> [limit]`。資料庫是一個資料夾或 zip 封存檔 | 四項屬性在每個映像檔上都成立時為 0，有一項失敗時為 1，參數錯誤時為 2 |
-| `python3 -m conformance.documents` | `--check` 只驗證而不下載，`--only SUBSTRING` 挑選一個檔案 | 每份文件都通過驗證時為 0，否則為 1 |
-| `python3 -m conformance.quotes` | 無 | 每段引文都已定位或沒有文件時為 0，否則為 1 |
-| `python3 -m conformance.speed` | 無 | 每秒 200 次識別或以上時為 0，低於此數時為 1 |
-| `python3 -m conformance.links` | 無 | 本檔案中有地址回應 404 或 410 時為 1，否則為 0 |
+| 命令                               | 參數                                                            | 結束代碼                                                             |
+| :--------------------------------- | :-------------------------------------------------------------- | :------------------------------------------------------------------- |
+| `python3 romimage/doctor.py`       | 無                                                              | 每項檢查都通過時為 0，否則為 1                                       |
+| `python3 -m conformance.corpus`    | 可選的語料庫路徑                                                | 每項聲明都相符時為 0，有一項不符時為 1，參數錯誤時為 2               |
+| `python3 -m conformance.census`    | `<library> <out.json> [limit]`。資料庫是一個資料夾或 zip 封存檔 | 四項屬性在每個映像檔上都成立時為 0，有一項失敗時為 1，參數錯誤時為 2 |
+| `python3 -m conformance.documents` | `--check` 只驗證而不下載，`--only SUBSTRING` 挑選一個檔案       | 每份文件都通過驗證時為 0，否則為 1                                   |
+| `python3 -m conformance.quotes`    | 無                                                              | 每段引文都已定位或沒有文件時為 0，否則為 1                           |
+| `python3 -m conformance.speed`     | 無                                                              | 每秒 200 次識別或以上時為 0，低於此數時為 1                          |
+| `python3 -m conformance.links`     | 無                                                              | 本檔案中有地址回應 404 或 410 時為 1，否則為 0                       |
 
 ## 本套件要防止的錯誤
 
@@ -469,28 +469,28 @@ CRC32 是 32 位元的錯誤偵測碼，而 MD5 及 SHA-1 均有已公開的碰�
 
 在 **7,330** 盒卡帶上量度，另有 249 盒因沒有可讀標頭而被拒絕：
 
-| 量度項目 | 值 |
-|:--|--:|
-| 不同的聲明 | 489 |
-| 不同的映像檔大小 | 108 |
-| 不同的晶片組位元組 | 36 |
-| 需要改寫的卡帶 | 3,799 |
-| 在是否有標頭一事上與標頭讀取器的分歧 | 0 |
+| 量度項目                             |    值 |
+| :----------------------------------- | ----: |
+| 不同的聲明                           |   489 |
+| 不同的映像檔大小                     |   108 |
+| 不同的晶片組位元組                   |    36 |
+| 需要改寫的卡帶                       | 3,799 |
+| 在是否有標頭一事上與標頭讀取器的分歧 |     0 |
 
 四項屬性在每盒卡帶上檢查，而非在樣本上：
 
-| 屬性 | 成立數量 |
-|:--|--:|
-| 寫入的校驗和與其補數互為補數 | 7,330 之中 7,330 |
+| 屬性                           |         成立數量 |
+| :----------------------------- | ---------------: |
+| 寫入的校驗和與其補數互為補數   | 7,330 之中 7,330 |
 | 在結果上重新計算會得出寫入的值 | 7,330 之中 7,330 |
-| 標頭以外沒有任何改變 | 7,330 之中 7,330 |
-| 第二次改寫不會改變任何東西 | 7,330 之中 7,330 |
+| 標頭以外沒有任何改變           | 7,330 之中 7,330 |
+| 第二次改寫不會改變任何東西     | 7,330 之中 7,330 |
 
 有一項觀察只作量度，不作任何關卡檢查：本套件計算的校驗和是否就是卡帶上已寫入的那一個。
 
-| 群體 | 相符 |
-|:--|--:|
-| 標頭自洽的正式授權零售版卡帶 | 2,780 之中 2,768 |
+| 群體                           |             相符 |
+| :----------------------------- | ---------------: |
+| 標頭自洽的正式授權零售版卡帶   | 2,780 之中 2,768 |
 | 所有標頭自洽的映像檔，包括改版 | 7,167 之中 4,502 |
 
 改版修改了內容卻沒有重新計算校驗和，並非本套件的缺陷，因此這項觀察只作報告而不判為失敗。四項屬性問的是程式碼是否與自身一致。這項觀察問的是卡帶，而一條在每個映像檔上都以同樣方式出錯的校驗和規則，會通過全部四項屬性，卻在這項觀察上失敗。[`conformance/divergences.json`](conformance/divergences.json) 列出仍然不符的十二盒零售版卡帶，以及每一盒的已知資訊。
@@ -501,14 +501,14 @@ CRC32 是 32 位元的錯誤偵測碼，而 MD5 及 SHA-1 均有已公開的碰�
 
 [`conformance/corpus.json`](conformance/corpus.json) 收錄 489 項不同的聲明，以及帶有每項聲明的卡帶數量。
 
-| 欄位 | 是甚麼 | 是否在語料庫中 |
-|:--|:--|:--|
-| 大小、映射、晶片組、ROM 及 RAM 容量 | 關於實物的事實 | 是 |
-| 共用某一組合的卡帶數量 | 一項量度 | 是 |
-| 標題 | 一個名稱 | 否 |
-| 標頭以外的任何內容 | 遊戲本身 | 從不讀取 |
+| 欄位                                | 是甚麼         | 是否在語料庫中 |
+| :---------------------------------- | :------------- | :------------- |
+| 大小、映射、晶片組、ROM 及 RAM 容量 | 關於實物的事實 | 是             |
+| 共用某一組合的卡帶數量              | 一項量度       | 是             |
+| 標題                                | 一個名稱       | 否             |
+| 標頭以外的任何內容                  | 遊戲本身       | 從不讀取       |
 
-根據 [17 U.S.C. 102(b)](https://www.law.cornell.edu/uscode/text/17/102) 及 *Feist* 案，事實及功能性元素不在版權涵蓋範圍內。[`conformance/census.py`](conformance/census.py) 不記錄任何標題，語料庫中亦沒有任何內容能重建任何卡帶的任何部分。這是本儲存庫的構建方式，並非法律意見。
+根據 [17 U.S.C. 102(b)](https://www.law.cornell.edu/uscode/text/17/102) 及 _Feist_ 案，事實及功能性元素不在版權涵蓋範圍內。[`conformance/census.py`](conformance/census.py) 不記錄任何標題，語料庫中亦沒有任何內容能重建任何卡帶的任何部分。這是本儲存庫的構建方式，並非法律意見。
 
 有兩項主張單憑語料庫即可重播。每項聲明記錄的容量位元組，必須是 `size_byte` 從其容量推導出的那一個。帶協處理器的聲明，或容量位元組與自身不符的聲明，必須是普查標記為需要改寫的聲明。第二項主張只單向成立：第一個標頭乾淨，仍可能因後面某份副本不一致而需要改寫，而語料庫記錄的是第一份副本。
 
@@ -543,13 +543,13 @@ python3 -m conformance.corpus
 
 ## 參與開發
 
-| 需要 | 位置 |
-|:--|:--|
-| 每項關卡檢查及其執行順序 | [CONTRIBUTING.md](CONTRIBUTING.md) |
-| 供編程代理使用的同一份材料 | [AGENTS.md](AGENTS.md) |
-| 本儲存庫與家族其餘成員共用的標準 | [FAMILY.md](FAMILY.md) |
-| 錯誤報告 | [GitHub Issues](https://github.com/gufranco/snes-rom-image-python/issues) |
-| 安全報告 | [SECURITY.md](SECURITY.md) |
+| 需要                             | 位置                                                                      |
+| :------------------------------- | :------------------------------------------------------------------------ |
+| 每項關卡檢查及其執行順序         | [CONTRIBUTING.md](CONTRIBUTING.md)                                        |
+| 供編程代理使用的同一份材料       | [AGENTS.md](AGENTS.md)                                                    |
+| 本儲存庫與家族其餘成員共用的標準 | [FAMILY.md](FAMILY.md)                                                    |
+| 錯誤報告                         | [GitHub Issues](https://github.com/gufranco/snes-rom-image-python/issues) |
+| 安全報告                         | [SECURITY.md](SECURITY.md)                                                |
 
 ```bash
 uvx ruff@0.16.3 format --check .
@@ -572,7 +572,7 @@ python3 -m coverage report
 
 ## 參考資料
 
-- *SNES Development Manual, Book 1*，Nintendo of America Inc. 出版。240 頁，21,022,582 位元組，SHA-256 `f1405241000046abba7849376d2ec53cf85f1ad2e9950d69a7c2cf1f3ff6b791`。它決定每個標頭位元組的意思及校驗和的計算方法。第 1-2-20 頁定義標頭校驗和。第 1-2-9 頁為提交表格定義另一種簡單總和，並明言如此："This method of calculation is different from the check sum on the ROM Registration Specification." 該手冊不可再分發，亦不在本儲存庫中。`python3 -m conformance.documents` 會從 https://archive.org/download/SNESDevManual/book1_text.pdf 將其下載至 git 忽略的 `docs/`，並拒絕任何其他檔案。`python3 -m conformance.documents --check` 驗證已存在的副本。
+- _SNES Development Manual, Book 1_，Nintendo of America Inc. 出版。240 頁，21,022,582 位元組，SHA-256 `f1405241000046abba7849376d2ec53cf85f1ad2e9950d69a7c2cf1f3ff6b791`。它決定每個標頭位元組的意思及校驗和的計算方法。第 1-2-20 頁定義標頭校驗和。第 1-2-9 頁為提交表格定義另一種簡單總和，並明言如此："This method of calculation is different from the check sum on the ROM Registration Specification." 該手冊不可再分發，亦不在本儲存庫中。`python3 -m conformance.documents` 會從 https://archive.org/download/SNESDevManual/book1_text.pdf 將其下載至 git 忽略的 `docs/`，並拒絕任何其他檔案。`python3 -m conformance.documents --check` 驗證已存在的副本。
 - 作者擁有的零售版卡帶資料庫，用於 [`conformance/corpus.json`](conformance/corpus.json) 中的 489 項聲明，讀取自 7,330 個檔案。其中任何內容都沒有提交。
 - [gufranco/snes-mapper-python](https://github.com/gufranco/snes-mapper-python)，用於尋找標頭，以按提交固定的子模組形式納入。
 

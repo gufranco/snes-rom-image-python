@@ -36,10 +36,10 @@ True
 
 ## 安装
 
-| 要求 | 版本 |
-|:--|:--|
-| Python | 3.12 或更高 |
-| git | 任意版本，用于获取子模块 |
+| 要求   | 版本                     |
+| :----- | :----------------------- |
+| Python | 3.12 或更高              |
+| git    | 任意版本，用于获取子模块 |
 
 ```bash
 git clone --recurse-submodules https://github.com/gufranco/snes-rom-image-python.git
@@ -63,38 +63,38 @@ python3 romimage/doctor.py
 
 四个模块，每个回答关于文件的一个问题。
 
-| 模块 | 问题 |
-|:--|:--|
-| [`dump`](romimage/dump.py) | 转储设备添加或拆分了什么 |
-| [`identity`](romimage/identity.py) | 哪些摘要标识该文件，以及由哪一个决定 |
-| [`rewrite`](romimage/rewrite.py) | 头部声明了什么，以及如何从中清除协处理器 |
+| 模块                               | 问题                                         |
+| :--------------------------------- | :------------------------------------------- |
+| [`dump`](romimage/dump.py)         | 转储设备添加或拆分了什么                     |
+| [`identity`](romimage/identity.py) | 哪些摘要标识该文件，以及由哪一个决定         |
+| [`rewrite`](romimage/rewrite.py)   | 头部声明了什么，以及如何从中清除协处理器     |
 | [`manifest`](romimage/manifest.py) | 当提供的文件不是预期的那个时，属于哪种不匹配 |
 
 ### 调用
 
-| 调用 | 作用 |
-|:--|:--|
-| `dump.read(path)` | 返回镜像字节。文件会去掉拷贝机前缀。带编号分片的文件夹按名称顺序拼接。文件夹中没有分片时抛出 `NoParts` |
-| `dump.form(path)` | 对文件按长度判断，返回 `"bare"` 或 `"copier header"`；对文件夹返回 `"N part set"` |
-| `dump.strip_copier_stub(data)` | 当长度表明存在前缀时，去掉开头的 512 字节 |
-| `dump.parts_in(folder)` | 带一到三位数字后缀的文件，按大写化后的名称排序 |
-| `dump.join(parts)` | 去掉第一个分片的前缀后拼接所有分片 |
-| `dump.deflate_ratio(block)` | deflate 级别 6 下压缩后大小与原始大小之比，空块为 0.0 |
-| `dump.block_ratios(data, block=0x10000)` | 每个完整 64 KB 块的 `deflate_ratio` |
-| `dump.measure_reuse(source, target, chunk=1024, stride=512)` | `(found, total)`：`source` 的 1 KB 块中有多少出现在 `target` 中 |
-| `dump.chunk_index(data, chunk=1024, stride=512)` | `measure_reuse` 搜索所用的块到偏移的索引 |
-| `identity.measure(data)` | 字节的 `size`、`crc32`、`md5`、`sha1` 和 `sha256` |
-| `identity.agrees(found, expected)` | `sha256` 值相同时为 True。`expected` 没有 `sha256` 时抛出 `NoAuthority` |
-| `rewrite.anchor_of(image)` | 读取器找到的头部的偏移，或 `None` |
-| `rewrite.mirrors(image)` | 该头部每一份逐字节相同的副本的偏移 |
-| `rewrite.describe(image)` | 每份副本一个字典：`at`、`title`、`map`、`chipset`、`coprocessor`、`size`、`sram`、`checksum` |
-| `rewrite.needs_rewrite(image)` | 任一副本声明的芯片组不是 `0x00`，或大小字节与镜像自身不符时为 True。没有头部时抛出 `NoHeader` |
-| `rewrite.declare_rom_only(image)` | 返回新的字节，其中每份副本都写入芯片组 `0x00`、正确的大小字节和重新计算的校验和。没有头部时抛出 `NoHeader` |
-| `rewrite.checksum(image, places=None)` | 头部校验和，每份副本的四个校验和字节都按 `FF FF 00 00` 计入。`places` 默认为 `mirrors(image)` |
-| `rewrite.mirrored_sum(data)` | 字节和，长度不是 2 的幂时镜像补足到 2 的幂 |
-| `rewrite.size_byte(length)` | 大小指数：以千字节计的大小向上取整后的 2 的幂次 |
-| `rewrite.identifies(block)` | 块中含有 `0x00`、`0x20` 或 `0xFF` 以外的字节时为 True |
-| `rewrite.changes(before, after, block=0x1000)` | 所有字节不同的偏移 |
+| 调用                                                         | 作用                                                                                                       |
+| :----------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------- |
+| `dump.read(path)`                                            | 返回镜像字节。文件会去掉拷贝机前缀。带编号分片的文件夹按名称顺序拼接。文件夹中没有分片时抛出 `NoParts`     |
+| `dump.form(path)`                                            | 对文件按长度判断，返回 `"bare"` 或 `"copier header"`；对文件夹返回 `"N part set"`                          |
+| `dump.strip_copier_stub(data)`                               | 当长度表明存在前缀时，去掉开头的 512 字节                                                                  |
+| `dump.parts_in(folder)`                                      | 带一到三位数字后缀的文件，按大写化后的名称排序                                                             |
+| `dump.join(parts)`                                           | 去掉第一个分片的前缀后拼接所有分片                                                                         |
+| `dump.deflate_ratio(block)`                                  | deflate 级别 6 下压缩后大小与原始大小之比，空块为 0.0                                                      |
+| `dump.block_ratios(data, block=0x10000)`                     | 每个完整 64 KB 块的 `deflate_ratio`                                                                        |
+| `dump.measure_reuse(source, target, chunk=1024, stride=512)` | `(found, total)`：`source` 的 1 KB 块中有多少出现在 `target` 中                                            |
+| `dump.chunk_index(data, chunk=1024, stride=512)`             | `measure_reuse` 搜索所用的块到偏移的索引                                                                   |
+| `identity.measure(data)`                                     | 字节的 `size`、`crc32`、`md5`、`sha1` 和 `sha256`                                                          |
+| `identity.agrees(found, expected)`                           | `sha256` 值相同时为 True。`expected` 没有 `sha256` 时抛出 `NoAuthority`                                    |
+| `rewrite.anchor_of(image)`                                   | 读取器找到的头部的偏移，或 `None`                                                                          |
+| `rewrite.mirrors(image)`                                     | 该头部每一份逐字节相同的副本的偏移                                                                         |
+| `rewrite.describe(image)`                                    | 每份副本一个字典：`at`、`title`、`map`、`chipset`、`coprocessor`、`size`、`sram`、`checksum`               |
+| `rewrite.needs_rewrite(image)`                               | 任一副本声明的芯片组不是 `0x00`，或大小字节与镜像自身不符时为 True。没有头部时抛出 `NoHeader`              |
+| `rewrite.declare_rom_only(image)`                            | 返回新的字节，其中每份副本都写入芯片组 `0x00`、正确的大小字节和重新计算的校验和。没有头部时抛出 `NoHeader` |
+| `rewrite.checksum(image, places=None)`                       | 头部校验和，每份副本的四个校验和字节都按 `FF FF 00 00` 计入。`places` 默认为 `mirrors(image)`              |
+| `rewrite.mirrored_sum(data)`                                 | 字节和，长度不是 2 的幂时镜像补足到 2 的幂                                                                 |
+| `rewrite.size_byte(length)`                                  | 大小指数：以千字节计的大小向上取整后的 2 的幂次                                                            |
+| `rewrite.identifies(block)`                                  | 块中含有 `0x00`、`0x20` 或 `0xFF` 以外的字节时为 True                                                      |
+| `rewrite.changes(before, after, block=0x1000)`               | 所有字节不同的偏移                                                                                         |
 
 `declare_rom_only`、`needs_rewrite`、`AUTHORITATIVE`、`CHIPSET_ROM_ONLY` 和 `COPROCESSORS` 也在包的顶层公开。
 
@@ -152,22 +152,22 @@ print(dump.measure_reuse(varied, empty))
 
 `Manifest(document)` 接受一个带 `artifacts` 列表的映射。每个制品有一个 `name`、一个由已测量形式组成的 `accepted` 列表，以及可选的 `rewritten` 形式和 `bad` 列表，后者的每个条目带有 `why`。每个被接受的形式都需要 `sha256`。`Manifest.from_path(path)` 从 JSON 文件读取同样的文档。
 
-| 调用 | 作用 |
-|:--|:--|
-| `document` | 构建它所用的映射，已经过上述检查 |
-| `artifacts` | 所有制品，以元组形式 |
-| `by_digest(found)` | 第一个其 accepted、rewritten 或 bad 形式与 `found` 一致的制品及其状态，或 `None` |
-| `by_size(size)` | 所有带有该大小的被接受形式的制品 |
+| 调用                        | 作用                                                                                                  |
+| :-------------------------- | :---------------------------------------------------------------------------------------------------- |
+| `document`                  | 构建它所用的映射，已经过上述检查                                                                      |
+| `artifacts`                 | 所有制品，以元组形式                                                                                  |
+| `by_digest(found)`          | 第一个其 accepted、rewritten 或 bad 形式与 `found` 一致的制品及其状态，或 `None`                      |
+| `by_size(size)`             | 所有带有该大小的被接受形式的制品                                                                      |
 | `diagnose(data, form=None)` | 去掉前缀并测量，返回 `form`、`size`、`identity`、`state`、`artifact`、`why`、`same_size` 和 `headers` |
-| `explain(found)` | 供人阅读的 `diagnose` 结果说明行，最后给出应采取的操作 |
+| `explain(found)`            | 供人阅读的 `diagnose` 结果说明行，最后给出应采取的操作                                                |
 
-| 状态 | 含义 |
-|:--|:--|
-| `known` | `sha256` 与某个被接受的形式一致 |
-| `rewritten` | 与该制品的重写形式一致 |
-| `bad dump` | 与已知的坏转储一致，`why` 说明它的问题 |
+| 状态        | 含义                                       |
+| :---------- | :----------------------------------------- |
+| `known`     | `sha256` 与某个被接受的形式一致            |
+| `rewritten` | 与该制品的重写形式一致                     |
+| `bad dump`  | 与已知的坏转储一致，`why` 说明它的问题     |
 | `same size` | 没有摘要一致，但有一个被接受的形式大小相同 |
-| `unknown` | 都不一致 |
+| `unknown`   | 都不一致                                   |
 
 ```python
 from romimage import Manifest, identity, rewrite
@@ -215,34 +215,34 @@ bare | same size | ['worked example']
 
 ### 常量
 
-| 名称 | 值 |
-|:--|:--|
-| `identity.AUTHORITATIVE` | `"sha256"`，唯一决定接受或拒绝的摘要 |
-| `identity.INTEROPERABLE` | `("crc32", "md5", "sha1")`，为数据库查找而公开，从不用于决定 |
-| `rewrite.CHIPSET_ROM_ONLY` | `0x00` |
-| `rewrite.COPROCESSORS` | 本包已知的 18 个代码的芯片组字节到协处理器名称的映射，从 `0x03` DSP 到 `0xF9` SPC7110 |
-| `rewrite.MAP_MODE`、`CHIPSET`、`ROM_SIZE`、`SRAM_SIZE` | 头部偏移 `0x15` 到 `0x18` |
-| `rewrite.CHECKSUM_COMPLEMENT`、`CHECKSUM` | 头部偏移 `0x1C` 和 `0x1E` |
-| `rewrite.CHECKSUM_FIELD_NEUTRAL` | `FF FF 00 00`，四个校验和字节计入时所取的值 |
-| `rewrite.CHECKSUM_FIELD_BYTES`、`CHECKSUM_FIELD_SUM` | `4` 和 `0x01FE`，这些中性字节的长度及其和 |
-| `rewrite.PADDING` | `0x00`、`0x20` 和 `0xFF`，`identifies` 视为填充的字节 |
-| `rewrite.KILOBYTE` | `1024`，`size_byte` 向上取整所用的单位 |
-| `rewrite.BLOCK_BYTES` | `0x1000`，`changes` 在逐字节比较之前所比较的块 |
-| `dump.BARE`、`dump.COPIER` | `form` 对文件返回的两个名称 |
-| `dump.PART_SUFFIX` | 带编号分片的后缀所匹配的模式：一个点加一到三位数字 |
-| `dump.BLOCK_BYTES`、`DEFLATE_LEVEL` | `0x10000` 和 `6`，`block_ratios` 和 `deflate_ratio` 的默认值 |
-| `dump.CHUNK_BYTES`、`CHUNK_STRIDE` | `1024` 和 `512`，`measure_reuse` 和 `chunk_index` 的默认值 |
-| `manifest.KNOWN`、`REWRITTEN`、`BAD_DUMP`、`SAME_SIZE`、`UNKNOWN` | 五种状态 |
-| `romimage.__version__` | 已安装的版本 |
+| 名称                                                              | 值                                                                                    |
+| :---------------------------------------------------------------- | :------------------------------------------------------------------------------------ |
+| `identity.AUTHORITATIVE`                                          | `"sha256"`，唯一决定接受或拒绝的摘要                                                  |
+| `identity.INTEROPERABLE`                                          | `("crc32", "md5", "sha1")`，为数据库查找而公开，从不用于决定                          |
+| `rewrite.CHIPSET_ROM_ONLY`                                        | `0x00`                                                                                |
+| `rewrite.COPROCESSORS`                                            | 本包已知的 18 个代码的芯片组字节到协处理器名称的映射，从 `0x03` DSP 到 `0xF9` SPC7110 |
+| `rewrite.MAP_MODE`、`CHIPSET`、`ROM_SIZE`、`SRAM_SIZE`            | 头部偏移 `0x15` 到 `0x18`                                                             |
+| `rewrite.CHECKSUM_COMPLEMENT`、`CHECKSUM`                         | 头部偏移 `0x1C` 和 `0x1E`                                                             |
+| `rewrite.CHECKSUM_FIELD_NEUTRAL`                                  | `FF FF 00 00`，四个校验和字节计入时所取的值                                           |
+| `rewrite.CHECKSUM_FIELD_BYTES`、`CHECKSUM_FIELD_SUM`              | `4` 和 `0x01FE`，这些中性字节的长度及其和                                             |
+| `rewrite.PADDING`                                                 | `0x00`、`0x20` 和 `0xFF`，`identifies` 视为填充的字节                                 |
+| `rewrite.KILOBYTE`                                                | `1024`，`size_byte` 向上取整所用的单位                                                |
+| `rewrite.BLOCK_BYTES`                                             | `0x1000`，`changes` 在逐字节比较之前所比较的块                                        |
+| `dump.BARE`、`dump.COPIER`                                        | `form` 对文件返回的两个名称                                                           |
+| `dump.PART_SUFFIX`                                                | 带编号分片的后缀所匹配的模式：一个点加一到三位数字                                    |
+| `dump.BLOCK_BYTES`、`DEFLATE_LEVEL`                               | `0x10000` 和 `6`，`block_ratios` 和 `deflate_ratio` 的默认值                          |
+| `dump.CHUNK_BYTES`、`CHUNK_STRIDE`                                | `1024` 和 `512`，`measure_reuse` 和 `chunk_index` 的默认值                            |
+| `manifest.KNOWN`、`REWRITTEN`、`BAD_DUMP`、`SAME_SIZE`、`UNKNOWN` | 五种状态                                                                              |
+| `romimage.__version__`                                            | 已安装的版本                                                                          |
 
 ### 错误
 
-| 错误 | 抛出时机 |
-|:--|:--|
-| `NoParts` | `dump.read` 收到没有带编号分片的文件夹 |
-| `NoAuthority` | `identity.agrees` 收到没有 `sha256` 的预期值 |
-| `Malformed` | `Manifest` 收到没有制品、制品没有被接受的形式，或被接受的形式没有 `sha256` |
-| `NoHeader` | `rewrite.needs_rewrite` 或 `rewrite.declare_rom_only` 找不到头部。它属于头部读取器，可通过 `rewrite.NoHeader` 访问 |
+| 错误          | 抛出时机                                                                                                           |
+| :------------ | :----------------------------------------------------------------------------------------------------------------- |
+| `NoParts`     | `dump.read` 收到没有带编号分片的文件夹                                                                             |
+| `NoAuthority` | `identity.agrees` 收到没有 `sha256` 的预期值                                                                       |
+| `Malformed`   | `Manifest` 收到没有制品、制品没有被接受的形式，或被接受的形式没有 `sha256`                                         |
+| `NoHeader`    | `rewrite.needs_rewrite` 或 `rewrite.declare_rom_only` 找不到头部。它属于头部读取器，可通过 `rewrite.NoHeader` 访问 |
 
 前三个位于 [`romimage/errors.py`](romimage/errors.py)，并在包的顶层公开。
 
@@ -284,15 +284,15 @@ NoHeader: no cartridge header at any documented position
 
 ### 命令行工具
 
-| 命令 | 参数 | 退出码 |
-|:--|:--|:--|
-| `python3 romimage/doctor.py` | 无 | 每项检查都通过时为 0，否则为 1 |
-| `python3 -m conformance.corpus` | 可选的语料库路径 | 每个声明都一致时为 0，有一个不一致时为 1，参数错误时为 2 |
-| `python3 -m conformance.census` | `<library> <out.json> [limit]`。库是文件夹或 zip 归档 | 四项属性在每个镜像上都成立时为 0，有一项失败时为 1，参数错误时为 2 |
-| `python3 -m conformance.documents` | `--check` 只校验不下载，`--only SUBSTRING` 选择单个文件 | 每份文档都校验通过时为 0，否则为 1 |
-| `python3 -m conformance.quotes` | 无 | 每处引文都已定位或没有任何文档时为 0，否则为 1 |
-| `python3 -m conformance.speed` | 无 | 每秒识别达到或超过 200 次时为 0，低于时为 1 |
-| `python3 -m conformance.links` | 无 | 本文件中有地址返回 404 或 410 时为 1，否则为 0 |
+| 命令                               | 参数                                                    | 退出码                                                             |
+| :--------------------------------- | :------------------------------------------------------ | :----------------------------------------------------------------- |
+| `python3 romimage/doctor.py`       | 无                                                      | 每项检查都通过时为 0，否则为 1                                     |
+| `python3 -m conformance.corpus`    | 可选的语料库路径                                        | 每个声明都一致时为 0，有一个不一致时为 1，参数错误时为 2           |
+| `python3 -m conformance.census`    | `<library> <out.json> [limit]`。库是文件夹或 zip 归档   | 四项属性在每个镜像上都成立时为 0，有一项失败时为 1，参数错误时为 2 |
+| `python3 -m conformance.documents` | `--check` 只校验不下载，`--only SUBSTRING` 选择单个文件 | 每份文档都校验通过时为 0，否则为 1                                 |
+| `python3 -m conformance.quotes`    | 无                                                      | 每处引文都已定位或没有任何文档时为 0，否则为 1                     |
+| `python3 -m conformance.speed`     | 无                                                      | 每秒识别达到或超过 200 次时为 0，低于时为 1                        |
+| `python3 -m conformance.links`     | 无                                                      | 本文件中有地址返回 404 或 410 时为 1，否则为 0                     |
 
 ## 本项目要防止的错误
 
@@ -469,28 +469,28 @@ CRC32 是 32 位检错码，而 MD5 和 SHA-1 都有已公开的碰撞。三者�
 
 在 **7,330** 个卡带上测量，另有 249 个因没有可读头部而被拒绝：
 
-| 测量项 | 值 |
-|:--|--:|
-| 不同的声明 | 489 |
-| 不同的镜像大小 | 108 |
-| 不同的芯片组字节 | 36 |
-| 需要重写的卡带 | 3,799 |
-| 与头部读取器在是否有头部上的分歧 | 0 |
+| 测量项                           |    值 |
+| :------------------------------- | ----: |
+| 不同的声明                       |   489 |
+| 不同的镜像大小                   |   108 |
+| 不同的芯片组字节                 |    36 |
+| 需要重写的卡带                   | 3,799 |
+| 与头部读取器在是否有头部上的分歧 |     0 |
 
 四项属性在每个卡带上检查，而不是抽样：
 
-| 属性 | 成立数量 |
-|:--|--:|
+| 属性                         |      成立数量 |
+| :--------------------------- | ------------: |
 | 写入的校验和与其补码互为补码 | 7,330 / 7,330 |
 | 基于结果重新计算得到写入的值 | 7,330 / 7,330 |
-| 头部以外的内容没有改变 | 7,330 / 7,330 |
-| 第二次重写不改变任何内容 | 7,330 / 7,330 |
+| 头部以外的内容没有改变       | 7,330 / 7,330 |
+| 第二次重写不改变任何内容     | 7,330 / 7,330 |
 
 有一项观察只做测量，不作为任何门禁检查：本包计算出的校验和是否就是卡带上已写入的那个。
 
-| 群体 | 一致 |
-|:--|--:|
-| 头部自洽的授权零售版卡带 | 2,768 / 2,780 |
+| 群体                          |          一致 |
+| :---------------------------- | ------------: |
+| 头部自洽的授权零售版卡带      | 2,768 / 2,780 |
 | 所有头部自洽的镜像，包括 hack | 4,502 / 7,167 |
 
 修改了内容却没有重新计算校验和的 hack 不是本包的缺陷，所以这项观察只报告而不判定失败。四项属性询问的是代码是否与自身一致。这项观察询问的是卡带：一条在每个镜像上都以同样方式出错的校验和规则，能通过全部四项属性，却无法通过这项观察。[`conformance/divergences.json`](conformance/divergences.json) 列出了仍不一致的十二个零售版卡带，以及关于每个卡带的已知信息。
@@ -501,14 +501,14 @@ CRC32 是 32 位检错码，而 MD5 和 SHA-1 都有已公开的碰撞。三者�
 
 [`conformance/corpus.json`](conformance/corpus.json) 保存了 489 个不同的声明，以及各自有多少卡带带有该声明。
 
-| 字段 | 性质 | 是否在语料库中 |
-|:--|:--|:--|
-| 大小、映射、芯片组、ROM 和 RAM 大小 | 关于实物的事实 | 是 |
-| 共享某一组合的卡带数量 | 测量值 | 是 |
-| 标题 | 名称 | 否 |
-| 头部以外的任何内容 | 游戏本身 | 从不读取 |
+| 字段                                | 性质           | 是否在语料库中 |
+| :---------------------------------- | :------------- | :------------- |
+| 大小、映射、芯片组、ROM 和 RAM 大小 | 关于实物的事实 | 是             |
+| 共享某一组合的卡带数量              | 测量值         | 是             |
+| 标题                                | 名称           | 否             |
+| 头部以外的任何内容                  | 游戏本身       | 从不读取       |
 
-依据 [17 U.S.C. 102(b)](https://www.law.cornell.edu/uscode/text/17/102) 和 *Feist*，事实和功能性要素不在版权保护范围内。[`conformance/census.py`](conformance/census.py) 不记录任何标题，语料库中的任何内容都无法重建任何卡带的任何部分。这是对仓库构建方式的说明，不是法律意见。
+依据 [17 U.S.C. 102(b)](https://www.law.cornell.edu/uscode/text/17/102) 和 _Feist_，事实和功能性要素不在版权保护范围内。[`conformance/census.py`](conformance/census.py) 不记录任何标题，语料库中的任何内容都无法重建任何卡带的任何部分。这是对仓库构建方式的说明，不是法律意见。
 
 有两项断言仅凭语料库即可重放。每个声明记录的大小字节必须是 `size_byte` 根据其大小推导出的值。带有协处理器、或大小字节与自身不符的声明，必须是普查标记为需要重写的声明。第二项断言只在一个方向上成立：第一个头部干净的镜像仍可能因为后面的副本不一致而需要重写，而语料库记录的是第一份副本。
 
@@ -543,13 +543,13 @@ python3 -m conformance.corpus
 
 ## 参与开发
 
-| 需求 | 位置 |
-|:--|:--|
-| 所有门禁检查及其运行顺序 | [CONTRIBUTING.md](CONTRIBUTING.md) |
-| 面向编码代理的相同内容 | [AGENTS.md](AGENTS.md) |
-| 本仓库与该系列其他仓库共享的标准 | [FAMILY.md](FAMILY.md) |
-| bug 报告 | [GitHub Issues](https://github.com/gufranco/snes-rom-image-python/issues) |
-| 安全报告 | [SECURITY.md](SECURITY.md) |
+| 需求                             | 位置                                                                      |
+| :------------------------------- | :------------------------------------------------------------------------ |
+| 所有门禁检查及其运行顺序         | [CONTRIBUTING.md](CONTRIBUTING.md)                                        |
+| 面向编码代理的相同内容           | [AGENTS.md](AGENTS.md)                                                    |
+| 本仓库与该系列其他仓库共享的标准 | [FAMILY.md](FAMILY.md)                                                    |
+| bug 报告                         | [GitHub Issues](https://github.com/gufranco/snes-rom-image-python/issues) |
+| 安全报告                         | [SECURITY.md](SECURITY.md)                                                |
 
 ```bash
 uvx ruff@0.16.3 format --check .
@@ -572,7 +572,7 @@ python3 -m coverage report
 
 ## 参考资料
 
-- *SNES Development Manual, Book 1*，Nintendo of America Inc.，240 页，21,022,582 字节，SHA-256 `f1405241000046abba7849376d2ec53cf85f1ad2e9950d69a7c2cf1f3ff6b791`。它决定每个头部字节的含义以及校验和的计算方式。第 1-2-20 页定义了头部校验和。第 1-2-9 页为提交单定义了另一种简单求和，并明确说明："This method of calculation is different from the check sum on the ROM Registration Specification." 该手册不可再分发，也不在本仓库中。`python3 -m conformance.documents` 从 https://archive.org/download/SNESDevManual/book1_text.pdf 下载它到 git 忽略的 `docs/` 中，并拒绝任何其他文件。`python3 -m conformance.documents --check` 校验已存在的副本。
+- _SNES Development Manual, Book 1_，Nintendo of America Inc.，240 页，21,022,582 字节，SHA-256 `f1405241000046abba7849376d2ec53cf85f1ad2e9950d69a7c2cf1f3ff6b791`。它决定每个头部字节的含义以及校验和的计算方式。第 1-2-20 页定义了头部校验和。第 1-2-9 页为提交单定义了另一种简单求和，并明确说明："This method of calculation is different from the check sum on the ROM Registration Specification." 该手册不可再分发，也不在本仓库中。`python3 -m conformance.documents` 从 https://archive.org/download/SNESDevManual/book1_text.pdf 下载它到 git 忽略的 `docs/` 中，并拒绝任何其他文件。`python3 -m conformance.documents --check` 校验已存在的副本。
 - 作者拥有的一个零售版卡带库，用于 [`conformance/corpus.json`](conformance/corpus.json) 中的 489 个声明，读取了 7,330 个文件。其中任何内容都未提交。
 - [gufranco/snes-mapper-python](https://github.com/gufranco/snes-mapper-python)，用于查找头部，以按提交固定的子模块形式引入。
 
