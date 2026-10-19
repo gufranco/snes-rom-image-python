@@ -8,7 +8,7 @@ English | [日本語](README.ja.md) | [简体中文](README.zh-Hans.md) | [繁�
 [![Release](https://img.shields.io/github/v/release/gufranco/snes-rom-image-python)](https://github.com/gufranco/snes-rom-image-python/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-**489** declarations replayed, **0** failures, **4** properties checked on every one of **7,330** cartridges, the computed checksum matches **2,768** of **2,780** retail cartridges, **20** quotes located in the manual, **802** tests, **100%** statement and branch coverage, no dependencies
+**489** declarations replayed, **0** failures, **4** properties checked on every one of **7,330** cartridges, the computed checksum matches **2,768** of **2,780** retail cartridges, **20** quotes located in the manual, **840** tests, **100%** statement and branch coverage, no dependencies
 
 ```python
 from romimage import rewrite
@@ -284,15 +284,16 @@ Two matching CRC32 values are refused rather than accepted, because only `sha256
 
 ### Command-line tools
 
-| Command                            | Arguments                                                                | Exit codes                                                                              |
-| :--------------------------------- | :----------------------------------------------------------------------- | :-------------------------------------------------------------------------------------- |
-| `python3 romimage/doctor.py`       | None                                                                     | 0 when every check passes, 1 otherwise                                                  |
-| `python3 -m conformance.corpus`    | An optional corpus path                                                  | 0 when every declaration agrees, 1 when one does not, 2 for wrong arguments             |
-| `python3 -m conformance.census`    | `<library> <out.json> [limit]`. The library is a folder or a zip archive | 0 when the four properties hold on every image, 1 when one fails, 2 for wrong arguments |
-| `python3 -m conformance.documents` | `--check` to verify without fetching, `--only SUBSTRING` to pick a file  | 0 when every document verifies, 1 otherwise                                             |
-| `python3 -m conformance.quotes`    | None                                                                     | 0 when every quote is located or no document is present, 1 otherwise                    |
-| `python3 -m conformance.speed`     | None                                                                     | 0 at or above 200 identifications per second, 1 below                                   |
-| `python3 -m conformance.links`     | None                                                                     | 1 when an address in this file answers 404 or 410, 0 otherwise                          |
+| Command                            | Arguments                                                                | Exit codes                                                                                                                |
+| :--------------------------------- | :----------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------ |
+| `python3 romimage/doctor.py`       | None                                                                     | 0 when every check passes, 1 otherwise                                                                                    |
+| `python3 -m conformance.corpus`    | An optional corpus path                                                  | 0 when every declaration agrees, 1 when one does not, 2 for wrong arguments                                               |
+| `python3 -m conformance.census`    | `<library> <out.json> [limit]`. The library is a folder or a zip archive | 0 when the four properties hold on every image, 1 when one fails, 2 for wrong arguments                                   |
+| `python3 -m conformance.testcarts` | `--record <out.json>` to write what it read                              | 0 when every test cartridge present reads as recorded, 1 when one does not, 2 when none is present or for wrong arguments |
+| `python3 -m conformance.documents` | `--check` to verify without fetching, `--only SUBSTRING` to pick a file  | 0 when every document verifies, 1 otherwise                                                                               |
+| `python3 -m conformance.quotes`    | None                                                                     | 0 when every quote is located or no document is present, 1 otherwise                                                      |
+| `python3 -m conformance.speed`     | None                                                                     | 0 at or above 200 identifications per second, 1 below                                                                     |
+| `python3 -m conformance.links`     | None                                                                     | 1 when an address in this file answers 404 or 410, 0 otherwise                                                            |
 
 ## The mistakes this exists to stop
 

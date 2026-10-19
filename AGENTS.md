@@ -119,6 +119,45 @@ would be misleading.**
 - **No fetch at runtime.** Any file this package reads is one already on the
   machine because somebody put it there.
 
+## Test cartridges
+
+[`conformance/testroms.json`](conformance/testroms.json) lists the 18 images in
+`snes-roms/5 Tools & Service Test Carts/`, each pinned by SHA-256, and every one
+is `read`: this package finds its header, its mirrors and its checksum. The
+images live beside this repository in `snes-roms/`, or wherever
+`SNES_TEST_CARTRIDGE_DIR` points, and are never committed.
+
+```bash
+python3 -m conformance.testcarts
+python3 -m conformance.testcarts --record conformance/testcarts.json
+```
+
+The first reads every listed image present and compares it with
+[`conformance/testcarts.json`](conformance/testcarts.json), which holds the
+declared bytes and the checksums and no title. It exits 2, and CI annotates the
+skip, when no image is present. The second rewrites the record.
+
+Every image is accounted for, and a test in
+[`conformance/testcarts.test.py`](conformance/testcarts.test.py) holds each one:
+
+- **Four agree.** Both 240p Test Suite builds, HD Retrovision and the Evoke
+  2010 demo carry the checksum this package computes.
+- **Ten carry no header.** Nintendo's own test and service programs, the
+  Controller Test Cassette, the Campus Challenge menu, the DSP1 Tech Demo and
+  the unpatched SA1 Demonstration Program have only the vectors at `0x7FE0`, so
+  there is nothing to check. NTF 2.5 is the first 640 KiB of the Test Program,
+  byte for byte.
+- **Three carry the placeholder pair.** Emudetect, the SA-1 3D Demo and the
+  SA-1 Speed Test store complement `0x0000` and checksum `0xFFFF`, a
+  self-consistent pair nobody computed.
+- **One carries a pair that is not complements.** The SA1 Demonstration
+  Program's header fix wrote the mapping, chipset and sizes into code bytes and
+  left the rest as it was.
+
+The `BIOS/` and `CPU/` folders beside them are not test cartridges: the first
+holds boot programs and peripherals, the second coprocessor program dumps with
+no header. Nothing waits on another member here.
+
 ## Every gate, in the order to run them
 
 ```bash
@@ -135,11 +174,12 @@ done
 "${cov[@]}" report
 ```
 
-Then the two that are not part of the coverage step:
+Then the three that are not part of the coverage step:
 
 ```bash
 python3 -m conformance.corpus
 python3 -m conformance.speed
+python3 -m conformance.testcarts
 ```
 
 And, with a library present, the census that walks it:
@@ -239,6 +279,9 @@ conformance/
   hardware.json     Nintendo's specification, pinned fact by fact
   hardware.test.py  this package's constants against those facts
   divergences.json  every place a real cartridge and the specification part company
+  testroms.json     every test cartridge, pinned by SHA-256, and what it exercises
+  testcarts.py      reads each one present and compares it with testcarts.json
+  testcarts.json    what each one read: declared bytes and checksums, no title
   links.py          the weekly check that every cited address still answers
   speed.py          the throughput floor
 snes-mapper-python/  the header reader, a submodule pinned by commit

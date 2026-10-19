@@ -8,7 +8,7 @@
 [![Release](https://img.shields.io/github/v/release/gufranco/snes-rom-image-python)](https://github.com/gufranco/snes-rom-image-python/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-重播 **489** 項聲明，**0** 項失敗，在全部 **7,330** 盒卡帶上逐一檢查 **4** 項屬性，計算所得的校驗和與 **2,780** 盒零售版卡帶中的 **2,768** 盒相符，在手冊中定位 **20** 段引文，**802** 個測試，**100%** 語句及分支覆蓋率，沒有依賴項
+重播 **489** 項聲明，**0** 項失敗，在全部 **7,330** 盒卡帶上逐一檢查 **4** 項屬性，計算所得的校驗和與 **2,780** 盒零售版卡帶中的 **2,768** 盒相符，在手冊中定位 **20** 段引文，**840** 個測試，**100%** 語句及分支覆蓋率，沒有依賴項
 
 ```python
 from romimage import rewrite
@@ -284,15 +284,16 @@ NoHeader: no cartridge header at any documented position
 
 ### 命令列工具
 
-| 命令                               | 參數                                                            | 結束代碼                                                             |
-| :--------------------------------- | :-------------------------------------------------------------- | :------------------------------------------------------------------- |
-| `python3 romimage/doctor.py`       | 無                                                              | 每項檢查都通過時為 0，否則為 1                                       |
-| `python3 -m conformance.corpus`    | 可選的語料庫路徑                                                | 每項聲明都相符時為 0，有一項不符時為 1，參數錯誤時為 2               |
-| `python3 -m conformance.census`    | `<library> <out.json> [limit]`。資料庫是一個資料夾或 zip 封存檔 | 四項屬性在每個映像檔上都成立時為 0，有一項失敗時為 1，參數錯誤時為 2 |
-| `python3 -m conformance.documents` | `--check` 只驗證而不下載，`--only SUBSTRING` 挑選一個檔案       | 每份文件都通過驗證時為 0，否則為 1                                   |
-| `python3 -m conformance.quotes`    | 無                                                              | 每段引文都已定位或沒有文件時為 0，否則為 1                           |
-| `python3 -m conformance.speed`     | 無                                                              | 每秒 200 次識別或以上時為 0，低於此數時為 1                          |
-| `python3 -m conformance.links`     | 無                                                              | 本檔案中有地址回應 404 或 410 時為 1，否則為 0                       |
+| 命令                               | 參數                                                            | 結束代碼                                                                           |
+| :--------------------------------- | :-------------------------------------------------------------- | :--------------------------------------------------------------------------------- |
+| `python3 romimage/doctor.py`       | 無                                                              | 每項檢查都通過時為 0，否則為 1                                                     |
+| `python3 -m conformance.corpus`    | 可選的語料庫路徑                                                | 每項聲明都相符時為 0，有一項不符時為 1，參數錯誤時為 2                             |
+| `python3 -m conformance.census`    | `<library> <out.json> [limit]`。資料庫是一個資料夾或 zip 封存檔 | 四項屬性在每個映像檔上都成立時為 0，有一項失敗時為 1，參數錯誤時為 2               |
+| `python3 -m conformance.testcarts` | `--record <out.json>` 寫出讀到的內容                            | 現有的每盒測試卡帶都按紀錄讀出時為 0，有一盒不符時為 1，一盒都沒有或參數錯誤時為 2 |
+| `python3 -m conformance.documents` | `--check` 只驗證而不下載，`--only SUBSTRING` 挑選一個檔案       | 每份文件都通過驗證時為 0，否則為 1                                                 |
+| `python3 -m conformance.quotes`    | 無                                                              | 每段引文都已定位或沒有文件時為 0，否則為 1                                         |
+| `python3 -m conformance.speed`     | 無                                                              | 每秒 200 次識別或以上時為 0，低於此數時為 1                                        |
+| `python3 -m conformance.links`     | 無                                                              | 本檔案中有地址回應 404 或 410 時為 1，否則為 0                                     |
 
 ## 本套件要防止的錯誤
 

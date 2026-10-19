@@ -114,6 +114,21 @@ jobs:
       - name: Replay the corpus
         run: python -m conformance.corpus
 
+      - name: Read the test cartridges, exit 2 meaning none present
+        run: |
+          set +e
+          python -m conformance.testcarts
+          status=$?
+          set -e
+          if [ "${status}" -eq 2 ]; then
+            notice="The test cartridges were not read."
+            notice="${notice} They are not failures; there was nothing to read."
+            echo "::notice title=No test cartridge present::${notice}"
+            exit 0
+          fi
+          exit "${status}"
+        shell: bash
+
       - name: Coverage must be total
         run: python -m coverage report
 

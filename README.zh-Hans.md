@@ -8,7 +8,7 @@
 [![Release](https://img.shields.io/github/v/release/gufranco/snes-rom-image-python)](https://github.com/gufranco/snes-rom-image-python/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-重放 **489** 个声明，**0** 个失败，在全部 **7,330** 个卡带上逐一检查 **4** 项属性，计算出的校验和与 **2,780** 个零售版卡带中的 **2,768** 个一致，在手册中定位到 **20** 处引文，**802** 个测试，**100%** 语句与分支覆盖率，无依赖
+重放 **489** 个声明，**0** 个失败，在全部 **7,330** 个卡带上逐一检查 **4** 项属性，计算出的校验和与 **2,780** 个零售版卡带中的 **2,768** 个一致，在手册中定位到 **20** 处引文，**840** 个测试，**100%** 语句与分支覆盖率，无依赖
 
 ```python
 from romimage import rewrite
@@ -284,15 +284,16 @@ NoHeader: no cartridge header at any documented position
 
 ### 命令行工具
 
-| 命令                               | 参数                                                    | 退出码                                                             |
-| :--------------------------------- | :------------------------------------------------------ | :----------------------------------------------------------------- |
-| `python3 romimage/doctor.py`       | 无                                                      | 每项检查都通过时为 0，否则为 1                                     |
-| `python3 -m conformance.corpus`    | 可选的语料库路径                                        | 每个声明都一致时为 0，有一个不一致时为 1，参数错误时为 2           |
-| `python3 -m conformance.census`    | `<library> <out.json> [limit]`。库是文件夹或 zip 归档   | 四项属性在每个镜像上都成立时为 0，有一项失败时为 1，参数错误时为 2 |
-| `python3 -m conformance.documents` | `--check` 只校验不下载，`--only SUBSTRING` 选择单个文件 | 每份文档都校验通过时为 0，否则为 1                                 |
-| `python3 -m conformance.quotes`    | 无                                                      | 每处引文都已定位或没有任何文档时为 0，否则为 1                     |
-| `python3 -m conformance.speed`     | 无                                                      | 每秒识别达到或超过 200 次时为 0，低于时为 1                        |
-| `python3 -m conformance.links`     | 无                                                      | 本文件中有地址返回 404 或 410 时为 1，否则为 0                     |
+| 命令                               | 参数                                                    | 退出码                                                                             |
+| :--------------------------------- | :------------------------------------------------------ | :--------------------------------------------------------------------------------- |
+| `python3 romimage/doctor.py`       | 无                                                      | 每项检查都通过时为 0，否则为 1                                                     |
+| `python3 -m conformance.corpus`    | 可选的语料库路径                                        | 每个声明都一致时为 0，有一个不一致时为 1，参数错误时为 2                           |
+| `python3 -m conformance.census`    | `<library> <out.json> [limit]`。库是文件夹或 zip 归档   | 四项属性在每个镜像上都成立时为 0，有一项失败时为 1，参数错误时为 2                 |
+| `python3 -m conformance.testcarts` | `--record <out.json>` 写出读到的内容                    | 现有的每个测试卡带都按记录读出时为 0，有一个不符时为 1，一个都没有或参数错误时为 2 |
+| `python3 -m conformance.documents` | `--check` 只校验不下载，`--only SUBSTRING` 选择单个文件 | 每份文档都校验通过时为 0，否则为 1                                                 |
+| `python3 -m conformance.quotes`    | 无                                                      | 每处引文都已定位或没有任何文档时为 0，否则为 1                                     |
+| `python3 -m conformance.speed`     | 无                                                      | 每秒识别达到或超过 200 次时为 0，低于时为 1                                        |
+| `python3 -m conformance.links`     | 无                                                      | 本文件中有地址返回 404 或 410 时为 1，否则为 0                                     |
 
 ## 本项目要防止的错误
 

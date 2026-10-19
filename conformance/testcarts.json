@@ -1,0 +1,172 @@
+{
+  "240p-test-suite-ntsc": {
+    "account": "agrees",
+    "header": {
+      "at": 32704,
+      "checksum": 37478,
+      "chipset": 0,
+      "complement": 28057,
+      "computed": 37478,
+      "map": 32,
+      "mirrors": 1,
+      "rom_size": 9,
+      "sram_size": 0
+    },
+    "size": 524288
+  },
+  "240p-test-suite-pal": {
+    "account": "agrees",
+    "header": {
+      "at": 32704,
+      "checksum": 37479,
+      "chipset": 0,
+      "complement": 28056,
+      "computed": 37479,
+      "map": 32,
+      "mirrors": 1,
+      "rom_size": 9,
+      "sram_size": 0
+    },
+    "size": 524288
+  },
+  "aging-1-00": {
+    "account": "no header",
+    "header": null,
+    "size": 131072
+  },
+  "burn-in-rev-d": {
+    "account": "no header",
+    "header": null,
+    "size": 524288
+  },
+  "campus-challenge-92-menu": {
+    "account": "no header",
+    "header": null,
+    "size": 262144
+  },
+  "control-deck-tester-rev-1": {
+    "account": "no header",
+    "header": null,
+    "size": 524288
+  },
+  "controller-test-cassette": {
+    "account": "no header",
+    "header": null,
+    "size": 131072
+  },
+  "dsp1-tech-demo": {
+    "account": "no header",
+    "header": null,
+    "size": 131072
+  },
+  "emudetect-v21": {
+    "account": "placeholder pair",
+    "header": {
+      "at": 32704,
+      "checksum": 65535,
+      "chipset": 0,
+      "complement": 0,
+      "computed": 28058,
+      "map": 32,
+      "mirrors": 1,
+      "rom_size": 10,
+      "sram_size": 0
+    },
+    "size": 1048576
+  },
+  "evoke-2010-logo-zoomer": {
+    "account": "agrees",
+    "header": {
+      "at": 32704,
+      "checksum": 23073,
+      "chipset": 52,
+      "complement": 42462,
+      "computed": 23073,
+      "map": 35,
+      "mirrors": 1,
+      "rom_size": 9,
+      "sram_size": 6
+    },
+    "size": 524288
+  },
+  "hd-retrovision-1-4": {
+    "account": "agrees",
+    "header": {
+      "at": 32704,
+      "checksum": 1356,
+      "chipset": 0,
+      "complement": 64179,
+      "computed": 1356,
+      "map": 32,
+      "mirrors": 1,
+      "rom_size": 9,
+      "sram_size": 0
+    },
+    "size": 524288
+  },
+  "ntf-2-5-rev-a": {
+    "account": "no header",
+    "header": null,
+    "size": 655360
+  },
+  "sa1-3d-demo": {
+    "account": "placeholder pair",
+    "header": {
+      "at": 32704,
+      "checksum": 65535,
+      "chipset": 52,
+      "complement": 0,
+      "computed": 1864,
+      "map": 35,
+      "mirrors": 1,
+      "rom_size": 10,
+      "sram_size": 6
+    },
+    "size": 1048576
+  },
+  "sa1-demonstration": {
+    "account": "no header",
+    "header": null,
+    "size": 1048576
+  },
+  "sa1-demonstration-header-fix": {
+    "account": "not complements",
+    "header": {
+      "at": 32704,
+      "checksum": 1281,
+      "chipset": 53,
+      "complement": 160,
+      "computed": 59266,
+      "map": 35,
+      "mirrors": 1,
+      "rom_size": 10,
+      "sram_size": 7
+    },
+    "size": 1048576
+  },
+  "sa1-speed-test-5-1": {
+    "account": "placeholder pair",
+    "header": {
+      "at": 32704,
+      "checksum": 65535,
+      "chipset": 53,
+      "complement": 0,
+      "computed": 33561,
+      "map": 35,
+      "mirrors": 1,
+      "rom_size": 9,
+      "sram_size": 5
+    },
+    "size": 65536
+  },
+  "snsp-aging-1-02": {
+    "account": "no header",
+    "header": null,
+    "size": 131072
+  },
+  "test-program": {
+    "account": "no header",
+    "header": null,
+    "size": 1048576
+  }
+}
