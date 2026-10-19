@@ -62,7 +62,7 @@ table, or a Nintendo licensee bulletin assigning the codes.
 **The document says.** A five row table covering 3 to 64 megabit, and nothing
 below or above it.
 
-Source: Nintendo, _SNES Development Manual, Book 1_, manual page 1-2-18.
+Source: Nintendo, _SNES Development Manual, Book 1_, manual page 1-2-19.
 
 **What this project follows.** The rule the table implies, which is the exponent
 of the smallest power of two that holds the image.
@@ -73,7 +73,7 @@ does print, which is the only evidence that it is the right rule.
 
 **What was searched and did not settle it.** Book I itself, on 2026-08-27, with
 the document on the machine and its pages rendered and read rather than searched
-through a text layer. The five rows are on manual page 1-2-18 and read `3 ~ 4M
+through a text layer. The five rows are on manual page 1-2-19 and read `3 ~ 4M
 Bit`, `5 ~ 8M Bit`, `9 ~ 16M Bit`, `17 ~ 32M Bit` and `33 ~ 64M Bit`, with
 nothing below or above them and no formula beside them. The book does print a
 rounding rule for sizes that are not a power of two, and it is about the check
