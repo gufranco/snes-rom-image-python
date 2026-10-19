@@ -71,8 +71,8 @@ against a library rather than argued.
 
 **Not settled: 4 things**, each in [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) with
 what would close it. Three are places the specification is silent and the
-cartridges are not, and one is twelve retail images whose stored checksum matches
-neither reading. Do not close one by argument.
+cartridges are not, and one is twelve retail images whose stored checksum is not
+the specified one. Do not close one by argument.
 
 ## The submission checksum is not the header checksum
 

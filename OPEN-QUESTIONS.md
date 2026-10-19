@@ -23,8 +23,9 @@ it says nothing about what was specified. Where the specification is silent, a
 library tells you what shipped and not what the rule was, so a pattern that holds
 across seven thousand cartridges is still a pattern rather than a rule.
 
-That distinction matters most in the last entry below, where twelve images
-disagree with both readings and three of them look like ordinary retail releases.
+That distinction matters most in the last entry below, where twelve images carry
+a checksum other than the specified one and three of them look like ordinary
+retail releases.
 
 ## What would settle almost all of them
 
@@ -104,7 +105,7 @@ against and not on the machine it was built for.
 
 ## Where neither reading explains what shipped
 
-### Twelve retail images whose stored checksum matches neither rule.
+### Twelve retail images whose stored checksum is not the specified one.
 
 **The document says.** Every cartridge should carry the checksum the
 specification defines.
@@ -121,20 +122,34 @@ groups:
   build, all storing the same value, and one Switch Online build of Pop'n
   TwinBee. Assembled decades later by a process with no reason to honour a
   submission requirement.
-- **Two SPC7110 cartridges and one other.** Both Tengai Makyou Zero images at 40
-  megabit, and Momotarou Dentetsu Happy at 24 megabit. **Not explained.** These
-  are ordinary retail Japanese releases with self-consistent headers, and they
-  are the only entries here that might indicate a rule this package still has
-  wrong.
+- **Three SPC7110 images.** Both Tengai Makyou Zero images at 40 megabit and
+  Momotarou Dentetsu Happy at 24 megabit, all three carrying maker code 18.
+  **Narrowed, not explained.** Each stored value is reproduced from the image
+  bytes alone: both Tengai Makyou Zero images carry the plain sum of every byte
+  counted once, and Momotarou Dentetsu Happy carries twice that plain sum. A sum
+  over the first megabyte, the program ROM an SPC7110 board splits off, matches
+  none of them.
 
 **What this project follows.** The document. It computes the specified checksum
 for these images, which is not the one they carry, so rewriting one of them
 changes its checksum to the specified value.
 
-**What would settle or reopen it.** For the last group, a second cartridge at the
-same size from the same publisher, to tell a per-title accident from a rule. For
-the SPC7110 pair specifically, whether the decompression hardware changes what
-the console reads at the top of the address space.
+**What was measured.** On 2026-10-19, over the 2,780 retail images with a
+self-consistent header, which reproduced the figures above. Every retail image
+declaring an SPC7110 is four images of three titles. The specified sum matches
+one, Super Power League 4 at 16 megabit, where every candidate rule agrees. The
+program ROM alone matches none of the four. The publisher is not the
+explanation: the 20 other non-power-of-two retail images carrying maker code 18
+all follow the specified mirrored sum, Daikaijuu Monogatari II among them at the
+same 40 megabit as Tengai Makyou Zero. No rule this package could adopt covers
+the three, so it keeps computing the specified value for them.
+
+**What would settle or reopen it.** For the SPC7110 group, a Nintendo or
+licensee document saying how the header checksum is taken on an SPC7110 board.
+The arithmetic is measured; why those titles were summed once, or twice, rather
+than mirrored is not. No further cartridge can settle it, because every retail
+SPC7110 image is already in the census. The other two groups were never
+submitted through the process the specification governs.
 
 ## What is not in question
 

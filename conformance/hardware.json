@@ -212,7 +212,7 @@
           ]
         }
       ],
-      "why": "Roughly a quarter of the retail library is not a power of two. A plain sum is wrong on all of it, and this package summed plainly until the specification was read. See divergences.json entry short-image-checksum.",
+      "why": "Roughly a quarter of the retail library is not a power of two. A plain sum disagrees with the stored value on 630 of the 633 such retail images, and this package summed plainly until the specification was read. See divergences.json entry short-image-checksum.",
       "manualPage": "1-2-20",
       "document": "developmentManual",
       "heldBy": [

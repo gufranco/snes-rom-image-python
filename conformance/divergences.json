@@ -32,13 +32,13 @@
       },
       "packageFollows": "document",
       "howItSurvived": "Every property the census checked was internal: that the value and its complement are complements, that recomputing over the output gives back what was written, that nothing outside a header moved, that a second rewrite changes nothing. A rule wrong the same way every time passes all four. Nothing compared the computed value against the value the cartridge already carried, and that check has now been added as a fifth property named carried.",
-      "wouldReopenIt": "A retail cartridge that is not a power of two, whose header is self-consistent, and whose stored checksum matches a plain sum."
+      "wouldReopenIt": "A retail cartridge that is not a power of two, whose header is self-consistent, and whose stored checksum matches a plain sum and not the mirrored one, outside the SPC7110 images entry cartridges-that-still-disagree already names. Three of the 633 match a plain sum: both Tengai Makyou Zero images, which are two of those SPC7110 images, and Undake 30 - Same Game Daisakusen - Mario Version at 3 Mbit, where the two rules give the same value."
     },
     {
       "id": "cartridges-that-still-disagree",
       "severity": "high",
       "status": "open",
-      "topic": "Twelve retail images whose stored checksum matches neither rule.",
+      "topic": "Twelve retail images whose stored checksum is not the one the specification defines.",
       "documentSays": {
         "rung": 1,
         "claim": "Every cartridge should carry the checksum the specification defines."
@@ -59,18 +59,24 @@
           "reading": "Re-releases assembled decades later by a process that had no reason to honour a submission requirement."
         },
         {
-          "what": "Two SPC7110 cartridges and one other",
-          "which": "both Tengai Makyou Zero images at 40 Mbit, and Momotarou Dentetsu Happy at 24 Mbit",
-          "reading": "Not explained. These are ordinary retail Japanese releases with self-consistent headers, and they are the only entries here that might indicate a rule this package still has wrong."
+          "what": "Three SPC7110 images",
+          "which": "both Tengai Makyou Zero images at 40 Mbit, chipset F9H, and Momotarou Dentetsu Happy at 24 Mbit, chipset F5H, all three carrying maker code 18",
+          "reading": "Narrowed, not explained. Each stored value is reproduced from the image bytes alone, with the four checksum bytes neutral and no address mapping applied: both Tengai Makyou Zero images carry the plain sum of every byte counted once, and Momotarou Dentetsu Happy carries twice that plain sum. A sum over the first megabyte alone, the program ROM an SPC7110 board splits off from its data ROM, matches none of the three and does not match Super Power League 4, the fourth SPC7110 image, either. No rule this package could adopt covers them: the 20 other retail images carrying maker code 18 that are not a power of two follow the specified mirrored sum, Daikaijuu Monogatari II among them at the same 40 Mbit as Tengai Makyou Zero, so the departure belongs to these SPC7110 titles rather than to the publisher's sizes."
         }
       ],
       "packageFollows": "document",
       "consequence": "This package computes the specified checksum for these images, which is not the one they carry. Rewriting one of them therefore changes its checksum to the specified value.",
       "wouldSettleIt": [
-        "For the last group, a second cartridge at the same size from the same publisher, to tell a per-title accident from a rule.",
-        "For the SPC7110 pair specifically, whether the decompression hardware changes what the console reads at the top of the address space, which would change what a sum over the image means."
+        "For the SPC7110 group, a Nintendo or licensee document saying how the header checksum is taken on an SPC7110 board. The arithmetic is measured; what is missing is why the tool that mastered these titles summed the file once, or twice, instead of mirroring it. No further cartridge can settle it, because all four retail SPC7110 images are in the census.",
+        "For the competition, prototype and re-release groups, nothing outside reach would change the reading: they were never submitted through the process the specification governs."
       ],
-      "why": "Named rather than folded into a pass rate. Twelve is small and three of them are unexplained, and a summary that reported only the agreement figure would hide that."
+      "why": "Named rather than folded into a pass rate. Twelve is small and three of them are unexplained, and a summary that reported only the agreement figure would hide that.",
+      "measured": {
+        "on": "2026-10-19",
+        "subjects": "The 2,780 retail images from the licensed regions with a self-consistent header, the population the carried observation reports, which reproduced its figures: 2,768 agree with the specified sum, and of the 633 that are not a power of two, 626 agree with the mirrored sum and 3 with a plain one.",
+        "spc7110": "Every retail image declaring chipset F5H or F9H: 4 images, 3 titles. Specified mirrored sum matches 1, Super Power League 4 at 16 Mbit, where every candidate rule agrees. Program ROM only, the first 0x100000 bytes, matches 0 of 4. Plain sum matches both Tengai Makyou Zero images. Twice the plain sum matches Momotarou Dentetsu Happy, and it was the only hit among 4,096 weightings of 0 to 3 applied to each of its six 512 KB blocks, against about 0.06 hits expected by chance.",
+        "control": "The 20 other non-power-of-two retail images with maker code 18, the publisher of all three, every one agreeing with the specified mirrored sum and none with a plain sum except Undake 30, where the two coincide."
+      }
     },
     {
       "id": "mirrored-headers-undocumented",
