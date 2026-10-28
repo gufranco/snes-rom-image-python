@@ -21,3 +21,4 @@ specs/
 *.sfc
 *.smc
 packages/
+external/

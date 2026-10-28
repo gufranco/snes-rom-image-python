@@ -121,11 +121,12 @@ would be misleading.**
 
 ## Test cartridges
 
-[`conformance/testroms.json`](conformance/testroms.json) lists the 18 images in
-`snes-roms/5 Tools & Service Test Carts/`, each pinned by SHA-256, and every one
-is `read`: this package finds its header, its mirrors and its checksum. The
-images live beside this repository in `snes-roms/`, or wherever
-`SNES_TEST_CARTRIDGE_DIR` points, and are never committed.
+[`conformance/testroms.json`](conformance/testroms.json) lists the 18 images
+taken from the cartridge library's `5 Tools & Service Test Carts/` folder, each
+pinned by SHA-256, and every one is `read`: this package finds its header, its
+mirrors and its checksum. Copies sit in `external/tools/`, which the runner
+reads unless `SNES_TEST_CARTRIDGE_DIR` points elsewhere, and are never
+committed.
 
 ```bash
 python3 -m conformance.testcarts
@@ -157,6 +158,25 @@ Every image is accounted for, and a test in
 The `BIOS/` and `CPU/` folders beside them are not test cartridges: the first
 holds boot programs and peripherals, the second coprocessor program dumps with
 no header. Nothing waits on another member here.
+
+## Files kept in `external/`
+
+Everything this member reads and may not ship sits in `external/`, which git
+ignores and Dropbox is told to leave alone, per FAMILY.md's "Where the files a
+member reads are kept". [`artifacts.manifest.json`](artifacts.manifest.json)
+names all 18 by size, CRC32, MD5, SHA-1 and SHA-256:
+
+- `external/tools/`, the eighteen test images the cartridge record reads,
+  copied from the cartridge library.
+
+```bash
+python3 -m conformance.external
+python3 -m conformance.external --describe external/<file>
+```
+
+The first says which are here, verified, missing or wrong. The second prints
+the manifest entry for a file being added, which gets its entry in the same
+change.
 
 ## Every gate, in the order to run them
 
@@ -284,7 +304,10 @@ conformance/
   testcarts.json    what each one read: declared bytes and checksums, no title
   links.py          the weekly check that every cited address still answers
   speed.py          the throughput floor
+  external.py       which files in external/ are here, verified, missing or wrong
 snes-mapper-python/  the header reader, a submodule pinned by commit
+external/           the test images, never committed
+artifacts.manifest.json  every file in external/, by size and every digest
 ```
 
 ## Things that will bite you
