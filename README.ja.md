@@ -8,7 +8,7 @@
 [![Release](https://img.shields.io/github/v/release/gufranco/snes-rom-image-python)](https://github.com/gufranco/snes-rom-image-python/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-**489**件の宣言を再生し、失敗は**0**件、**7,330**本のカートリッジすべてで**4**つの性質を確認、計算したチェックサムは市販カートリッジ**2,780**本中**2,768**本で一致、マニュアル内で**20**件の引用を特定、テスト**949**件、ステートメントとブランチのカバレッジ**100%**、依存関係なし
+**489**件の宣言を再生し、失敗は**0**件、**7,330**本のカートリッジすべてで**4**つの性質を確認、計算したチェックサムは市販カートリッジ**2,780**本中**2,768**本で一致、マニュアル内で**20**件の引用を特定、テスト**951**件、ステートメントとブランチのカバレッジ**100%**、依存関係なし
 
 ```python
 from romimage import rewrite
