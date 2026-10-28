@@ -35,7 +35,7 @@ fifth writes what a backup unit or flash cart reads in front of the image.
   says whether it would change anything, and running it twice changes nothing.
 - `copier.for_game_doctor(image)` derives the Game Doctor map from the cartridge
   map and refuses a slot that leaves its 4 Mbit chunk. `copier.for_sd2snes(image,
-  chipset)` writes the one form the sd2snes firmware maps a whole-bank image for.
+chipset)` writes the one form the sd2snes firmware maps a whole-bank image for.
   Neither header is ever read by the console, only by the unit in front of it.
 - `Manifest(document)` matches a supplied file and, on a miss, says which miss it
   is rather than printing a digest.
