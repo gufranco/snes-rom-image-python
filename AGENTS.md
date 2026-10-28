@@ -17,9 +17,10 @@ thing.
 
 ## The interface a caller drives
 
-Four modules, answering four questions in the order they have to be asked: what
+Five modules. Four answer questions in the order they have to be asked: what
 the dumping device added or split off, what makes this file itself, what the
-cartridge says and how to change it safely, and which wrong a wrong file is.
+cartridge says and how to change it safely, and which wrong a wrong file is. The
+fifth writes what a backup unit or flash cart reads in front of the image.
 
 - `dump.read(path)` joins a split set and strips a copier stub. The pieces are
   separately available, because a caller who already knows which they have should
@@ -27,9 +28,15 @@ cartridge says and how to change it safely, and which wrong a wrong file is.
 - `identity.measure(data)` publishes size and four digests, and
   `identity.AUTHORITATIVE` names the one that decides. The other three are there
   because the databases a reader will search still index by them.
-- `rewrite.declare_rom_only(image)` clears the chipset byte in every mirror and
-  recomputes the checksum over the result. `rewrite.needs_rewrite(image)` says
-  whether it would change anything, and running it twice changes nothing.
+- `rewrite.declare_rom_only(image)` takes the coprocessor out of the chipset
+  byte in every mirror and recomputes the checksum over the result. The low
+  nibble's RAM and battery stay: `0x45` becomes `0x02`, never `0x00`, because an
+  emulator keeps save RAM only for a declared battery. `rewrite.needs_rewrite(image)`
+  says whether it would change anything, and running it twice changes nothing.
+- `copier.for_game_doctor(image)` derives the Game Doctor map from the cartridge
+  map and refuses a slot that leaves its 4 Mbit chunk. `copier.for_sd2snes(image,
+  chipset)` writes the one form the sd2snes firmware maps a whole-bank image for.
+  Neither header is ever read by the console, only by the unit in front of it.
 - `Manifest(document)` matches a supplied file and, on a miss, says which miss it
   is rather than printing a digest.
 

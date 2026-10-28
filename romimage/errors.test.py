@@ -37,7 +37,9 @@ class OneHomeTest(unittest.TestCase):
         ]
 
     def test_the_module_defines_every_refusal_this_package_makes(self) -> None:
-        self.assertEqual(sorted(self.named()), ["Malformed", "NoAuthority", "NoParts"])
+        self.assertEqual(
+            sorted(self.named()), ["Malformed", "NoAuthority", "NoParts", "Unmappable"]
+        )
 
     def test_every_one_of_them_derives_from_exception(self) -> None:
         stray = [name for name in self.named() if not issubclass(getattr(errors, name), Exception)]

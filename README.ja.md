@@ -8,7 +8,7 @@
 [![Release](https://img.shields.io/github/v/release/gufranco/snes-rom-image-python)](https://github.com/gufranco/snes-rom-image-python/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-**489**件の宣言を再生し、失敗は**0**件、**7,330**本のカートリッジすべてで**4**つの性質を確認、計算したチェックサムは市販カートリッジ**2,780**本中**2,768**本で一致、マニュアル内で**20**件の引用を特定、テスト**915**件、ステートメントとブランチのカバレッジ**100%**、依存関係なし
+**489**件の宣言を再生し、失敗は**0**件、**7,330**本のカートリッジすべてで**4**つの性質を確認、計算したチェックサムは市販カートリッジ**2,780**本中**2,768**本で一致、マニュアル内で**20**件の引用を特定、テスト**949**件、ステートメントとブランチのカバレッジ**100%**、依存関係なし
 
 ```python
 from romimage import rewrite
@@ -32,7 +32,7 @@ True
 True
 ```
 
-この例は512 KBのイメージを作ります。その`0x7FC0`にあるヘッダーはチップセット`0x03`、つまりDSPを宣言しています。`needs_rewrite`は、この宣言を取り除く必要があると報告します。`declare_rom_only`はヘッダーのすべてのコピーにチップセット`0x00`とサイズ指数を書き込み、その結果に対してチェックサムとその補数を再計算します。2回目の処理では同じバイト列が返ります。
+この例は512 KBのイメージを作ります。その`0x7FC0`にあるヘッダーはチップセット`0x03`、つまりDSPを宣言しています。`needs_rewrite`は、この宣言を取り除く必要があると報告します。`declare_rom_only`はヘッダーのすべてのコピーにチップセット`0x00`とサイズ指数を書き込み、その結果に対してチェックサムとその補数を再計算します。2回目の処理では同じバイト列が返ります。宣言されたRAMやバッテリーは宣言されたまま残ります。
 
 ## インストール
 
@@ -61,40 +61,49 @@ python3 romimage/doctor.py
 
 ## インターフェース
 
-4つのモジュールがあり、それぞれがファイルについての1つの問いに答えます。
+5つのモジュールがあり、それぞれがファイルについての1つの問いに答えます。
 
-| モジュール                         | 問い                                                               |
-| :--------------------------------- | :----------------------------------------------------------------- |
-| [`dump`](romimage/dump.py)         | ダンプ機器は何を付け加え、何を分割したか                           |
-| [`identity`](romimage/identity.py) | どのダイジェストがファイルを識別し、どれが判定を下すか             |
-| [`rewrite`](romimage/rewrite.py)   | ヘッダーは何を宣言しているか、そこからコプロセッサをどう消すか     |
-| [`manifest`](romimage/manifest.py) | 渡されたファイルが期待したものでないとき、それはどの種類の不一致か |
+| モジュール                         | 問い                                                                               |
+| :--------------------------------- | :--------------------------------------------------------------------------------- |
+| [`dump`](romimage/dump.py)         | ダンプ機器は何を付け加え、何を分割したか                                           |
+| [`identity`](romimage/identity.py) | どのダイジェストがファイルを識別し、どれが判定を下すか                             |
+| [`rewrite`](romimage/rewrite.py)   | ヘッダーは何を宣言しているか、そこからコプロセッサをどう消すか                     |
+| [`manifest`](romimage/manifest.py) | 渡されたファイルが期待したものでないとき、それはどの種類の不一致か                 |
+| [`copier`](romimage/copier.py)     | バックアップユニットやフラッシュカートがイメージの前で読むもの、そしてその書き出し |
 
 ### 呼び出し
 
-| 呼び出し                                                     | 効果                                                                                                                                                                         |
-| :----------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `dump.read(path)`                                            | イメージのバイト列を返します。ファイルからはコピー機のスタブを取り除きます。番号付きパートのフォルダは名前順に連結します。パートが1つもないフォルダには`NoParts`を送出します |
-| `dump.form(path)`                                            | ファイルには長さで判断した`"bare"`または`"copier header"`を、フォルダには`"N part set"`を返します                                                                            |
-| `dump.strip_copier_stub(data)`                               | 長さからスタブがあると判断できるとき、先頭の512バイトを取り除きます                                                                                                          |
-| `dump.parts_in(folder)`                                      | 1桁から3桁の数字のサフィックスを持つファイルを、大文字化した名前順に並べて返します                                                                                           |
-| `dump.join(parts)`                                           | 最初のパートからスタブを取り除いたうえで、パートを連結します                                                                                                                 |
-| `dump.deflate_ratio(block)`                                  | deflateレベル6での圧縮後サイズを元のサイズで割った値です。空のブロックでは0.0です                                                                                            |
-| `dump.block_ratios(data, block=0x10000)`                     | 64 KBの完全なブロックそれぞれの`deflate_ratio`です                                                                                                                           |
-| `dump.measure_reuse(source, target, chunk=1024, stride=512)` | `(found, total)`です。`source`の1 KBチャンクのうち、いくつが`target`に現れるかを示します                                                                                     |
-| `dump.chunk_index(data, chunk=1024, stride=512)`             | `measure_reuse`が検索する、チャンクからオフセットへのインデックスです                                                                                                        |
-| `identity.measure(data)`                                     | バイト列の`size`、`crc32`、`md5`、`sha1`、`sha256`です                                                                                                                       |
-| `identity.agrees(found, expected)`                           | `sha256`の値が一致するときTrueです。`expected`に`sha256`がないときは`NoAuthority`を送出します                                                                                |
-| `rewrite.anchor_of(image)`                                   | リーダーが見つけたヘッダーのオフセット、または`None`です                                                                                                                     |
-| `rewrite.mirrors(image)`                                     | そのヘッダーとバイト単位で同一なすべてのコピーのオフセットです                                                                                                               |
-| `rewrite.describe(image)`                                    | コピーごとに1つの辞書です。`at`、`title`、`map`、`chipset`、`coprocessor`、`size`、`sram`、`checksum`を持ちます                                                              |
-| `rewrite.needs_rewrite(image)`                               | いずれかのコピーが`0x00`以外のチップセット、またはイメージ自身のものと異なるサイズバイトを宣言しているときTrueです。ヘッダーがないときは`NoHeader`を送出します               |
-| `rewrite.declare_rom_only(image)`                            | すべてのコピーでチップセットを`0x00`、サイズバイトを正しい値にし、チェックサムを再計算した新しいバイト列を返します。ヘッダーがないときは`NoHeader`を送出します               |
-| `rewrite.checksum(image, places=None)`                       | ヘッダーのチェックサムです。すべてのコピーの4つのチェックサムバイトを`FF FF 00 00`として数えます。`places`のデフォルトは`mirrors(image)`です                                 |
-| `rewrite.mirrored_sum(data)`                                 | バイトの合計です。長さが2の累乗でない場合は、2の累乗になるまでミラーします                                                                                                   |
-| `rewrite.size_byte(length)`                                  | サイズ指数です。キロバイト単位のサイズを2の累乗で表した指数を、切り上げて返します                                                                                            |
-| `rewrite.identifies(block)`                                  | ブロックに`0x00`、`0x20`、`0xFF`以外のバイトが含まれるときTrueです                                                                                                           |
-| `rewrite.changes(before, after, block=0x1000)`               | バイトが異なるすべてのオフセットです                                                                                                                                         |
+| 呼び出し                                                     | 効果                                                                                                                                                                              |
+| :----------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `dump.read(path)`                                            | イメージのバイト列を返します。ファイルからはコピー機のスタブを取り除きます。番号付きパートのフォルダは名前順に連結します。パートが1つもないフォルダには`NoParts`を送出します      |
+| `dump.form(path)`                                            | ファイルには長さで判断した`"bare"`または`"copier header"`を、フォルダには`"N part set"`を返します                                                                                 |
+| `dump.strip_copier_stub(data)`                               | 長さからスタブがあると判断できるとき、先頭の512バイトを取り除きます                                                                                                               |
+| `dump.parts_in(folder)`                                      | 1桁から3桁の数字のサフィックスを持つファイルを、大文字化した名前順に並べて返します                                                                                                |
+| `dump.join(parts)`                                           | 最初のパートからスタブを取り除いたうえで、パートを連結します                                                                                                                      |
+| `dump.deflate_ratio(block)`                                  | deflateレベル6での圧縮後サイズを元のサイズで割った値です。空のブロックでは0.0です                                                                                                 |
+| `dump.block_ratios(data, block=0x10000)`                     | 64 KBの完全なブロックそれぞれの`deflate_ratio`です                                                                                                                                |
+| `dump.measure_reuse(source, target, chunk=1024, stride=512)` | `(found, total)`です。`source`の1 KBチャンクのうち、いくつが`target`に現れるかを示します                                                                                          |
+| `dump.chunk_index(data, chunk=1024, stride=512)`             | `measure_reuse`が検索する、チャンクからオフセットへのインデックスです                                                                                                             |
+| `identity.measure(data)`                                     | バイト列の`size`、`crc32`、`md5`、`sha1`、`sha256`です                                                                                                                            |
+| `identity.agrees(found, expected)`                           | `sha256`の値が一致するときTrueです。`expected`に`sha256`がないときは`NoAuthority`を送出します                                                                                     |
+| `rewrite.anchor_of(image)`                                   | リーダーが見つけたヘッダーのオフセット、または`None`です                                                                                                                          |
+| `rewrite.mirrors(image)`                                     | そのヘッダーとバイト単位で同一なすべてのコピーのオフセットです                                                                                                                    |
+| `rewrite.describe(image)`                                    | コピーごとに1つの辞書です。`at`、`title`、`map`、`chipset`、`coprocessor`、`size`、`sram`、`checksum`を持ちます                                                                   |
+| `rewrite.needs_rewrite(image)`                               | いずれかのコピーがコプロセッサー、またはイメージ自身のものと異なるサイズバイトを宣言しているときTrueです。ヘッダーがないときは`NoHeader`を送出します                              |
+| `rewrite.without_coprocessor(chipset)`                       | コプロセッサーを取り除いたチップセットバイトです。バッテリーを宣言していれば`0x02`、RAMだけなら`0x01`、それ以外は`0x00`です                                                       |
+| `rewrite.declare_rom_only(image)`                            | すべてのコピーでチップセットを`without_coprocessor`の値、サイズバイトを正しい値にし、チェックサムを再計算した新しいバイト列を返します。ヘッダーがないときは`NoHeader`を送出します |
+| `rewrite.declare_chipset(image, chipset)`                    | 同じ書き換えを、指定したチップセットバイトで行います。ヘッダーがないときは`NoHeader`を送出します                                                                                  |
+| `copier.for_game_doctor(image)`                              | LoROMまたはwhole-bankのイメージ用の512バイトのGame Doctorヘッダーと、その後ろのイメージです。他のレイアウトと、セーブRAMを持つwhole-bankのイメージには`Unmappable`を送出します    |
+| `copier.game_doctor_header(place, save_ram_bytes=0)`         | 任意の配置に対するそのヘッダーです。`place(bank, page)`はアドレスが読むファイルオフセットを返します                                                                               |
+| `copier.game_doctor_map(place)`                              | 24バイトのマップだけです。スロットごとに4 Mbitのチャンクを1つ割り当て、バンクがチャンクから外れるスロットは拒否します                                                             |
+| `copier.lorom_place(size)`, `copier.wholebank_place(size)`   | 対応する2つのレイアウトが使う配置です                                                                                                                                             |
+| `copier.place_of(image)`                                     | イメージのヘッダーと長さが求める配置です                                                                                                                                          |
+| `copier.for_sd2snes(image, chipset)`                         | 空の512バイトのコピー機ヘッダーと、その後ろに`chipset`(`0x43`または`0x45`)を宣言するwhole-bankのイメージです。他のサイズやチップセットには`Unmappable`を送出します                |
+| `rewrite.checksum(image, places=None)`                       | ヘッダーのチェックサムです。すべてのコピーの4つのチェックサムバイトを`FF FF 00 00`として数えます。`places`のデフォルトは`mirrors(image)`です                                      |
+| `rewrite.mirrored_sum(data)`                                 | バイトの合計です。長さが2の累乗でない場合は、2の累乗になるまでミラーします                                                                                                        |
+| `rewrite.size_byte(length)`                                  | サイズ指数です。キロバイト単位のサイズを2の累乗で表した指数を、切り上げて返します                                                                                                 |
+| `rewrite.identifies(block)`                                  | ブロックに`0x00`、`0x20`、`0xFF`以外のバイトが含まれるときTrueです                                                                                                                |
+| `rewrite.changes(before, after, block=0x1000)`               | バイトが異なるすべてのオフセットです                                                                                                                                              |
 
 `declare_rom_only`、`needs_rewrite`、`AUTHORITATIVE`、`CHIPSET_ROM_ONLY`、`COPROCESSORS`はパッケージのトップレベルでも公開しています。
 
@@ -219,7 +228,13 @@ bare | same size | ['worked example']
 | :---------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- |
 | `identity.AUTHORITATIVE`                                          | `"sha256"`。受け入れと拒否を決める唯一のダイジェストです                                                                                 |
 | `identity.INTEROPERABLE`                                          | `("crc32", "md5", "sha1")`。データベース検索のために公開しており、判定には一切使いません                                                 |
-| `rewrite.CHIPSET_ROM_ONLY`                                        | `0x00`                                                                                                                                   |
+| `rewrite.CHIPSET_ROM_ONLY`, `CHIPSET_RAM`, `CHIPSET_RAM_BATTERY`  | `0x00`、`0x01`、`0x02`。コプロセッサーがなくなった後に残る3つの宣言です                                                                  |
+| `rewrite.RAM_NIBBLES`, `BATTERY_NIBBLES`                          | RAMを宣言する下位ニブル`1 2 4 5`と、バッテリーを宣言する`2 5 6`です                                                                      |
+| `copier.COPIER_BYTES`                                             | `0x200`。あらゆるコピー機ヘッダーの長さです                                                                                              |
+| `copier.GAME_DOCTOR_MAGIC`                                        | `GAME DOCTOR SF 3`。Game Doctorヘッダーの最初の16バイトです                                                                              |
+| `copier.GAME_DOCTOR_SLOTS`                                        | `0x11`から`0x28`のマップバイトが受け持つ24の`(first bank, page)`領域で、それぞれ16バンクです                                             |
+| `copier.GAME_DOCTOR_SAVE_CODES`                                   | セーブRAMのバイト数から`0x10`のコードへの対応です。なしまたは32 KBは`0x80`、8 KBは`0x81`、2 KBは`0x82`                                   |
+| `copier.SD2SNES_CHIPSETS`                                         | `0x43`と`0x45`。sd2snesファームウェアがwhole-bankのイメージをマップするチップセットです                                                  |
 | `rewrite.COPROCESSORS`                                            | パッケージが知っている18個のコードについて、チップセットバイトからコプロセッサ名への対応です。`0x03`のDSPから`0xF9`のSPC7110まであります |
 | `rewrite.MAP_MODE`、`CHIPSET`、`ROM_SIZE`、`SRAM_SIZE`            | ヘッダーオフセット`0x15`から`0x18`                                                                                                       |
 | `rewrite.CHECKSUM_COMPLEMENT`、`CHECKSUM`                         | ヘッダーオフセット`0x1C`と`0x1E`                                                                                                         |
@@ -237,14 +252,15 @@ bare | same size | ['worked example']
 
 ### エラー
 
-| エラー        | 送出される条件                                                                                                                                                |
-| :------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `NoParts`     | `dump.read`に番号付きパートのないフォルダが渡されたとき                                                                                                       |
-| `NoAuthority` | `identity.agrees`に`sha256`のない期待値が渡されたとき                                                                                                         |
-| `Malformed`   | `Manifest`にアーティファクトがない、accepted形式のないアーティファクトがある、または`sha256`のないaccepted形式が渡されたとき                                  |
-| `NoHeader`    | `rewrite.needs_rewrite`または`rewrite.declare_rom_only`がヘッダーを見つけられないとき。ヘッダーリーダーに属するエラーで、`rewrite.NoHeader`として参照できます |
+| エラー        | 送出される条件                                                                                                                                                                          |
+| :------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `NoParts`     | `dump.read`に番号付きパートのないフォルダが渡されたとき                                                                                                                                 |
+| `NoAuthority` | `identity.agrees`に`sha256`のない期待値が渡されたとき                                                                                                                                   |
+| `Malformed`   | `Manifest`にアーティファクトがない、accepted形式のないアーティファクトがある、または`sha256`のないaccepted形式が渡されたとき                                                            |
+| `Unmappable`  | `copier`に、そのイメージではユニットが読めないヘッダーを求めたとき。導出しないレイアウト、チャンクから外れるスロット、sd2snesファームウェアがその方法でマップしないサイズやチップセット |
+| `NoHeader`    | `rewrite.needs_rewrite`または`rewrite.declare_rom_only`がヘッダーを見つけられないとき。ヘッダーリーダーに属するエラーで、`rewrite.NoHeader`として参照できます                           |
 
-最初の3つは[`romimage/errors.py`](romimage/errors.py)にあり、パッケージのトップレベルで公開しています。
+最初の4つは[`romimage/errors.py`](romimage/errors.py)にあり、パッケージのトップレベルで公開しています。
 
 ```python
 import tempfile
@@ -466,6 +482,52 @@ sha256
 
 CRC32は32ビットの誤り検出符号で、MD5とSHA-1には衝突が公表されています。3つとも、それらで索引付けしたデータベースからコピーを探せるように公開しています。いずれもファイルを受け入れる根拠にはなりません。
 
+### コプロセッサーを取り除いてもセーブメモリーは残る
+
+```python
+from romimage import rewrite
+
+image = bytearray(0x100000)
+image[0x7FC0 : 0x7FC0 + 21] = b"WORKED EXAMPLE       "
+image[0x7FD5] = 0x20
+image[0x7FD6] = 0x45
+image[0x7FD8] = 0x03
+
+after = rewrite.declare_rom_only(image)
+
+print(f"{after[0x7FD6]:#04x} {after[0x7FD8]:#04x}")
+print(rewrite.needs_rewrite(after))
+```
+
+```
+0x02 0x03
+False
+```
+
+チップセットバイトは2つの事実を持っています。上位ニブルがコプロセッサーを示し、下位ニブルがボード上の他のものを示します。`0x45`はRAMとバッテリーを持つS-DD1です。これに`0x00`を書くとバッテリーまで消えてしまい、bsnesが`nonVolatile()`で行うように、宣言されたバッテリーがあるときだけセーブRAMを保存するエミュレーターはセーブを保存しなくなりました。書き換えは現在コプロセッサーだけを取り除いて、RAMとバッテリーを示す`0x02`を残し、隣のセーブRAMのサイズには触れません。2026-10-28までは、どのチップセットにも`0x00`を書いていました。
+
+### コピー機ヘッダーを読むのはユニットで、本体ではない
+
+```python
+from romimage import copier
+
+header = copier.game_doctor_header(copier.wholebank_place(0xC00000))
+
+print(header[:16].decode())
+print(header[0x11:0x29].hex(" "))
+print(copier.game_doctor_map(copier.lorom_place(0x100000)).hex(" "))
+```
+
+```
+GAME DOCTOR SF 3
+20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35 36 37
+20 21 20 21 20 21 20 21 20 21 20 21 20 21 20 21 20 21 20 21 20 21 20 21
+```
+
+Game Doctorは、イメージの前にある512バイトを読んで、アドレス空間の各領域がどこから来るかを決めます。24のマップバイトはそれぞれ、16バンクの1つの領域について、そのメモリーの4 Mbitのチャンクを1つ、`0x20`にチャンク番号を足した値で示します。領域は、バンク`$00`から`$7F`と`$80`から`$FF`の上半分、続いて`$40`から`$7F`と`$C0`から`$FF`の下半分です。ucon64は同じ配置を表から書きます。96 Mbitのwhole-bankのイメージでは、最後の32 Mbitを一度もマップしない64 Mbitの表に落ちるため、ここではマップをカートリッジのマップから導出し、すべてのスロットが1つのチャンクに収まることを確かめます。導出したwhole-bankのヘッダーは、snes-street-fighter-alpha-2-nochipのissue 37が報告した、128 MbitのGame Doctor SF7がStreet Fighter Alpha 2とStreet Fighter Zero 2を動かしたヘッダーとバイト単位で同じです。
+
+FXPAK Proも動かすsd2snesファームウェアは、この512バイトを読まずに読み飛ばします。読むのは長さとチップセットです。whole-bankのイメージをマップするのは、ファイルが`0xC00200`バイトでチップセットが`0x43`または`0x45`のときだけなので、`for_sd2snes`は空のコピー機ヘッダーを付けたその形を書き出します。
+
 ## 実際のライブラリに含まれているもの
 
 **7,330**本のカートリッジで計測しました。このほか249本は読めるヘッダーがないため拒否しました。
@@ -475,7 +537,7 @@ CRC32は32ビットの誤り検出符号で、MD5とSHA-1には衝突が公表�
 | 異なる宣言の数                                       |   489 |
 | 異なるイメージサイズの数                             |   108 |
 | 異なるチップセットバイトの数                         |    36 |
-| 書き換えが必要になるカートリッジ                     | 3,799 |
+| 書き換えが必要になるカートリッジ                     | 1,197 |
 | ヘッダーの有無についてヘッダーリーダーと食い違った数 |     0 |
 
 4つの性質は、サンプルではなくすべてのカートリッジで確認しています。

@@ -8,7 +8,7 @@
 [![Release](https://img.shields.io/github/v/release/gufranco/snes-rom-image-python)](https://github.com/gufranco/snes-rom-image-python/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-重播 **489** 項聲明，**0** 項失敗，在全部 **7,330** 盒卡帶上逐一檢查 **4** 項屬性，計算所得的校驗和與 **2,780** 盒零售版卡帶中的 **2,768** 盒相符，在手冊中定位 **20** 段引文，**915** 個測試，**100%** 語句及分支覆蓋率，沒有依賴項
+重播 **489** 項聲明，**0** 項失敗，在全部 **7,330** 盒卡帶上逐一檢查 **4** 項屬性，計算所得的校驗和與 **2,780** 盒零售版卡帶中的 **2,768** 盒相符，在手冊中定位 **20** 段引文，**949** 個測試，**100%** 語句及分支覆蓋率，沒有依賴項
 
 ```python
 from romimage import rewrite
@@ -32,7 +32,7 @@ True
 True
 ```
 
-此示例建立一個 512 KB 的映像檔，其位於 `0x7FC0` 的標頭聲明晶片組 `0x03`，即 DSP。`needs_rewrite` 報告該聲明必須移除。`declare_rom_only` 將晶片組 `0x00` 及容量指數寫入標頭的每一份副本，然後在結果上重新計算校驗和及其補數。第二次處理會傳回相同的位元組。
+此示例建立一個 512 KB 的映像檔，其位於 `0x7FC0` 的標頭聲明晶片組 `0x03`，即 DSP。`needs_rewrite` 報告該聲明必須移除。`declare_rom_only` 將晶片組 `0x00` 及容量指數寫入標頭的每一份副本，然後在結果上重新計算校驗和及其補數。第二次處理會傳回相同的位元組。已聲明的 RAM 或電池會保持聲明。
 
 ## 安裝
 
@@ -61,40 +61,49 @@ python3 romimage/doctor.py
 
 ## 介面
 
-四個模組，各自回答關於檔案的一個問題。
+五個模組，各自回答關於檔案的一個問題。
 
-| 模組                               | 問題                                         |
-| :--------------------------------- | :------------------------------------------- |
-| [`dump`](romimage/dump.py)         | 傾印裝置加入或分拆了甚麼                     |
-| [`identity`](romimage/identity.py) | 哪些摘要可識別該檔案，以及由哪一個決定       |
-| [`rewrite`](romimage/rewrite.py)   | 標頭聲明了甚麼，以及如何從中清除協處理器     |
-| [`manifest`](romimage/manifest.py) | 當提供的檔案並非預期的檔案時，屬於哪一種不符 |
+| 模組                               | 問題                                               |
+| :--------------------------------- | :------------------------------------------------- |
+| [`dump`](romimage/dump.py)         | 傾印裝置加入或分拆了甚麼                           |
+| [`identity`](romimage/identity.py) | 哪些摘要可識別該檔案，以及由哪一個決定             |
+| [`rewrite`](romimage/rewrite.py)   | 標頭聲明了甚麼，以及如何從中清除協處理器           |
+| [`manifest`](romimage/manifest.py) | 當提供的檔案並非預期的檔案時，屬於哪一種不符       |
+| [`copier`](romimage/copier.py)     | 備份機或燒錄卡在映像檔前面讀取甚麼，以及如何寫出它 |
 
 ### 呼叫
 
-| 呼叫                                                         | 作用                                                                                                               |
-| :----------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------- |
-| `dump.read(path)`                                            | 傳回映像檔位元組。檔案會去除其複製機前置段。由編號分段組成的資料夾按名稱順序合併。資料夾內沒有分段時引發 `NoParts` |
-| `dump.form(path)`                                            | 對檔案按長度判斷，傳回 `"bare"` 或 `"copier header"`，對資料夾則傳回 `"N part set"`                                |
-| `dump.strip_copier_stub(data)`                               | 當長度顯示存在前置段時，捨棄開頭的 512 個位元組                                                                    |
-| `dump.parts_in(folder)`                                      | 帶一至三位數字後綴的檔案，按轉為大寫後的名稱排序                                                                   |
-| `dump.join(parts)`                                           | 去除第一個分段的前置段後，將各分段串接                                                                             |
-| `dump.deflate_ratio(block)`                                  | 以 deflate 等級 6 壓縮後的大小除以原始大小，空區塊為 0.0                                                           |
-| `dump.block_ratios(data, block=0x10000)`                     | 每個完整 64 KB 區塊的 `deflate_ratio`                                                                              |
-| `dump.measure_reuse(source, target, chunk=1024, stride=512)` | `(found, total)`：`source` 中有多少個 1 KB 區段出現在 `target` 中                                                  |
-| `dump.chunk_index(data, chunk=1024, stride=512)`             | `measure_reuse` 搜尋所用的區段至偏移索引                                                                           |
-| `identity.measure(data)`                                     | 位元組的 `size`、`crc32`、`md5`、`sha1` 及 `sha256`                                                                |
-| `identity.agrees(found, expected)`                           | `sha256` 值相符時為 True。`expected` 沒有 `sha256` 時引發 `NoAuthority`                                            |
-| `rewrite.anchor_of(image)`                                   | 讀取器找到的標頭的偏移，或 `None`                                                                                  |
-| `rewrite.mirrors(image)`                                     | 該標頭每一份逐位元組相同的副本的偏移                                                                               |
-| `rewrite.describe(image)`                                    | 每份副本一個字典：`at`、`title`、`map`、`chipset`、`coprocessor`、`size`、`sram`、`checksum`                       |
-| `rewrite.needs_rewrite(image)`                               | 任何副本聲明的晶片組不是 `0x00`，或容量位元組與映像檔本身不符時為 True。沒有標頭時引發 `NoHeader`                  |
-| `rewrite.declare_rom_only(image)`                            | 傳回新的位元組，每份副本都帶晶片組 `0x00`、正確的容量位元組及重新計算的校驗和。沒有標頭時引發 `NoHeader`           |
-| `rewrite.checksum(image, places=None)`                       | 標頭校驗和，每份副本的四個校驗和位元組均按 `FF FF 00 00` 計算。`places` 預設為 `mirrors(image)`                    |
-| `rewrite.mirrored_sum(data)`                                 | 位元組總和，長度不是 2 的冪時鏡像補足至 2 的冪                                                                     |
-| `rewrite.size_byte(length)`                                  | 容量指數：以千位元組計的容量向上取整後的 2 的冪次                                                                  |
-| `rewrite.identifies(block)`                                  | 區塊含有 `0x00`、`0x20` 或 `0xFF` 以外的位元組時為 True                                                            |
-| `rewrite.changes(before, after, block=0x1000)`               | 每個位元組不同的偏移                                                                                               |
+| 呼叫                                                         | 作用                                                                                                                                          |
+| :----------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------- |
+| `dump.read(path)`                                            | 傳回映像檔位元組。檔案會去除其複製機前置段。由編號分段組成的資料夾按名稱順序合併。資料夾內沒有分段時引發 `NoParts`                            |
+| `dump.form(path)`                                            | 對檔案按長度判斷，傳回 `"bare"` 或 `"copier header"`，對資料夾則傳回 `"N part set"`                                                           |
+| `dump.strip_copier_stub(data)`                               | 當長度顯示存在前置段時，捨棄開頭的 512 個位元組                                                                                               |
+| `dump.parts_in(folder)`                                      | 帶一至三位數字後綴的檔案，按轉為大寫後的名稱排序                                                                                              |
+| `dump.join(parts)`                                           | 去除第一個分段的前置段後，將各分段串接                                                                                                        |
+| `dump.deflate_ratio(block)`                                  | 以 deflate 等級 6 壓縮後的大小除以原始大小，空區塊為 0.0                                                                                      |
+| `dump.block_ratios(data, block=0x10000)`                     | 每個完整 64 KB 區塊的 `deflate_ratio`                                                                                                         |
+| `dump.measure_reuse(source, target, chunk=1024, stride=512)` | `(found, total)`：`source` 中有多少個 1 KB 區段出現在 `target` 中                                                                             |
+| `dump.chunk_index(data, chunk=1024, stride=512)`             | `measure_reuse` 搜尋所用的區段至偏移索引                                                                                                      |
+| `identity.measure(data)`                                     | 位元組的 `size`、`crc32`、`md5`、`sha1` 及 `sha256`                                                                                           |
+| `identity.agrees(found, expected)`                           | `sha256` 值相符時為 True。`expected` 沒有 `sha256` 時引發 `NoAuthority`                                                                       |
+| `rewrite.anchor_of(image)`                                   | 讀取器找到的標頭的偏移，或 `None`                                                                                                             |
+| `rewrite.mirrors(image)`                                     | 該標頭每一份逐位元組相同的副本的偏移                                                                                                          |
+| `rewrite.describe(image)`                                    | 每份副本一個字典：`at`、`title`、`map`、`chipset`、`coprocessor`、`size`、`sram`、`checksum`                                                  |
+| `rewrite.needs_rewrite(image)`                               | 任何副本聲明了協處理器，或容量位元組與映像檔本身不符時為 True。沒有標頭時引發 `NoHeader`                                                      |
+| `rewrite.without_coprocessor(chipset)`                       | 移除協處理器後的晶片組位元組：聲明了電池時為 `0x02`，只有 RAM 時為 `0x01`，否則為 `0x00`                                                      |
+| `rewrite.declare_rom_only(image)`                            | 傳回新的位元組，每份副本都帶晶片組的 `without_coprocessor` 值、正確的容量位元組及重新計算的校驗和。沒有標頭時引發 `NoHeader`                  |
+| `rewrite.declare_chipset(image, chipset)`                    | 同樣的改寫，使用給定的晶片組位元組。沒有標頭時引發 `NoHeader`                                                                                 |
+| `copier.for_game_doctor(image)`                              | 為 LoROM 或 whole-bank 映像檔產生的 512 位元組 Game Doctor 標頭，後接映像檔。其他佈局，以及帶存檔 RAM 的 whole-bank 映像檔，引發 `Unmappable` |
+| `copier.game_doctor_header(place, save_ram_bytes=0)`         | 任何放置方式下的該標頭：`place(bank, page)` 傳回一個位址讀取的檔案偏移                                                                        |
+| `copier.game_doctor_map(place)`                              | 只有 24 個映射位元組，每個槽一個 4 Mbit 區塊，拒絕其庫離開所屬區塊的槽                                                                        |
+| `copier.lorom_place(size)`, `copier.wholebank_place(size)`   | 兩種受支援佈局所用的放置方式                                                                                                                  |
+| `copier.place_of(image)`                                     | 映像檔的標頭及長度所要求的放置方式                                                                                                            |
+| `copier.for_sd2snes(image, chipset)`                         | 512 位元組的空複製機標頭，後接聲明 `chipset`（`0x43` 或 `0x45`）的 whole-bank 映像檔。其他容量或晶片組引發 `Unmappable`                       |
+| `rewrite.checksum(image, places=None)`                       | 標頭校驗和，每份副本的四個校驗和位元組均按 `FF FF 00 00` 計算。`places` 預設為 `mirrors(image)`                                               |
+| `rewrite.mirrored_sum(data)`                                 | 位元組總和，長度不是 2 的冪時鏡像補足至 2 的冪                                                                                                |
+| `rewrite.size_byte(length)`                                  | 容量指數：以千位元組計的容量向上取整後的 2 的冪次                                                                                             |
+| `rewrite.identifies(block)`                                  | 區塊含有 `0x00`、`0x20` 或 `0xFF` 以外的位元組時為 True                                                                                       |
+| `rewrite.changes(before, after, block=0x1000)`               | 每個位元組不同的偏移                                                                                                                          |
 
 `declare_rom_only`、`needs_rewrite`、`AUTHORITATIVE`、`CHIPSET_ROM_ONLY` 及 `COPROCESSORS` 亦在套件頂層公開。
 
@@ -215,36 +224,43 @@ bare | same size | ['worked example']
 
 ### 常數
 
-| 名稱                                                              | 值                                                                                    |
-| :---------------------------------------------------------------- | :------------------------------------------------------------------------------------ |
-| `identity.AUTHORITATIVE`                                          | `"sha256"`，唯一用於接受或拒絕的摘要                                                  |
-| `identity.INTEROPERABLE`                                          | `("crc32", "md5", "sha1")`，供數據庫查詢而公開，從不用於決定                          |
-| `rewrite.CHIPSET_ROM_ONLY`                                        | `0x00`                                                                                |
-| `rewrite.COPROCESSORS`                                            | 晶片組位元組至協處理器名稱，涵蓋套件已知的 18 個代碼，由 `0x03` DSP 至 `0xF9` SPC7110 |
-| `rewrite.MAP_MODE`、`CHIPSET`、`ROM_SIZE`、`SRAM_SIZE`            | 標頭偏移 `0x15` 至 `0x18`                                                             |
-| `rewrite.CHECKSUM_COMPLEMENT`、`CHECKSUM`                         | 標頭偏移 `0x1C` 及 `0x1E`                                                             |
-| `rewrite.CHECKSUM_FIELD_NEUTRAL`                                  | `FF FF 00 00`，四個校驗和位元組按此計算                                               |
-| `rewrite.CHECKSUM_FIELD_BYTES`、`CHECKSUM_FIELD_SUM`              | `4` 及 `0x01FE`，這些中性位元組的長度及其總和                                         |
-| `rewrite.PADDING`                                                 | `0x00`、`0x20` 及 `0xFF`，`identifies` 視為填充的位元組                               |
-| `rewrite.KILOBYTE`                                                | `1024`，`size_byte` 向上取整所用的單位                                                |
-| `rewrite.BLOCK_BYTES`                                             | `0x1000`，`changes` 在逐個位元組比較前先比較的區塊                                    |
-| `dump.BARE`、`dump.COPIER`                                        | `form` 對檔案傳回的兩個名稱                                                           |
-| `dump.PART_SUFFIX`                                                | 編號分段後綴所匹配的模式：一個句點加一至三位數字                                      |
-| `dump.BLOCK_BYTES`、`DEFLATE_LEVEL`                               | `0x10000` 及 `6`，`block_ratios` 及 `deflate_ratio` 的預設值                          |
-| `dump.CHUNK_BYTES`、`CHUNK_STRIDE`                                | `1024` 及 `512`，`measure_reuse` 及 `chunk_index` 的預設值                            |
-| `manifest.KNOWN`、`REWRITTEN`、`BAD_DUMP`、`SAME_SIZE`、`UNKNOWN` | 五種狀態                                                                              |
-| `romimage.__version__`                                            | 已安裝的版本                                                                          |
+| 名稱                                                              | 值                                                                                              |
+| :---------------------------------------------------------------- | :---------------------------------------------------------------------------------------------- |
+| `identity.AUTHORITATIVE`                                          | `"sha256"`，唯一用於接受或拒絕的摘要                                                            |
+| `identity.INTEROPERABLE`                                          | `("crc32", "md5", "sha1")`，供數據庫查詢而公開，從不用於決定                                    |
+| `rewrite.CHIPSET_ROM_ONLY`, `CHIPSET_RAM`, `CHIPSET_RAM_BATTERY`  | `0x00`、`0x01` 及 `0x02`，移除協處理器後剩下的三種聲明                                          |
+| `rewrite.RAM_NIBBLES`, `BATTERY_NIBBLES`                          | 聲明 RAM 的低半位元組 `1 2 4 5`，以及聲明電池的 `2 5 6`                                         |
+| `copier.COPIER_BYTES`                                             | `0x200`，任何複製機標頭的長度                                                                   |
+| `copier.GAME_DOCTOR_MAGIC`                                        | `GAME DOCTOR SF 3`，Game Doctor 標頭的首 16 個位元組                                            |
+| `copier.GAME_DOCTOR_SLOTS`                                        | `0x11` 至 `0x28` 的映射位元組涵蓋的 24 個 `(first bank, page)` 區域，每個 16 個庫               |
+| `copier.GAME_DOCTOR_SAVE_CODES`                                   | 存檔 RAM 位元組數至 `0x10` 處代碼的對應：沒有或 32 KB 為 `0x80`，8 KB 為 `0x81`，2 KB 為 `0x82` |
+| `copier.SD2SNES_CHIPSETS`                                         | `0x43` 及 `0x45`，sd2snes 韌體為其映射 whole-bank 映像檔的晶片組                                |
+| `rewrite.COPROCESSORS`                                            | 晶片組位元組至協處理器名稱，涵蓋套件已知的 18 個代碼，由 `0x03` DSP 至 `0xF9` SPC7110           |
+| `rewrite.MAP_MODE`、`CHIPSET`、`ROM_SIZE`、`SRAM_SIZE`            | 標頭偏移 `0x15` 至 `0x18`                                                                       |
+| `rewrite.CHECKSUM_COMPLEMENT`、`CHECKSUM`                         | 標頭偏移 `0x1C` 及 `0x1E`                                                                       |
+| `rewrite.CHECKSUM_FIELD_NEUTRAL`                                  | `FF FF 00 00`，四個校驗和位元組按此計算                                                         |
+| `rewrite.CHECKSUM_FIELD_BYTES`、`CHECKSUM_FIELD_SUM`              | `4` 及 `0x01FE`，這些中性位元組的長度及其總和                                                   |
+| `rewrite.PADDING`                                                 | `0x00`、`0x20` 及 `0xFF`，`identifies` 視為填充的位元組                                         |
+| `rewrite.KILOBYTE`                                                | `1024`，`size_byte` 向上取整所用的單位                                                          |
+| `rewrite.BLOCK_BYTES`                                             | `0x1000`，`changes` 在逐個位元組比較前先比較的區塊                                              |
+| `dump.BARE`、`dump.COPIER`                                        | `form` 對檔案傳回的兩個名稱                                                                     |
+| `dump.PART_SUFFIX`                                                | 編號分段後綴所匹配的模式：一個句點加一至三位數字                                                |
+| `dump.BLOCK_BYTES`、`DEFLATE_LEVEL`                               | `0x10000` 及 `6`，`block_ratios` 及 `deflate_ratio` 的預設值                                    |
+| `dump.CHUNK_BYTES`、`CHUNK_STRIDE`                                | `1024` 及 `512`，`measure_reuse` 及 `chunk_index` 的預設值                                      |
+| `manifest.KNOWN`、`REWRITTEN`、`BAD_DUMP`、`SAME_SIZE`、`UNKNOWN` | 五種狀態                                                                                        |
+| `romimage.__version__`                                            | 已安裝的版本                                                                                    |
 
 ### 錯誤
 
-| 錯誤          | 引發時機                                                                                                         |
-| :------------ | :--------------------------------------------------------------------------------------------------------------- |
-| `NoParts`     | `dump.read` 收到一個沒有編號分段的資料夾                                                                         |
-| `NoAuthority` | `identity.agrees` 收到一個沒有 `sha256` 的預期值                                                                 |
-| `Malformed`   | `Manifest` 收到的內容沒有工件、有工件沒有已接受形式，或有已接受形式沒有 `sha256`                                 |
-| `NoHeader`    | `rewrite.needs_rewrite` 或 `rewrite.declare_rom_only` 找不到標頭。它屬於標頭讀取器，可經 `rewrite.NoHeader` 取得 |
+| 錯誤          | 引發時機                                                                                                           |
+| :------------ | :----------------------------------------------------------------------------------------------------------------- |
+| `NoParts`     | `dump.read` 收到一個沒有編號分段的資料夾                                                                           |
+| `NoAuthority` | `identity.agrees` 收到一個沒有 `sha256` 的預期值                                                                   |
+| `Malformed`   | `Manifest` 收到的內容沒有工件、有工件沒有已接受形式，或有已接受形式沒有 `sha256`                                   |
+| `Unmappable`  | 向 `copier` 要求一個該裝置讀不到的標頭：不推導的佈局、離開所屬區塊的槽、sd2snes 韌體不以這種方式映射的容量或晶片組 |
+| `NoHeader`    | `rewrite.needs_rewrite` 或 `rewrite.declare_rom_only` 找不到標頭。它屬於標頭讀取器，可經 `rewrite.NoHeader` 取得   |
 
-前三個位於 [`romimage/errors.py`](romimage/errors.py)，並在套件頂層公開。
+前四個位於 [`romimage/errors.py`](romimage/errors.py)，並在套件頂層公開。
 
 ```python
 import tempfile
@@ -466,6 +482,52 @@ sha256
 
 CRC32 是 32 位元的錯誤偵測碼，而 MD5 及 SHA-1 均有已公開的碰撞。三者均會公開，讓讀者能在以它們作索引的數據庫中找到副本。它們之中沒有一個能接受檔案。
 
+### 移除協處理器，存檔記憶體仍然保留
+
+```python
+from romimage import rewrite
+
+image = bytearray(0x100000)
+image[0x7FC0 : 0x7FC0 + 21] = b"WORKED EXAMPLE       "
+image[0x7FD5] = 0x20
+image[0x7FD6] = 0x45
+image[0x7FD8] = 0x03
+
+after = rewrite.declare_rom_only(image)
+
+print(f"{after[0x7FD6]:#04x} {after[0x7FD8]:#04x}")
+print(rewrite.needs_rewrite(after))
+```
+
+```
+0x02 0x03
+False
+```
+
+晶片組位元組承載兩項事實：高半位元組指明協處理器，低半位元組說明板上還有甚麼。`0x45` 是帶 RAM 及電池的 S-DD1。為它寫入 `0x00` 會連電池一併移除，而像 bsnes 在 `nonVolatile()` 中那樣只為聲明了電池的卡帶保存存檔 RAM 的模擬器，便不再保存存檔。現在的改寫只移除協處理器，留下表示 RAM 及電池的 `0x02`，旁邊的存檔 RAM 容量保持不變。2026-10-28 之前，它對每個晶片組都寫入 `0x00`。
+
+### 複製機標頭由裝置讀取，而不是主機
+
+```python
+from romimage import copier
+
+header = copier.game_doctor_header(copier.wholebank_place(0xC00000))
+
+print(header[:16].decode())
+print(header[0x11:0x29].hex(" "))
+print(copier.game_doctor_map(copier.lorom_place(0x100000)).hex(" "))
+```
+
+```
+GAME DOCTOR SF 3
+20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35 36 37
+20 21 20 21 20 21 20 21 20 21 20 21 20 21 20 21 20 21 20 21 20 21 20 21
+```
+
+Game Doctor 讀取映像檔前面的 512 位元組，以決定位址空間每個區域來自哪裏。24 個映射位元組中的每一個，為一個 16 庫的區域指明其記憶體中的一個 4 Mbit 區塊，值為 `0x20` 加區塊編號。這些區域依次是庫 `$00` 至 `$7F` 及 `$80` 至 `$FF` 的上半部，然後是 `$40` 至 `$7F` 及 `$C0` 至 `$FF` 的下半部。ucon64 用表寫出同樣的佈局。對於 96 Mbit 的 whole-bank 映像檔，它會退回一個從不映射最後 32 Mbit 的 64 Mbit 表，所以這裏的映射改為從卡帶映射推導，並檢查每個槽都落在一個區塊上。推導出的 whole-bank 標頭，與 snes-street-fighter-alpha-2-nochip 的 issue 37 所報告、128 Mbit 的 Game Doctor SF7 運行 Street Fighter Alpha 2 及 Street Fighter Zero 2 時所用的標頭逐位元組相同。
+
+同樣運行 FXPAK Pro 的 sd2snes 韌體從不讀取這 512 位元組，而是跳過它們。它讀取的是長度及晶片組。只有當檔案為 `0xC00200` 位元組且晶片組為 `0x43` 或 `0x45` 時，它才映射 whole-bank 映像檔，所以 `for_sd2snes` 寫出這種形式，帶一個空的複製機標頭。
+
 ## 真實資料庫實際包含甚麼
 
 在 **7,330** 盒卡帶上量度，另有 249 盒因沒有可讀標頭而被拒絕：
@@ -475,7 +537,7 @@ CRC32 是 32 位元的錯誤偵測碼，而 MD5 及 SHA-1 均有已公開的碰�
 | 不同的聲明                           |   489 |
 | 不同的映像檔大小                     |   108 |
 | 不同的晶片組位元組                   |    36 |
-| 需要改寫的卡帶                       | 3,799 |
+| 需要改寫的卡帶                       | 1,197 |
 | 在是否有標頭一事上與標頭讀取器的分歧 |     0 |
 
 四項屬性在每盒卡帶上檢查，而非在樣本上：

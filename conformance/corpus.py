@@ -24,7 +24,10 @@ def check(document: Mapping[str, Any]) -> list[dict[str, Any]]:
             wrong.append({"case": case, "why": "size_byte", "wanted": wanted})
             continue
 
-        dirty = case["chipset"] != rewrite.CHIPSET_ROM_ONLY or case["rom_size"] != wanted
+        dirty = (
+            case["chipset"] != rewrite.without_coprocessor(case["chipset"])
+            or case["rom_size"] != wanted
+        )
         if dirty and not case["needs_rewrite"]:
             wrong.append({"case": case, "why": "needs_rewrite", "wanted": True})
     return wrong

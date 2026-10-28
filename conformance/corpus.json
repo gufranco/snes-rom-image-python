@@ -1796,17 +1796,7 @@
     {
       "chipset": 1,
       "map": 32,
-      "needs_rewrite": true,
-      "rom_size": 1,
-      "size": 163840,
-      "sram_size": 1,
-      "size_byte": 8,
-      "cartridges": 1
-    },
-    {
-      "chipset": 1,
-      "map": 32,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 10,
       "size": 1048576,
       "sram_size": 5,
@@ -1816,7 +1806,7 @@
     {
       "chipset": 1,
       "map": 32,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 11,
       "size": 2097152,
       "sram_size": 0,
@@ -1826,12 +1816,32 @@
     {
       "chipset": 1,
       "map": 32,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 11,
       "size": 2097152,
       "sram_size": 255,
       "size_byte": 11,
       "cartridges": 2
+    },
+    {
+      "chipset": 1,
+      "map": 32,
+      "needs_rewrite": false,
+      "rom_size": 9,
+      "size": 524288,
+      "sram_size": 1,
+      "size_byte": 9,
+      "cartridges": 2
+    },
+    {
+      "chipset": 1,
+      "map": 32,
+      "needs_rewrite": true,
+      "rom_size": 1,
+      "size": 163840,
+      "sram_size": 1,
+      "size_byte": 8,
+      "cartridges": 1
     },
     {
       "chipset": 1,
@@ -1845,18 +1855,8 @@
     },
     {
       "chipset": 1,
-      "map": 32,
-      "needs_rewrite": true,
-      "rom_size": 9,
-      "size": 524288,
-      "sram_size": 1,
-      "size_byte": 9,
-      "cartridges": 2
-    },
-    {
-      "chipset": 1,
       "map": 48,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 10,
       "size": 1048576,
       "sram_size": 0,
@@ -1866,7 +1866,7 @@
     {
       "chipset": 1,
       "map": 48,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 11,
       "size": 1572864,
       "sram_size": 3,
@@ -1876,7 +1876,7 @@
     {
       "chipset": 1,
       "map": 48,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 11,
       "size": 2097152,
       "sram_size": 1,
@@ -1896,7 +1896,7 @@
     {
       "chipset": 1,
       "map": 49,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 12,
       "size": 3145728,
       "sram_size": 0,
@@ -1906,7 +1906,7 @@
     {
       "chipset": 1,
       "map": 49,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 12,
       "size": 3145728,
       "sram_size": 3,
@@ -1916,7 +1916,7 @@
     {
       "chipset": 1,
       "map": 49,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 12,
       "size": 4194304,
       "sram_size": 3,
@@ -2156,7 +2156,7 @@
     {
       "chipset": 2,
       "map": 128,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 10,
       "size": 1048576,
       "sram_size": 6,
@@ -2166,7 +2166,7 @@
     {
       "chipset": 2,
       "map": 128,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 11,
       "size": 2097152,
       "sram_size": 6,
@@ -2186,7 +2186,7 @@
     {
       "chipset": 2,
       "map": 146,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 12,
       "size": 4194304,
       "sram_size": 1,
@@ -2196,7 +2196,7 @@
     {
       "chipset": 2,
       "map": 146,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 12,
       "size": 4194304,
       "sram_size": 3,
@@ -2206,7 +2206,7 @@
     {
       "chipset": 2,
       "map": 32,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 10,
       "size": 1048576,
       "sram_size": 0,
@@ -2216,7 +2216,7 @@
     {
       "chipset": 2,
       "map": 32,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 10,
       "size": 1048576,
       "sram_size": 1,
@@ -2226,7 +2226,7 @@
     {
       "chipset": 2,
       "map": 32,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 10,
       "size": 1048576,
       "sram_size": 3,
@@ -2236,12 +2236,272 @@
     {
       "chipset": 2,
       "map": 32,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 10,
       "size": 1048576,
       "sram_size": 5,
       "size_byte": 10,
       "cartridges": 23
+    },
+    {
+      "chipset": 2,
+      "map": 32,
+      "needs_rewrite": false,
+      "rom_size": 10,
+      "size": 786432,
+      "sram_size": 3,
+      "size_byte": 10,
+      "cartridges": 2
+    },
+    {
+      "chipset": 2,
+      "map": 32,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 1179648,
+      "sram_size": 1,
+      "size_byte": 11,
+      "cartridges": 3
+    },
+    {
+      "chipset": 2,
+      "map": 32,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 1310720,
+      "sram_size": 1,
+      "size_byte": 11,
+      "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 32,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 1310720,
+      "sram_size": 3,
+      "size_byte": 11,
+      "cartridges": 4
+    },
+    {
+      "chipset": 2,
+      "map": 32,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 1310720,
+      "sram_size": 5,
+      "size_byte": 11,
+      "cartridges": 3
+    },
+    {
+      "chipset": 2,
+      "map": 32,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 1572864,
+      "sram_size": 1,
+      "size_byte": 11,
+      "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 32,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 1572864,
+      "sram_size": 3,
+      "size_byte": 11,
+      "cartridges": 99
+    },
+    {
+      "chipset": 2,
+      "map": 32,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 1572864,
+      "sram_size": 5,
+      "size_byte": 11,
+      "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 32,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 1605408,
+      "sram_size": 4,
+      "size_byte": 11,
+      "cartridges": 2
+    },
+    {
+      "chipset": 2,
+      "map": 32,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 1838096,
+      "sram_size": 3,
+      "size_byte": 11,
+      "cartridges": 2
+    },
+    {
+      "chipset": 2,
+      "map": 32,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 2097152,
+      "sram_size": 1,
+      "size_byte": 11,
+      "cartridges": 98
+    },
+    {
+      "chipset": 2,
+      "map": 32,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 2097152,
+      "sram_size": 3,
+      "size_byte": 11,
+      "cartridges": 100
+    },
+    {
+      "chipset": 2,
+      "map": 32,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 2097152,
+      "sram_size": 5,
+      "size_byte": 11,
+      "cartridges": 5
+    },
+    {
+      "chipset": 2,
+      "map": 32,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 2097152,
+      "sram_size": 7,
+      "size_byte": 11,
+      "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 32,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 2621440,
+      "sram_size": 3,
+      "size_byte": 12,
+      "cartridges": 16
+    },
+    {
+      "chipset": 2,
+      "map": 32,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 3145728,
+      "sram_size": 1,
+      "size_byte": 12,
+      "cartridges": 16
+    },
+    {
+      "chipset": 2,
+      "map": 32,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 3145728,
+      "sram_size": 3,
+      "size_byte": 12,
+      "cartridges": 5
+    },
+    {
+      "chipset": 2,
+      "map": 32,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 3145728,
+      "sram_size": 7,
+      "size_byte": 12,
+      "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 32,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 4194304,
+      "sram_size": 1,
+      "size_byte": 12,
+      "cartridges": 49
+    },
+    {
+      "chipset": 2,
+      "map": 32,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 4194304,
+      "sram_size": 3,
+      "size_byte": 12,
+      "cartridges": 4
+    },
+    {
+      "chipset": 2,
+      "map": 32,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 4194304,
+      "sram_size": 5,
+      "size_byte": 12,
+      "cartridges": 2
+    },
+    {
+      "chipset": 2,
+      "map": 32,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 4194304,
+      "sram_size": 8,
+      "size_byte": 12,
+      "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 32,
+      "needs_rewrite": false,
+      "rom_size": 8,
+      "size": 262144,
+      "sram_size": 1,
+      "size_byte": 8,
+      "cartridges": 2
+    },
+    {
+      "chipset": 2,
+      "map": 32,
+      "needs_rewrite": false,
+      "rom_size": 9,
+      "size": 524288,
+      "sram_size": 1,
+      "size_byte": 9,
+      "cartridges": 32
+    },
+    {
+      "chipset": 2,
+      "map": 32,
+      "needs_rewrite": false,
+      "rom_size": 9,
+      "size": 524288,
+      "sram_size": 3,
+      "size_byte": 9,
+      "cartridges": 56
+    },
+    {
+      "chipset": 2,
+      "map": 32,
+      "needs_rewrite": false,
+      "rom_size": 9,
+      "size": 524288,
+      "sram_size": 5,
+      "size_byte": 9,
+      "cartridges": 12
     },
     {
       "chipset": 2,
@@ -2317,146 +2577,6 @@
       "chipset": 2,
       "map": 32,
       "needs_rewrite": true,
-      "rom_size": 10,
-      "size": 786432,
-      "sram_size": 3,
-      "size_byte": 10,
-      "cartridges": 2
-    },
-    {
-      "chipset": 2,
-      "map": 32,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 1179648,
-      "sram_size": 1,
-      "size_byte": 11,
-      "cartridges": 3
-    },
-    {
-      "chipset": 2,
-      "map": 32,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 1310720,
-      "sram_size": 1,
-      "size_byte": 11,
-      "cartridges": 1
-    },
-    {
-      "chipset": 2,
-      "map": 32,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 1310720,
-      "sram_size": 3,
-      "size_byte": 11,
-      "cartridges": 4
-    },
-    {
-      "chipset": 2,
-      "map": 32,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 1310720,
-      "sram_size": 5,
-      "size_byte": 11,
-      "cartridges": 3
-    },
-    {
-      "chipset": 2,
-      "map": 32,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 1572864,
-      "sram_size": 1,
-      "size_byte": 11,
-      "cartridges": 1
-    },
-    {
-      "chipset": 2,
-      "map": 32,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 1572864,
-      "sram_size": 3,
-      "size_byte": 11,
-      "cartridges": 99
-    },
-    {
-      "chipset": 2,
-      "map": 32,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 1572864,
-      "sram_size": 5,
-      "size_byte": 11,
-      "cartridges": 1
-    },
-    {
-      "chipset": 2,
-      "map": 32,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 1605408,
-      "sram_size": 4,
-      "size_byte": 11,
-      "cartridges": 2
-    },
-    {
-      "chipset": 2,
-      "map": 32,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 1838096,
-      "sram_size": 3,
-      "size_byte": 11,
-      "cartridges": 2
-    },
-    {
-      "chipset": 2,
-      "map": 32,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 2097152,
-      "sram_size": 1,
-      "size_byte": 11,
-      "cartridges": 98
-    },
-    {
-      "chipset": 2,
-      "map": 32,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 2097152,
-      "sram_size": 3,
-      "size_byte": 11,
-      "cartridges": 100
-    },
-    {
-      "chipset": 2,
-      "map": 32,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 2097152,
-      "sram_size": 5,
-      "size_byte": 11,
-      "cartridges": 5
-    },
-    {
-      "chipset": 2,
-      "map": 32,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 2097152,
-      "sram_size": 7,
-      "size_byte": 11,
-      "cartridges": 1
-    },
-    {
-      "chipset": 2,
-      "map": 32,
-      "needs_rewrite": true,
       "rom_size": 11,
       "size": 2107648,
       "sram_size": 3,
@@ -2517,96 +2637,6 @@
       "chipset": 2,
       "map": 32,
       "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 2621440,
-      "sram_size": 3,
-      "size_byte": 12,
-      "cartridges": 16
-    },
-    {
-      "chipset": 2,
-      "map": 32,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 3145728,
-      "sram_size": 1,
-      "size_byte": 12,
-      "cartridges": 16
-    },
-    {
-      "chipset": 2,
-      "map": 32,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 3145728,
-      "sram_size": 3,
-      "size_byte": 12,
-      "cartridges": 5
-    },
-    {
-      "chipset": 2,
-      "map": 32,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 3145728,
-      "sram_size": 7,
-      "size_byte": 12,
-      "cartridges": 1
-    },
-    {
-      "chipset": 2,
-      "map": 32,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 4194304,
-      "sram_size": 1,
-      "size_byte": 12,
-      "cartridges": 49
-    },
-    {
-      "chipset": 2,
-      "map": 32,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 4194304,
-      "sram_size": 3,
-      "size_byte": 12,
-      "cartridges": 4
-    },
-    {
-      "chipset": 2,
-      "map": 32,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 4194304,
-      "sram_size": 5,
-      "size_byte": 12,
-      "cartridges": 2
-    },
-    {
-      "chipset": 2,
-      "map": 32,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 4194304,
-      "sram_size": 8,
-      "size_byte": 12,
-      "cartridges": 1
-    },
-    {
-      "chipset": 2,
-      "map": 32,
-      "needs_rewrite": true,
-      "rom_size": 8,
-      "size": 262144,
-      "sram_size": 1,
-      "size_byte": 8,
-      "cartridges": 2
-    },
-    {
-      "chipset": 2,
-      "map": 32,
-      "needs_rewrite": true,
       "rom_size": 9,
       "size": 1048576,
       "sram_size": 1,
@@ -2638,36 +2668,6 @@
       "map": 32,
       "needs_rewrite": true,
       "rom_size": 9,
-      "size": 524288,
-      "sram_size": 1,
-      "size_byte": 9,
-      "cartridges": 32
-    },
-    {
-      "chipset": 2,
-      "map": 32,
-      "needs_rewrite": true,
-      "rom_size": 9,
-      "size": 524288,
-      "sram_size": 3,
-      "size_byte": 9,
-      "cartridges": 56
-    },
-    {
-      "chipset": 2,
-      "map": 32,
-      "needs_rewrite": true,
-      "rom_size": 9,
-      "size": 524288,
-      "sram_size": 5,
-      "size_byte": 9,
-      "cartridges": 12
-    },
-    {
-      "chipset": 2,
-      "map": 32,
-      "needs_rewrite": true,
-      "rom_size": 9,
       "size": 993942,
       "sram_size": 1,
       "size_byte": 10,
@@ -2676,7 +2676,7 @@
     {
       "chipset": 2,
       "map": 33,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 10,
       "size": 1048576,
       "sram_size": 3,
@@ -2686,17 +2686,7 @@
     {
       "chipset": 2,
       "map": 33,
-      "needs_rewrite": true,
-      "rom_size": 10,
-      "size": 1572864,
-      "sram_size": 3,
-      "size_byte": 11,
-      "cartridges": 1
-    },
-    {
-      "chipset": 2,
-      "map": 33,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 11,
       "size": 1572864,
       "sram_size": 1,
@@ -2706,7 +2696,7 @@
     {
       "chipset": 2,
       "map": 33,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 11,
       "size": 1572864,
       "sram_size": 3,
@@ -2716,7 +2706,7 @@
     {
       "chipset": 2,
       "map": 33,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 11,
       "size": 2097152,
       "sram_size": 3,
@@ -2726,10 +2716,50 @@
     {
       "chipset": 2,
       "map": 33,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 11,
       "size": 2097152,
       "sram_size": 5,
+      "size_byte": 11,
+      "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 33,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 2621440,
+      "sram_size": 3,
+      "size_byte": 12,
+      "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 33,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 3145728,
+      "sram_size": 3,
+      "size_byte": 12,
+      "cartridges": 2
+    },
+    {
+      "chipset": 2,
+      "map": 33,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 4194304,
+      "sram_size": 3,
+      "size_byte": 12,
+      "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 33,
+      "needs_rewrite": true,
+      "rom_size": 10,
+      "size": 1572864,
+      "sram_size": 3,
       "size_byte": 11,
       "cartridges": 1
     },
@@ -2765,33 +2795,453 @@
     },
     {
       "chipset": 2,
-      "map": 33,
-      "needs_rewrite": true,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 10,
+      "size": 1048576,
+      "sram_size": 1,
+      "size_byte": 10,
+      "cartridges": 47
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 10,
+      "size": 1048576,
+      "sram_size": 3,
+      "size_byte": 10,
+      "cartridges": 97
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 10,
+      "size": 1048576,
+      "sram_size": 5,
+      "size_byte": 10,
+      "cartridges": 8
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 1310720,
+      "sram_size": 1,
+      "size_byte": 11,
+      "cartridges": 8
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 1310720,
+      "sram_size": 3,
+      "size_byte": 11,
+      "cartridges": 5
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 1572864,
+      "sram_size": 1,
+      "size_byte": 11,
+      "cartridges": 5
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 1572864,
+      "sram_size": 3,
+      "size_byte": 11,
+      "cartridges": 102
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 1572864,
+      "sram_size": 5,
+      "size_byte": 11,
+      "cartridges": 6
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 1605632,
+      "sram_size": 3,
+      "size_byte": 11,
+      "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 1900544,
+      "sram_size": 3,
+      "size_byte": 11,
+      "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 1900545,
+      "sram_size": 3,
+      "size_byte": 11,
+      "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 2097152,
+      "sram_size": 0,
+      "size_byte": 11,
+      "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 2097152,
+      "sram_size": 1,
+      "size_byte": 11,
+      "cartridges": 14
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 2097152,
+      "sram_size": 2,
+      "size_byte": 11,
+      "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 2097152,
+      "sram_size": 3,
+      "size_byte": 11,
+      "cartridges": 118
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 2097152,
+      "sram_size": 5,
+      "size_byte": 11,
+      "cartridges": 15
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 2097152,
+      "sram_size": 6,
+      "size_byte": 11,
+      "cartridges": 3
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 2097152,
+      "sram_size": 7,
+      "size_byte": 11,
+      "cartridges": 4
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
       "rom_size": 12,
       "size": 2621440,
-      "sram_size": 3,
+      "sram_size": 1,
       "size_byte": 12,
       "cartridges": 1
     },
     {
       "chipset": 2,
-      "map": 33,
-      "needs_rewrite": true,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 2621440,
+      "sram_size": 3,
+      "size_byte": 12,
+      "cartridges": 12
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
       "rom_size": 12,
       "size": 3145728,
-      "sram_size": 3,
+      "sram_size": 1,
+      "size_byte": 12,
+      "cartridges": 19
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 3145728,
+      "sram_size": 2,
       "size_byte": 12,
       "cartridges": 2
     },
     {
       "chipset": 2,
-      "map": 33,
-      "needs_rewrite": true,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 3145728,
+      "sram_size": 3,
+      "size_byte": 12,
+      "cartridges": 99
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 3145728,
+      "sram_size": 5,
+      "size_byte": 12,
+      "cartridges": 8
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 3145728,
+      "sram_size": 6,
+      "size_byte": 12,
+      "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 3145728,
+      "sram_size": 83,
+      "size_byte": 12,
+      "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 3145728,
+      "sram_size": 8,
+      "size_byte": 12,
+      "cartridges": 4
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 3145729,
+      "sram_size": 3,
+      "size_byte": 12,
+      "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 3178496,
+      "sram_size": 3,
+      "size_byte": 12,
+      "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 3211264,
+      "sram_size": 3,
+      "size_byte": 12,
+      "cartridges": 3
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 3244032,
+      "sram_size": 3,
+      "size_byte": 12,
+      "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 3637248,
+      "sram_size": 3,
+      "size_byte": 12,
+      "cartridges": 4
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 4063232,
+      "sram_size": 3,
+      "size_byte": 12,
+      "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 4194304,
+      "sram_size": 1,
+      "size_byte": 12,
+      "cartridges": 35
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 4194304,
+      "sram_size": 2,
+      "size_byte": 12,
+      "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
       "rom_size": 12,
       "size": 4194304,
       "sram_size": 3,
       "size_byte": 12,
+      "cartridges": 44
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 4194304,
+      "sram_size": 4,
+      "size_byte": 12,
+      "cartridges": 4
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 4194304,
+      "sram_size": 5,
+      "size_byte": 12,
+      "cartridges": 18
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 4194304,
+      "sram_size": 7,
+      "size_byte": 12,
+      "cartridges": 10
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 13,
+      "size": 6291456,
+      "sram_size": 5,
+      "size_byte": 13,
+      "cartridges": 3
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 13,
+      "size": 8388608,
+      "sram_size": 3,
+      "size_byte": 13,
       "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 9,
+      "size": 524288,
+      "sram_size": 0,
+      "size_byte": 9,
+      "cartridges": 2
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 9,
+      "size": 524288,
+      "sram_size": 1,
+      "size_byte": 9,
+      "cartridges": 11
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 9,
+      "size": 524288,
+      "sram_size": 3,
+      "size_byte": 9,
+      "cartridges": 16
+    },
+    {
+      "chipset": 2,
+      "map": 48,
+      "needs_rewrite": false,
+      "rom_size": 9,
+      "size": 524288,
+      "sram_size": 7,
+      "size_byte": 9,
+      "cartridges": 2
     },
     {
       "chipset": 2,
@@ -2808,36 +3258,6 @@
       "map": 48,
       "needs_rewrite": true,
       "rom_size": 10,
-      "size": 1048576,
-      "sram_size": 1,
-      "size_byte": 10,
-      "cartridges": 47
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 10,
-      "size": 1048576,
-      "sram_size": 3,
-      "size_byte": 10,
-      "cartridges": 97
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 10,
-      "size": 1048576,
-      "sram_size": 5,
-      "size_byte": 10,
-      "cartridges": 8
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 10,
       "size": 1572864,
       "sram_size": 1,
       "size_byte": 11,
@@ -2882,156 +3302,6 @@
       "sram_size": 3,
       "size_byte": 10,
       "cartridges": 2
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 1310720,
-      "sram_size": 1,
-      "size_byte": 11,
-      "cartridges": 8
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 1310720,
-      "sram_size": 3,
-      "size_byte": 11,
-      "cartridges": 5
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 1572864,
-      "sram_size": 1,
-      "size_byte": 11,
-      "cartridges": 5
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 1572864,
-      "sram_size": 3,
-      "size_byte": 11,
-      "cartridges": 102
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 1572864,
-      "sram_size": 5,
-      "size_byte": 11,
-      "cartridges": 6
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 1605632,
-      "sram_size": 3,
-      "size_byte": 11,
-      "cartridges": 1
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 1900544,
-      "sram_size": 3,
-      "size_byte": 11,
-      "cartridges": 1
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 1900545,
-      "sram_size": 3,
-      "size_byte": 11,
-      "cartridges": 1
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 2097152,
-      "sram_size": 0,
-      "size_byte": 11,
-      "cartridges": 1
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 2097152,
-      "sram_size": 1,
-      "size_byte": 11,
-      "cartridges": 14
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 2097152,
-      "sram_size": 2,
-      "size_byte": 11,
-      "cartridges": 1
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 2097152,
-      "sram_size": 3,
-      "size_byte": 11,
-      "cartridges": 118
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 2097152,
-      "sram_size": 5,
-      "size_byte": 11,
-      "cartridges": 15
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 2097152,
-      "sram_size": 6,
-      "size_byte": 11,
-      "cartridges": 3
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 2097152,
-      "sram_size": 7,
-      "size_byte": 11,
-      "cartridges": 4
     },
     {
       "chipset": 2,
@@ -3097,236 +3367,6 @@
       "chipset": 2,
       "map": 48,
       "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 2621440,
-      "sram_size": 1,
-      "size_byte": 12,
-      "cartridges": 1
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 2621440,
-      "sram_size": 3,
-      "size_byte": 12,
-      "cartridges": 12
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 3145728,
-      "sram_size": 1,
-      "size_byte": 12,
-      "cartridges": 19
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 3145728,
-      "sram_size": 2,
-      "size_byte": 12,
-      "cartridges": 2
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 3145728,
-      "sram_size": 3,
-      "size_byte": 12,
-      "cartridges": 99
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 3145728,
-      "sram_size": 5,
-      "size_byte": 12,
-      "cartridges": 8
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 3145728,
-      "sram_size": 6,
-      "size_byte": 12,
-      "cartridges": 1
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 3145728,
-      "sram_size": 83,
-      "size_byte": 12,
-      "cartridges": 1
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 3145728,
-      "sram_size": 8,
-      "size_byte": 12,
-      "cartridges": 4
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 3145729,
-      "sram_size": 3,
-      "size_byte": 12,
-      "cartridges": 1
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 3178496,
-      "sram_size": 3,
-      "size_byte": 12,
-      "cartridges": 1
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 3211264,
-      "sram_size": 3,
-      "size_byte": 12,
-      "cartridges": 3
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 3244032,
-      "sram_size": 3,
-      "size_byte": 12,
-      "cartridges": 1
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 3637248,
-      "sram_size": 3,
-      "size_byte": 12,
-      "cartridges": 4
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 4063232,
-      "sram_size": 3,
-      "size_byte": 12,
-      "cartridges": 1
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 4194304,
-      "sram_size": 1,
-      "size_byte": 12,
-      "cartridges": 35
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 4194304,
-      "sram_size": 2,
-      "size_byte": 12,
-      "cartridges": 1
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 4194304,
-      "sram_size": 3,
-      "size_byte": 12,
-      "cartridges": 44
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 4194304,
-      "sram_size": 4,
-      "size_byte": 12,
-      "cartridges": 4
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 4194304,
-      "sram_size": 5,
-      "size_byte": 12,
-      "cartridges": 18
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 4194304,
-      "sram_size": 7,
-      "size_byte": 12,
-      "cartridges": 10
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 13,
-      "size": 6291456,
-      "sram_size": 5,
-      "size_byte": 13,
-      "cartridges": 3
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 13,
-      "size": 8388608,
-      "sram_size": 3,
-      "size_byte": 13,
-      "cartridges": 1
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
       "rom_size": 9,
       "size": 131072,
       "sram_size": 0,
@@ -3335,48 +3375,8 @@
     },
     {
       "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 9,
-      "size": 524288,
-      "sram_size": 0,
-      "size_byte": 9,
-      "cartridges": 2
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 9,
-      "size": 524288,
-      "sram_size": 1,
-      "size_byte": 9,
-      "cartridges": 11
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 9,
-      "size": 524288,
-      "sram_size": 3,
-      "size_byte": 9,
-      "cartridges": 16
-    },
-    {
-      "chipset": 2,
-      "map": 48,
-      "needs_rewrite": true,
-      "rom_size": 9,
-      "size": 524288,
-      "sram_size": 7,
-      "size_byte": 9,
-      "cartridges": 2
-    },
-    {
-      "chipset": 2,
       "map": 49,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 10,
       "size": 1048576,
       "sram_size": 1,
@@ -3386,7 +3386,7 @@
     {
       "chipset": 2,
       "map": 49,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 10,
       "size": 1048576,
       "sram_size": 3,
@@ -3396,7 +3396,7 @@
     {
       "chipset": 2,
       "map": 49,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 10,
       "size": 1048576,
       "sram_size": 5,
@@ -3406,12 +3406,342 @@
     {
       "chipset": 2,
       "map": 49,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 10,
       "size": 1048576,
       "sram_size": 6,
       "size_byte": 10,
       "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 1310720,
+      "sram_size": 3,
+      "size_byte": 11,
+      "cartridges": 2
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 1310720,
+      "sram_size": 5,
+      "size_byte": 11,
+      "cartridges": 3
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 1572864,
+      "sram_size": 0,
+      "size_byte": 11,
+      "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 1572864,
+      "sram_size": 1,
+      "size_byte": 11,
+      "cartridges": 4
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 1572864,
+      "sram_size": 3,
+      "size_byte": 11,
+      "cartridges": 94
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 1572864,
+      "sram_size": 5,
+      "size_byte": 11,
+      "cartridges": 14
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 2097152,
+      "sram_size": 1,
+      "size_byte": 11,
+      "cartridges": 13
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 2097152,
+      "sram_size": 2,
+      "size_byte": 11,
+      "cartridges": 4
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 2097152,
+      "sram_size": 3,
+      "size_byte": 11,
+      "cartridges": 62
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 2097152,
+      "sram_size": 5,
+      "size_byte": 11,
+      "cartridges": 13
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 11,
+      "size": 2097152,
+      "sram_size": 6,
+      "size_byte": 11,
+      "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 2621440,
+      "sram_size": 1,
+      "size_byte": 12,
+      "cartridges": 2
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 2621440,
+      "sram_size": 3,
+      "size_byte": 12,
+      "cartridges": 18
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 2621440,
+      "sram_size": 5,
+      "size_byte": 12,
+      "cartridges": 2
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 3017110,
+      "sram_size": 3,
+      "size_byte": 12,
+      "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 3145195,
+      "sram_size": 3,
+      "size_byte": 12,
+      "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 3145728,
+      "sram_size": 1,
+      "size_byte": 12,
+      "cartridges": 6
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 3145728,
+      "sram_size": 3,
+      "size_byte": 12,
+      "cartridges": 136
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 3145728,
+      "sram_size": 5,
+      "size_byte": 12,
+      "cartridges": 20
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 3203072,
+      "sram_size": 3,
+      "size_byte": 12,
+      "cartridges": 2
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 3211264,
+      "sram_size": 3,
+      "size_byte": 12,
+      "cartridges": 2
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 3219456,
+      "sram_size": 3,
+      "size_byte": 12,
+      "cartridges": 4
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 3276800,
+      "sram_size": 1,
+      "size_byte": 12,
+      "cartridges": 2
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 3440640,
+      "sram_size": 3,
+      "size_byte": 12,
+      "cartridges": 14
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 3670016,
+      "sram_size": 3,
+      "size_byte": 12,
+      "cartridges": 8
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 4194304,
+      "sram_size": 1,
+      "size_byte": 12,
+      "cartridges": 55
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 4194304,
+      "sram_size": 2,
+      "size_byte": 12,
+      "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 4194304,
+      "sram_size": 3,
+      "size_byte": 12,
+      "cartridges": 192
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 4194304,
+      "sram_size": 4,
+      "size_byte": 12,
+      "cartridges": 6
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 12,
+      "size": 4194304,
+      "sram_size": 5,
+      "size_byte": 12,
+      "cartridges": 10
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 9,
+      "size": 393216,
+      "sram_size": 3,
+      "size_byte": 9,
+      "cartridges": 1
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 9,
+      "size": 524288,
+      "sram_size": 1,
+      "size_byte": 9,
+      "cartridges": 7
+    },
+    {
+      "chipset": 2,
+      "map": 49,
+      "needs_rewrite": false,
+      "rom_size": 9,
+      "size": 524288,
+      "sram_size": 3,
+      "size_byte": 9,
+      "cartridges": 17
     },
     {
       "chipset": 2,
@@ -3431,116 +3761,6 @@
       "size": 2621440,
       "sram_size": 3,
       "size_byte": 12,
-      "cartridges": 1
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 1310720,
-      "sram_size": 3,
-      "size_byte": 11,
-      "cartridges": 2
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 1310720,
-      "sram_size": 5,
-      "size_byte": 11,
-      "cartridges": 3
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 1572864,
-      "sram_size": 0,
-      "size_byte": 11,
-      "cartridges": 1
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 1572864,
-      "sram_size": 1,
-      "size_byte": 11,
-      "cartridges": 4
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 1572864,
-      "sram_size": 3,
-      "size_byte": 11,
-      "cartridges": 94
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 1572864,
-      "sram_size": 5,
-      "size_byte": 11,
-      "cartridges": 14
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 2097152,
-      "sram_size": 1,
-      "size_byte": 11,
-      "cartridges": 13
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 2097152,
-      "sram_size": 2,
-      "size_byte": 11,
-      "cartridges": 4
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 2097152,
-      "sram_size": 3,
-      "size_byte": 11,
-      "cartridges": 62
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 2097152,
-      "sram_size": 5,
-      "size_byte": 11,
-      "cartridges": 13
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 11,
-      "size": 2097152,
-      "sram_size": 6,
-      "size_byte": 11,
       "cartridges": 1
     },
     {
@@ -3568,196 +3788,6 @@
       "map": 49,
       "needs_rewrite": true,
       "rom_size": 12,
-      "size": 2621440,
-      "sram_size": 1,
-      "size_byte": 12,
-      "cartridges": 2
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 2621440,
-      "sram_size": 3,
-      "size_byte": 12,
-      "cartridges": 18
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 2621440,
-      "sram_size": 5,
-      "size_byte": 12,
-      "cartridges": 2
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 3017110,
-      "sram_size": 3,
-      "size_byte": 12,
-      "cartridges": 1
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 3145195,
-      "sram_size": 3,
-      "size_byte": 12,
-      "cartridges": 1
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 3145728,
-      "sram_size": 1,
-      "size_byte": 12,
-      "cartridges": 6
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 3145728,
-      "sram_size": 3,
-      "size_byte": 12,
-      "cartridges": 136
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 3145728,
-      "sram_size": 5,
-      "size_byte": 12,
-      "cartridges": 20
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 3203072,
-      "sram_size": 3,
-      "size_byte": 12,
-      "cartridges": 2
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 3211264,
-      "sram_size": 3,
-      "size_byte": 12,
-      "cartridges": 2
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 3219456,
-      "sram_size": 3,
-      "size_byte": 12,
-      "cartridges": 4
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 3276800,
-      "sram_size": 1,
-      "size_byte": 12,
-      "cartridges": 2
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 3440640,
-      "sram_size": 3,
-      "size_byte": 12,
-      "cartridges": 14
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 3670016,
-      "sram_size": 3,
-      "size_byte": 12,
-      "cartridges": 8
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 4194304,
-      "sram_size": 1,
-      "size_byte": 12,
-      "cartridges": 55
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 4194304,
-      "sram_size": 2,
-      "size_byte": 12,
-      "cartridges": 1
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 4194304,
-      "sram_size": 3,
-      "size_byte": 12,
-      "cartridges": 192
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 4194304,
-      "sram_size": 4,
-      "size_byte": 12,
-      "cartridges": 6
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 12,
-      "size": 4194304,
-      "sram_size": 5,
-      "size_byte": 12,
-      "cartridges": 10
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 12,
       "size": 4194305,
       "sram_size": 3,
       "size_byte": 13,
@@ -3775,38 +3805,8 @@
     },
     {
       "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 9,
-      "size": 393216,
-      "sram_size": 3,
-      "size_byte": 9,
-      "cartridges": 1
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 9,
-      "size": 524288,
-      "sram_size": 1,
-      "size_byte": 9,
-      "cartridges": 7
-    },
-    {
-      "chipset": 2,
-      "map": 49,
-      "needs_rewrite": true,
-      "rom_size": 9,
-      "size": 524288,
-      "sram_size": 3,
-      "size_byte": 9,
-      "cartridges": 17
-    },
-    {
-      "chipset": 2,
       "map": 50,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 10,
       "size": 1048576,
       "sram_size": 3,
@@ -3816,7 +3816,7 @@
     {
       "chipset": 2,
       "map": 53,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 13,
       "size": 6291456,
       "sram_size": 3,
@@ -3826,7 +3826,7 @@
     {
       "chipset": 2,
       "map": 53,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 13,
       "size": 6291456,
       "sram_size": 4,
@@ -3836,7 +3836,7 @@
     {
       "chipset": 2,
       "map": 53,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 13,
       "size": 8388608,
       "sram_size": 3,
@@ -3846,7 +3846,7 @@
     {
       "chipset": 2,
       "map": 53,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 13,
       "size": 8388608,
       "sram_size": 5,
@@ -3856,7 +3856,7 @@
     {
       "chipset": 2,
       "map": 56,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 10,
       "size": 1048576,
       "sram_size": 3,
@@ -3866,7 +3866,7 @@
     {
       "chipset": 2,
       "map": 72,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 9,
       "size": 524288,
       "sram_size": 1,
@@ -3876,7 +3876,7 @@
     {
       "chipset": 2,
       "map": 76,
-      "needs_rewrite": true,
+      "needs_rewrite": false,
       "rom_size": 11,
       "size": 1572864,
       "sram_size": 3,

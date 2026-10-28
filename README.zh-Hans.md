@@ -8,7 +8,7 @@
 [![Release](https://img.shields.io/github/v/release/gufranco/snes-rom-image-python)](https://github.com/gufranco/snes-rom-image-python/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-重放 **489** 个声明，**0** 个失败，在全部 **7,330** 个卡带上逐一检查 **4** 项属性，计算出的校验和与 **2,780** 个零售版卡带中的 **2,768** 个一致，在手册中定位到 **20** 处引文，**915** 个测试，**100%** 语句与分支覆盖率，无依赖
+重放 **489** 个声明，**0** 个失败，在全部 **7,330** 个卡带上逐一检查 **4** 项属性，计算出的校验和与 **2,780** 个零售版卡带中的 **2,768** 个一致，在手册中定位到 **20** 处引文，**949** 个测试，**100%** 语句与分支覆盖率，无依赖
 
 ```python
 from romimage import rewrite
@@ -32,7 +32,7 @@ True
 True
 ```
 
-示例构建了一个 512 KB 的镜像，其位于 `0x7FC0` 的头部声明芯片组 `0x03`，即 DSP。`needs_rewrite` 报告该声明必须去掉。`declare_rom_only` 把芯片组 `0x00` 和大小指数写入头部的每一份副本，然后基于结果重新计算校验和及其补码。第二次处理返回相同的字节。
+示例构建了一个 512 KB 的镜像，其位于 `0x7FC0` 的头部声明芯片组 `0x03`，即 DSP。`needs_rewrite` 报告该声明必须去掉。`declare_rom_only` 把芯片组 `0x00` 和大小指数写入头部的每一份副本，然后基于结果重新计算校验和及其补码。第二次处理返回相同的字节。已声明的 RAM 或电池保持声明。
 
 ## 安装
 
@@ -61,40 +61,49 @@ python3 romimage/doctor.py
 
 ## 接口
 
-四个模块，每个回答关于文件的一个问题。
+五个模块，每个回答关于文件的一个问题。
 
-| 模块                               | 问题                                         |
-| :--------------------------------- | :------------------------------------------- |
-| [`dump`](romimage/dump.py)         | 转储设备添加或拆分了什么                     |
-| [`identity`](romimage/identity.py) | 哪些摘要标识该文件，以及由哪一个决定         |
-| [`rewrite`](romimage/rewrite.py)   | 头部声明了什么，以及如何从中清除协处理器     |
-| [`manifest`](romimage/manifest.py) | 当提供的文件不是预期的那个时，属于哪种不匹配 |
+| 模块                               | 问题                                             |
+| :--------------------------------- | :----------------------------------------------- |
+| [`dump`](romimage/dump.py)         | 转储设备添加或拆分了什么                         |
+| [`identity`](romimage/identity.py) | 哪些摘要标识该文件，以及由哪一个决定             |
+| [`rewrite`](romimage/rewrite.py)   | 头部声明了什么，以及如何从中清除协处理器         |
+| [`manifest`](romimage/manifest.py) | 当提供的文件不是预期的那个时，属于哪种不匹配     |
+| [`copier`](romimage/copier.py)     | 备份机或烧录卡在镜像前面读取什么，以及如何写出它 |
 
 ### 调用
 
-| 调用                                                         | 作用                                                                                                       |
-| :----------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------- |
-| `dump.read(path)`                                            | 返回镜像字节。文件会去掉拷贝机前缀。带编号分片的文件夹按名称顺序拼接。文件夹中没有分片时抛出 `NoParts`     |
-| `dump.form(path)`                                            | 对文件按长度判断，返回 `"bare"` 或 `"copier header"`；对文件夹返回 `"N part set"`                          |
-| `dump.strip_copier_stub(data)`                               | 当长度表明存在前缀时，去掉开头的 512 字节                                                                  |
-| `dump.parts_in(folder)`                                      | 带一到三位数字后缀的文件，按大写化后的名称排序                                                             |
-| `dump.join(parts)`                                           | 去掉第一个分片的前缀后拼接所有分片                                                                         |
-| `dump.deflate_ratio(block)`                                  | deflate 级别 6 下压缩后大小与原始大小之比，空块为 0.0                                                      |
-| `dump.block_ratios(data, block=0x10000)`                     | 每个完整 64 KB 块的 `deflate_ratio`                                                                        |
-| `dump.measure_reuse(source, target, chunk=1024, stride=512)` | `(found, total)`：`source` 的 1 KB 块中有多少出现在 `target` 中                                            |
-| `dump.chunk_index(data, chunk=1024, stride=512)`             | `measure_reuse` 搜索所用的块到偏移的索引                                                                   |
-| `identity.measure(data)`                                     | 字节的 `size`、`crc32`、`md5`、`sha1` 和 `sha256`                                                          |
-| `identity.agrees(found, expected)`                           | `sha256` 值相同时为 True。`expected` 没有 `sha256` 时抛出 `NoAuthority`                                    |
-| `rewrite.anchor_of(image)`                                   | 读取器找到的头部的偏移，或 `None`                                                                          |
-| `rewrite.mirrors(image)`                                     | 该头部每一份逐字节相同的副本的偏移                                                                         |
-| `rewrite.describe(image)`                                    | 每份副本一个字典：`at`、`title`、`map`、`chipset`、`coprocessor`、`size`、`sram`、`checksum`               |
-| `rewrite.needs_rewrite(image)`                               | 任一副本声明的芯片组不是 `0x00`，或大小字节与镜像自身不符时为 True。没有头部时抛出 `NoHeader`              |
-| `rewrite.declare_rom_only(image)`                            | 返回新的字节，其中每份副本都写入芯片组 `0x00`、正确的大小字节和重新计算的校验和。没有头部时抛出 `NoHeader` |
-| `rewrite.checksum(image, places=None)`                       | 头部校验和，每份副本的四个校验和字节都按 `FF FF 00 00` 计入。`places` 默认为 `mirrors(image)`              |
-| `rewrite.mirrored_sum(data)`                                 | 字节和，长度不是 2 的幂时镜像补足到 2 的幂                                                                 |
-| `rewrite.size_byte(length)`                                  | 大小指数：以千字节计的大小向上取整后的 2 的幂次                                                            |
-| `rewrite.identifies(block)`                                  | 块中含有 `0x00`、`0x20` 或 `0xFF` 以外的字节时为 True                                                      |
-| `rewrite.changes(before, after, block=0x1000)`               | 所有字节不同的偏移                                                                                         |
+| 调用                                                         | 作用                                                                                                                                  |
+| :----------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------ |
+| `dump.read(path)`                                            | 返回镜像字节。文件会去掉拷贝机前缀。带编号分片的文件夹按名称顺序拼接。文件夹中没有分片时抛出 `NoParts`                                |
+| `dump.form(path)`                                            | 对文件按长度判断，返回 `"bare"` 或 `"copier header"`；对文件夹返回 `"N part set"`                                                     |
+| `dump.strip_copier_stub(data)`                               | 当长度表明存在前缀时，去掉开头的 512 字节                                                                                             |
+| `dump.parts_in(folder)`                                      | 带一到三位数字后缀的文件，按大写化后的名称排序                                                                                        |
+| `dump.join(parts)`                                           | 去掉第一个分片的前缀后拼接所有分片                                                                                                    |
+| `dump.deflate_ratio(block)`                                  | deflate 级别 6 下压缩后大小与原始大小之比，空块为 0.0                                                                                 |
+| `dump.block_ratios(data, block=0x10000)`                     | 每个完整 64 KB 块的 `deflate_ratio`                                                                                                   |
+| `dump.measure_reuse(source, target, chunk=1024, stride=512)` | `(found, total)`：`source` 的 1 KB 块中有多少出现在 `target` 中                                                                       |
+| `dump.chunk_index(data, chunk=1024, stride=512)`             | `measure_reuse` 搜索所用的块到偏移的索引                                                                                              |
+| `identity.measure(data)`                                     | 字节的 `size`、`crc32`、`md5`、`sha1` 和 `sha256`                                                                                     |
+| `identity.agrees(found, expected)`                           | `sha256` 值相同时为 True。`expected` 没有 `sha256` 时抛出 `NoAuthority`                                                               |
+| `rewrite.anchor_of(image)`                                   | 读取器找到的头部的偏移，或 `None`                                                                                                     |
+| `rewrite.mirrors(image)`                                     | 该头部每一份逐字节相同的副本的偏移                                                                                                    |
+| `rewrite.describe(image)`                                    | 每份副本一个字典：`at`、`title`、`map`、`chipset`、`coprocessor`、`size`、`sram`、`checksum`                                          |
+| `rewrite.needs_rewrite(image)`                               | 任一副本声明了协处理器，或大小字节与镜像自身不符时为 True。没有头部时抛出 `NoHeader`                                                  |
+| `rewrite.without_coprocessor(chipset)`                       | 去掉协处理器后的芯片组字节：声明了电池时为 `0x02`，只有 RAM 时为 `0x01`，否则为 `0x00`                                                |
+| `rewrite.declare_rom_only(image)`                            | 返回新的字节，其中每份副本都写入芯片组的 `without_coprocessor` 值、正确的大小字节和重新计算的校验和。没有头部时抛出 `NoHeader`        |
+| `rewrite.declare_chipset(image, chipset)`                    | 同样的重写，使用给定的芯片组字节。没有头部时抛出 `NoHeader`                                                                           |
+| `copier.for_game_doctor(image)`                              | 为 LoROM 或 whole-bank 镜像生成的 512 字节 Game Doctor 头部，后接镜像。其他布局，以及带存档 RAM 的 whole-bank 镜像，抛出 `Unmappable` |
+| `copier.game_doctor_header(place, save_ram_bytes=0)`         | 任意放置方式下的该头部：`place(bank, page)` 返回一个地址读取的文件偏移                                                                |
+| `copier.game_doctor_map(place)`                              | 只有 24 个映射字节，每个槽一个 4 Mbit 块，拒绝其库离开所属块的槽                                                                      |
+| `copier.lorom_place(size)`, `copier.wholebank_place(size)`   | 两种受支持布局所用的放置方式                                                                                                          |
+| `copier.place_of(image)`                                     | 镜像的头部和长度所要求的放置方式                                                                                                      |
+| `copier.for_sd2snes(image, chipset)`                         | 512 字节的空拷贝机头部，后接声明 `chipset`（`0x43` 或 `0x45`）的 whole-bank 镜像。其他大小或芯片组抛出 `Unmappable`                   |
+| `rewrite.checksum(image, places=None)`                       | 头部校验和，每份副本的四个校验和字节都按 `FF FF 00 00` 计入。`places` 默认为 `mirrors(image)`                                         |
+| `rewrite.mirrored_sum(data)`                                 | 字节和，长度不是 2 的幂时镜像补足到 2 的幂                                                                                            |
+| `rewrite.size_byte(length)`                                  | 大小指数：以千字节计的大小向上取整后的 2 的幂次                                                                                       |
+| `rewrite.identifies(block)`                                  | 块中含有 `0x00`、`0x20` 或 `0xFF` 以外的字节时为 True                                                                                 |
+| `rewrite.changes(before, after, block=0x1000)`               | 所有字节不同的偏移                                                                                                                    |
 
 `declare_rom_only`、`needs_rewrite`、`AUTHORITATIVE`、`CHIPSET_ROM_ONLY` 和 `COPROCESSORS` 也在包的顶层公开。
 
@@ -215,25 +224,31 @@ bare | same size | ['worked example']
 
 ### 常量
 
-| 名称                                                              | 值                                                                                    |
-| :---------------------------------------------------------------- | :------------------------------------------------------------------------------------ |
-| `identity.AUTHORITATIVE`                                          | `"sha256"`，唯一决定接受或拒绝的摘要                                                  |
-| `identity.INTEROPERABLE`                                          | `("crc32", "md5", "sha1")`，为数据库查找而公开，从不用于决定                          |
-| `rewrite.CHIPSET_ROM_ONLY`                                        | `0x00`                                                                                |
-| `rewrite.COPROCESSORS`                                            | 本包已知的 18 个代码的芯片组字节到协处理器名称的映射，从 `0x03` DSP 到 `0xF9` SPC7110 |
-| `rewrite.MAP_MODE`、`CHIPSET`、`ROM_SIZE`、`SRAM_SIZE`            | 头部偏移 `0x15` 到 `0x18`                                                             |
-| `rewrite.CHECKSUM_COMPLEMENT`、`CHECKSUM`                         | 头部偏移 `0x1C` 和 `0x1E`                                                             |
-| `rewrite.CHECKSUM_FIELD_NEUTRAL`                                  | `FF FF 00 00`，四个校验和字节计入时所取的值                                           |
-| `rewrite.CHECKSUM_FIELD_BYTES`、`CHECKSUM_FIELD_SUM`              | `4` 和 `0x01FE`，这些中性字节的长度及其和                                             |
-| `rewrite.PADDING`                                                 | `0x00`、`0x20` 和 `0xFF`，`identifies` 视为填充的字节                                 |
-| `rewrite.KILOBYTE`                                                | `1024`，`size_byte` 向上取整所用的单位                                                |
-| `rewrite.BLOCK_BYTES`                                             | `0x1000`，`changes` 在逐字节比较之前所比较的块                                        |
-| `dump.BARE`、`dump.COPIER`                                        | `form` 对文件返回的两个名称                                                           |
-| `dump.PART_SUFFIX`                                                | 带编号分片的后缀所匹配的模式：一个点加一到三位数字                                    |
-| `dump.BLOCK_BYTES`、`DEFLATE_LEVEL`                               | `0x10000` 和 `6`，`block_ratios` 和 `deflate_ratio` 的默认值                          |
-| `dump.CHUNK_BYTES`、`CHUNK_STRIDE`                                | `1024` 和 `512`，`measure_reuse` 和 `chunk_index` 的默认值                            |
-| `manifest.KNOWN`、`REWRITTEN`、`BAD_DUMP`、`SAME_SIZE`、`UNKNOWN` | 五种状态                                                                              |
-| `romimage.__version__`                                            | 已安装的版本                                                                          |
+| 名称                                                              | 值                                                                                          |
+| :---------------------------------------------------------------- | :------------------------------------------------------------------------------------------ |
+| `identity.AUTHORITATIVE`                                          | `"sha256"`，唯一决定接受或拒绝的摘要                                                        |
+| `identity.INTEROPERABLE`                                          | `("crc32", "md5", "sha1")`，为数据库查找而公开，从不用于决定                                |
+| `rewrite.CHIPSET_ROM_ONLY`, `CHIPSET_RAM`, `CHIPSET_RAM_BATTERY`  | `0x00`、`0x01` 和 `0x02`，去掉协处理器后剩下的三种声明                                      |
+| `rewrite.RAM_NIBBLES`, `BATTERY_NIBBLES`                          | 声明 RAM 的低半字节 `1 2 4 5`，以及声明电池的 `2 5 6`                                       |
+| `copier.COPIER_BYTES`                                             | `0x200`，任何拷贝机头部的长度                                                               |
+| `copier.GAME_DOCTOR_MAGIC`                                        | `GAME DOCTOR SF 3`，Game Doctor 头部的前 16 个字节                                          |
+| `copier.GAME_DOCTOR_SLOTS`                                        | `0x11` 到 `0x28` 的映射字节覆盖的 24 个 `(first bank, page)` 区域，每个 16 个库             |
+| `copier.GAME_DOCTOR_SAVE_CODES`                                   | 存档 RAM 字节数到 `0x10` 处代码的对应：无或 32 KB 为 `0x80`，8 KB 为 `0x81`，2 KB 为 `0x82` |
+| `copier.SD2SNES_CHIPSETS`                                         | `0x43` 和 `0x45`，sd2snes 固件为其映射 whole-bank 镜像的芯片组                              |
+| `rewrite.COPROCESSORS`                                            | 本包已知的 18 个代码的芯片组字节到协处理器名称的映射，从 `0x03` DSP 到 `0xF9` SPC7110       |
+| `rewrite.MAP_MODE`、`CHIPSET`、`ROM_SIZE`、`SRAM_SIZE`            | 头部偏移 `0x15` 到 `0x18`                                                                   |
+| `rewrite.CHECKSUM_COMPLEMENT`、`CHECKSUM`                         | 头部偏移 `0x1C` 和 `0x1E`                                                                   |
+| `rewrite.CHECKSUM_FIELD_NEUTRAL`                                  | `FF FF 00 00`，四个校验和字节计入时所取的值                                                 |
+| `rewrite.CHECKSUM_FIELD_BYTES`、`CHECKSUM_FIELD_SUM`              | `4` 和 `0x01FE`，这些中性字节的长度及其和                                                   |
+| `rewrite.PADDING`                                                 | `0x00`、`0x20` 和 `0xFF`，`identifies` 视为填充的字节                                       |
+| `rewrite.KILOBYTE`                                                | `1024`，`size_byte` 向上取整所用的单位                                                      |
+| `rewrite.BLOCK_BYTES`                                             | `0x1000`，`changes` 在逐字节比较之前所比较的块                                              |
+| `dump.BARE`、`dump.COPIER`                                        | `form` 对文件返回的两个名称                                                                 |
+| `dump.PART_SUFFIX`                                                | 带编号分片的后缀所匹配的模式：一个点加一到三位数字                                          |
+| `dump.BLOCK_BYTES`、`DEFLATE_LEVEL`                               | `0x10000` 和 `6`，`block_ratios` 和 `deflate_ratio` 的默认值                                |
+| `dump.CHUNK_BYTES`、`CHUNK_STRIDE`                                | `1024` 和 `512`，`measure_reuse` 和 `chunk_index` 的默认值                                  |
+| `manifest.KNOWN`、`REWRITTEN`、`BAD_DUMP`、`SAME_SIZE`、`UNKNOWN` | 五种状态                                                                                    |
+| `romimage.__version__`                                            | 已安装的版本                                                                                |
 
 ### 错误
 
@@ -242,9 +257,10 @@ bare | same size | ['worked example']
 | `NoParts`     | `dump.read` 收到没有带编号分片的文件夹                                                                             |
 | `NoAuthority` | `identity.agrees` 收到没有 `sha256` 的预期值                                                                       |
 | `Malformed`   | `Manifest` 收到没有制品、制品没有被接受的形式，或被接受的形式没有 `sha256`                                         |
+| `Unmappable`  | 向 `copier` 请求一个该设备读不了的头部：不推导的布局、离开所属块的槽、sd2snes 固件不以这种方式映射的大小或芯片组   |
 | `NoHeader`    | `rewrite.needs_rewrite` 或 `rewrite.declare_rom_only` 找不到头部。它属于头部读取器，可通过 `rewrite.NoHeader` 访问 |
 
-前三个位于 [`romimage/errors.py`](romimage/errors.py)，并在包的顶层公开。
+前四个位于 [`romimage/errors.py`](romimage/errors.py)，并在包的顶层公开。
 
 ```python
 import tempfile
@@ -466,6 +482,52 @@ sha256
 
 CRC32 是 32 位检错码，而 MD5 和 SHA-1 都有已公开的碰撞。三者都会公开，方便读者在以它们为索引的数据库中找到副本。它们都不能用来接受文件。
 
+### 去掉协处理器，存档内存仍然保留
+
+```python
+from romimage import rewrite
+
+image = bytearray(0x100000)
+image[0x7FC0 : 0x7FC0 + 21] = b"WORKED EXAMPLE       "
+image[0x7FD5] = 0x20
+image[0x7FD6] = 0x45
+image[0x7FD8] = 0x03
+
+after = rewrite.declare_rom_only(image)
+
+print(f"{after[0x7FD6]:#04x} {after[0x7FD8]:#04x}")
+print(rewrite.needs_rewrite(after))
+```
+
+```
+0x02 0x03
+False
+```
+
+芯片组字节承载两个事实：高半字节指明协处理器，低半字节说明板上还有什么。`0x45` 是带 RAM 和电池的 S-DD1。为它写入 `0x00` 会连电池一起去掉，而像 bsnes 在 `nonVolatile()` 中那样只为声明了电池的卡带保存存档 RAM 的模拟器，就不再保存存档了。现在的重写只去掉协处理器，留下表示 RAM 和电池的 `0x02`，旁边的存档 RAM 大小保持不变。2026-10-28 之前，它对每个芯片组都写入 `0x00`。
+
+### 拷贝机头部由设备读取，而不是主机
+
+```python
+from romimage import copier
+
+header = copier.game_doctor_header(copier.wholebank_place(0xC00000))
+
+print(header[:16].decode())
+print(header[0x11:0x29].hex(" "))
+print(copier.game_doctor_map(copier.lorom_place(0x100000)).hex(" "))
+```
+
+```
+GAME DOCTOR SF 3
+20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35 36 37
+20 21 20 21 20 21 20 21 20 21 20 21 20 21 20 21 20 21 20 21 20 21 20 21
+```
+
+Game Doctor 读取镜像前面的 512 字节，以决定地址空间的每个区域来自哪里。24 个映射字节中的每一个，为一个 16 库的区域指明其内存中的一个 4 Mbit 块，值为 `0x20` 加块号。这些区域依次是库 `$00` 到 `$7F` 和 `$80` 到 `$FF` 的上半部分，然后是 `$40` 到 `$7F` 和 `$C0` 到 `$FF` 的下半部分。ucon64 用表写出同样的布局。对于 96 Mbit 的 whole-bank 镜像，它会退回到一个从不映射最后 32 Mbit 的 64 Mbit 表，所以这里的映射改为从卡带映射推导，并检查每个槽都落在一个块上。推导出的 whole-bank 头部，与 snes-street-fighter-alpha-2-nochip 的 issue 37 所报告的、128 Mbit 的 Game Doctor SF7 运行 Street Fighter Alpha 2 和 Street Fighter Zero 2 时所用的头部逐字节相同。
+
+同样运行 FXPAK Pro 的 sd2snes 固件从不读取这 512 字节，而是跳过它们。它读取的是长度和芯片组。只有当文件为 `0xC00200` 字节且芯片组为 `0x43` 或 `0x45` 时，它才映射 whole-bank 镜像，所以 `for_sd2snes` 写出这种形式，带一个空的拷贝机头部。
+
 ## 真实的库实际包含什么
 
 在 **7,330** 个卡带上测量，另有 249 个因没有可读头部而被拒绝：
@@ -475,7 +537,7 @@ CRC32 是 32 位检错码，而 MD5 和 SHA-1 都有已公开的碰撞。三者�
 | 不同的声明                       |   489 |
 | 不同的镜像大小                   |   108 |
 | 不同的芯片组字节                 |    36 |
-| 需要重写的卡带                   | 3,799 |
+| 需要重写的卡带                   | 1,197 |
 | 与头部读取器在是否有头部上的分歧 |     0 |
 
 四项属性在每个卡带上检查，而不是抽样：

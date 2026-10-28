@@ -8,7 +8,7 @@ English | [日本語](README.ja.md) | [简体中文](README.zh-Hans.md) | [繁�
 [![Release](https://img.shields.io/github/v/release/gufranco/snes-rom-image-python)](https://github.com/gufranco/snes-rom-image-python/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-**489** declarations replayed, **0** failures, **4** properties checked on every one of **7,330** cartridges, the computed checksum matches **2,768** of **2,780** retail cartridges, **20** quotes located in the manual, **915** tests, **100%** statement and branch coverage, no dependencies
+**489** declarations replayed, **0** failures, **4** properties checked on every one of **7,330** cartridges, the computed checksum matches **2,768** of **2,780** retail cartridges, **20** quotes located in the manual, **949** tests, **100%** statement and branch coverage, no dependencies
 
 ```python
 from romimage import rewrite
@@ -32,7 +32,7 @@ True
 True
 ```
 
-The example builds a 512 KB image whose header at `0x7FC0` declares chipset `0x03`, a DSP. `needs_rewrite` reports that the declaration has to go. `declare_rom_only` writes chipset `0x00` and the size exponent into every copy of the header, then recomputes the checksum and its complement over the result. A second pass returns the same bytes.
+The example builds a 512 KB image whose header at `0x7FC0` declares chipset `0x03`, a DSP. `needs_rewrite` reports that the declaration has to go. `declare_rom_only` writes the chipset with the coprocessor taken out, `0x00` here, and the size exponent into every copy of the header, then recomputes the checksum and its complement over the result. A declared RAM or battery stays declared. A second pass returns the same bytes.
 
 ## Install
 
@@ -61,40 +61,49 @@ Releases follow [Semantic Versioning](https://semver.org/) and are cut from the 
 
 ## The interface
 
-Four modules, each answering one question about a file.
+Five modules, each answering one question about a file.
 
-| Module                             | Question                                                               |
-| :--------------------------------- | :--------------------------------------------------------------------- |
-| [`dump`](romimage/dump.py)         | What did the dumping device add or split off                           |
-| [`identity`](romimage/identity.py) | Which digests identify the file, and which one decides                 |
-| [`rewrite`](romimage/rewrite.py)   | What the header declares, and how to clear a coprocessor from it       |
-| [`manifest`](romimage/manifest.py) | When a supplied file is not the expected one, which kind of miss it is |
+| Module                             | Question                                                                     |
+| :--------------------------------- | :--------------------------------------------------------------------------- |
+| [`dump`](romimage/dump.py)         | What did the dumping device add or split off                                 |
+| [`identity`](romimage/identity.py) | Which digests identify the file, and which one decides                       |
+| [`rewrite`](romimage/rewrite.py)   | What the header declares, and how to clear a coprocessor from it             |
+| [`manifest`](romimage/manifest.py) | When a supplied file is not the expected one, which kind of miss it is       |
+| [`copier`](romimage/copier.py)     | What a backup unit or flash cart reads in front of the image, and writing it |
 
 ### Calls
 
-| Call                                                         | Effect                                                                                                                                             |
-| :----------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `dump.read(path)`                                            | Returns the image bytes. A file loses its copier stub. A folder of numbered parts is joined in name order. Raises `NoParts` for a folder with none |
-| `dump.form(path)`                                            | `"bare"` or `"copier header"` for a file, judged by length, and `"N part set"` for a folder                                                        |
-| `dump.strip_copier_stub(data)`                               | Drops the leading 512 bytes when the length says a stub is there                                                                                   |
-| `dump.parts_in(folder)`                                      | Files with a numeric suffix of one to three digits, sorted by upper-cased name                                                                     |
-| `dump.join(parts)`                                           | Concatenates the parts after stripping the stub from the first                                                                                     |
-| `dump.deflate_ratio(block)`                                  | Compressed size over raw size at deflate level 6, 0.0 for an empty block                                                                           |
-| `dump.block_ratios(data, block=0x10000)`                     | `deflate_ratio` of each whole 64 KB block                                                                                                          |
-| `dump.measure_reuse(source, target, chunk=1024, stride=512)` | `(found, total)`: how many 1 KB chunks of `source` occur in `target`                                                                               |
-| `dump.chunk_index(data, chunk=1024, stride=512)`             | The chunk-to-offset index `measure_reuse` searches                                                                                                 |
-| `identity.measure(data)`                                     | `size`, `crc32`, `md5`, `sha1` and `sha256` of the bytes                                                                                           |
-| `identity.agrees(found, expected)`                           | True when the `sha256` values match. Raises `NoAuthority` when `expected` has no `sha256`                                                          |
-| `rewrite.anchor_of(image)`                                   | Offset of the header the reader finds, or `None`                                                                                                   |
-| `rewrite.mirrors(image)`                                     | Offsets of every byte-identical copy of that header                                                                                                |
-| `rewrite.describe(image)`                                    | One dictionary per copy: `at`, `title`, `map`, `chipset`, `coprocessor`, `size`, `sram`, `checksum`                                                |
-| `rewrite.needs_rewrite(image)`                               | True when any copy declares a chipset other than `0x00` or a size byte other than the image's own. Raises `NoHeader` when there is no header       |
-| `rewrite.declare_rom_only(image)`                            | Returns new bytes with chipset `0x00`, the right size byte and a recomputed checksum in every copy. Raises `NoHeader` when there is no header      |
-| `rewrite.checksum(image, places=None)`                       | The header checksum, with the four checksum bytes of every copy counted as `FF FF 00 00`. `places` defaults to `mirrors(image)`                    |
-| `rewrite.mirrored_sum(data)`                                 | The byte sum with a length that is not a power of two mirrored up to one                                                                           |
-| `rewrite.size_byte(length)`                                  | The size exponent: the power of two of the size in kilobytes, rounded up                                                                           |
-| `rewrite.identifies(block)`                                  | True when the block holds a byte other than `0x00`, `0x20` or `0xFF`                                                                               |
-| `rewrite.changes(before, after, block=0x1000)`               | Every offset whose byte differs                                                                                                                    |
+| Call                                                         | Effect                                                                                                                                                              |
+| :----------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `dump.read(path)`                                            | Returns the image bytes. A file loses its copier stub. A folder of numbered parts is joined in name order. Raises `NoParts` for a folder with none                  |
+| `dump.form(path)`                                            | `"bare"` or `"copier header"` for a file, judged by length, and `"N part set"` for a folder                                                                         |
+| `dump.strip_copier_stub(data)`                               | Drops the leading 512 bytes when the length says a stub is there                                                                                                    |
+| `dump.parts_in(folder)`                                      | Files with a numeric suffix of one to three digits, sorted by upper-cased name                                                                                      |
+| `dump.join(parts)`                                           | Concatenates the parts after stripping the stub from the first                                                                                                      |
+| `dump.deflate_ratio(block)`                                  | Compressed size over raw size at deflate level 6, 0.0 for an empty block                                                                                            |
+| `dump.block_ratios(data, block=0x10000)`                     | `deflate_ratio` of each whole 64 KB block                                                                                                                           |
+| `dump.measure_reuse(source, target, chunk=1024, stride=512)` | `(found, total)`: how many 1 KB chunks of `source` occur in `target`                                                                                                |
+| `dump.chunk_index(data, chunk=1024, stride=512)`             | The chunk-to-offset index `measure_reuse` searches                                                                                                                  |
+| `identity.measure(data)`                                     | `size`, `crc32`, `md5`, `sha1` and `sha256` of the bytes                                                                                                            |
+| `identity.agrees(found, expected)`                           | True when the `sha256` values match. Raises `NoAuthority` when `expected` has no `sha256`                                                                           |
+| `rewrite.anchor_of(image)`                                   | Offset of the header the reader finds, or `None`                                                                                                                    |
+| `rewrite.mirrors(image)`                                     | Offsets of every byte-identical copy of that header                                                                                                                 |
+| `rewrite.describe(image)`                                    | One dictionary per copy: `at`, `title`, `map`, `chipset`, `coprocessor`, `size`, `sram`, `checksum`                                                                 |
+| `rewrite.needs_rewrite(image)`                               | True when any copy declares a coprocessor or a size byte other than the image's own. Raises `NoHeader` when there is no header                                      |
+| `rewrite.without_coprocessor(chipset)`                       | The chipset byte with the coprocessor taken out: `0x02` when it declared a battery, `0x01` for RAM alone, `0x00` otherwise                                          |
+| `rewrite.declare_rom_only(image)`                            | Returns new bytes with `without_coprocessor` of the chipset, the right size byte and a recomputed checksum in every copy. Raises `NoHeader` when there is no header |
+| `rewrite.declare_chipset(image, chipset)`                    | The same rewrite with the chipset byte given. Raises `NoHeader` when there is no header                                                                             |
+| `copier.for_game_doctor(image)`                              | The 512-byte Game Doctor header for a LoROM or whole-bank image, then the image. Raises `Unmappable` for any other layout, and for a whole-bank image with save RAM |
+| `copier.game_doctor_header(place, save_ram_bytes=0)`         | That header for any placement: `place(bank, page)` returns the file offset an address reads                                                                         |
+| `copier.game_doctor_map(place)`                              | The 24 map bytes alone, one 4 Mbit chunk per slot, refusing a slot whose banks leave their chunk                                                                    |
+| `copier.lorom_place(size)`, `copier.wholebank_place(size)`   | The placements the two supported layouts use                                                                                                                        |
+| `copier.place_of(image)`                                     | The placement the header and length of an image call for                                                                                                            |
+| `copier.for_sd2snes(image, chipset)`                         | A 512-byte empty copier header, then the whole-bank image declaring `chipset`, `0x43` or `0x45`. Raises `Unmappable` for any other size or chipset                  |
+| `rewrite.checksum(image, places=None)`                       | The header checksum, with the four checksum bytes of every copy counted as `FF FF 00 00`. `places` defaults to `mirrors(image)`                                     |
+| `rewrite.mirrored_sum(data)`                                 | The byte sum with a length that is not a power of two mirrored up to one                                                                                            |
+| `rewrite.size_byte(length)`                                  | The size exponent: the power of two of the size in kilobytes, rounded up                                                                                            |
+| `rewrite.identifies(block)`                                  | True when the block holds a byte other than `0x00`, `0x20` or `0xFF`                                                                                                |
+| `rewrite.changes(before, after, block=0x1000)`               | Every offset whose byte differs                                                                                                                                     |
 
 `declare_rom_only`, `needs_rewrite`, `AUTHORITATIVE`, `CHIPSET_ROM_ONLY` and `COPROCESSORS` are also published at the top of the package.
 
@@ -219,7 +228,13 @@ The stubbed copy is still `known`, because the stub is stripped before measuring
 | :---------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------- |
 | `identity.AUTHORITATIVE`                                          | `"sha256"`, the one digest that accepts or rejects                                                     |
 | `identity.INTEROPERABLE`                                          | `("crc32", "md5", "sha1")`, published for database lookups and never used to decide                    |
-| `rewrite.CHIPSET_ROM_ONLY`                                        | `0x00`                                                                                                 |
+| `rewrite.CHIPSET_ROM_ONLY`, `CHIPSET_RAM`, `CHIPSET_RAM_BATTERY`  | `0x00`, `0x01` and `0x02`, the three declarations left once a coprocessor is gone                      |
+| `rewrite.RAM_NIBBLES`, `BATTERY_NIBBLES`                          | The low nibbles that declare RAM, `1 2 4 5`, and a battery, `2 5 6`                                    |
+| `copier.COPIER_BYTES`                                             | `0x200`, the length of any copier header                                                               |
+| `copier.GAME_DOCTOR_MAGIC`                                        | `GAME DOCTOR SF 3`, the first 16 bytes of the Game Doctor header                                       |
+| `copier.GAME_DOCTOR_SLOTS`                                        | The 24 `(first bank, page)` regions the map bytes at `0x11` to `0x28` cover, 16 banks each             |
+| `copier.GAME_DOCTOR_SAVE_CODES`                                   | Save RAM bytes to the code at `0x10`: none or 32 KB `0x80`, 8 KB `0x81`, 2 KB `0x82`                   |
+| `copier.SD2SNES_CHIPSETS`                                         | `0x43` and `0x45`, the chipsets the sd2snes firmware maps a whole-bank image for                       |
 | `rewrite.COPROCESSORS`                                            | Chipset byte to coprocessor name for the 18 codes the package knows, from `0x03` DSP to `0xF9` SPC7110 |
 | `rewrite.MAP_MODE`, `CHIPSET`, `ROM_SIZE`, `SRAM_SIZE`            | Header offsets `0x15` to `0x18`                                                                        |
 | `rewrite.CHECKSUM_COMPLEMENT`, `CHECKSUM`                         | Header offsets `0x1C` and `0x1E`                                                                       |
@@ -237,14 +252,15 @@ The stubbed copy is still `known`, because the stub is stripped before measuring
 
 ### Errors
 
-| Error         | Raised when                                                                                                                                   |
-| :------------ | :-------------------------------------------------------------------------------------------------------------------------------------------- |
-| `NoParts`     | `dump.read` is given a folder with no numbered parts                                                                                          |
-| `NoAuthority` | `identity.agrees` is given an expectation with no `sha256`                                                                                    |
-| `Malformed`   | `Manifest` is given no artifacts, an artifact with no accepted form, or an accepted form with no `sha256`                                     |
-| `NoHeader`    | `rewrite.needs_rewrite` or `rewrite.declare_rom_only` finds no header. It belongs to the header reader and is reachable as `rewrite.NoHeader` |
+| Error         | Raised when                                                                                                                                                                                 |
+| :------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `NoParts`     | `dump.read` is given a folder with no numbered parts                                                                                                                                        |
+| `NoAuthority` | `identity.agrees` is given an expectation with no `sha256`                                                                                                                                  |
+| `Malformed`   | `Manifest` is given no artifacts, an artifact with no accepted form, or an accepted form with no `sha256`                                                                                   |
+| `Unmappable`  | `copier` is asked for a header the unit cannot read for that image: a layout it does not derive, a slot that leaves its chunk, a size or chipset the sd2snes firmware does not map that way |
+| `NoHeader`    | `rewrite.needs_rewrite` or `rewrite.declare_rom_only` finds no header. It belongs to the header reader and is reachable as `rewrite.NoHeader`                                               |
 
-The first three live in [`romimage/errors.py`](romimage/errors.py) and are published at the top of the package.
+The first four live in [`romimage/errors.py`](romimage/errors.py) and are published at the top of the package.
 
 ```python
 import tempfile
@@ -466,6 +482,52 @@ sha256
 
 CRC32 is a 32-bit error-detecting code, and MD5 and SHA-1 have published collisions. All three are published so a reader can find a copy in a database that indexes by them. None of them accepts a file.
 
+### Taking the coprocessor out leaves the save memory in
+
+```python
+from romimage import rewrite
+
+image = bytearray(0x100000)
+image[0x7FC0 : 0x7FC0 + 21] = b"WORKED EXAMPLE       "
+image[0x7FD5] = 0x20
+image[0x7FD6] = 0x45
+image[0x7FD8] = 0x03
+
+after = rewrite.declare_rom_only(image)
+
+print(f"{after[0x7FD6]:#04x} {after[0x7FD8]:#04x}")
+print(rewrite.needs_rewrite(after))
+```
+
+```
+0x02 0x03
+False
+```
+
+The chipset byte carries two facts: the high nibble names the coprocessor, and the low nibble says what else is on the board. `0x45` is an S-DD1 with RAM and a battery. Writing `0x00` for it removed the battery too, and an emulator that keeps save RAM only for a declared battery, as bsnes does in `nonVolatile()`, stopped keeping the saves. The rewrite now takes out the coprocessor and leaves `0x02`, RAM and a battery, with the save RAM size beside it untouched. Until 2026-10-28 it wrote `0x00` for every chipset.
+
+### A copier header is read by the unit, never by the console
+
+```python
+from romimage import copier
+
+header = copier.game_doctor_header(copier.wholebank_place(0xC00000))
+
+print(header[:16].decode())
+print(header[0x11:0x29].hex(" "))
+print(copier.game_doctor_map(copier.lorom_place(0x100000)).hex(" "))
+```
+
+```
+GAME DOCTOR SF 3
+20 21 22 23 24 25 26 27 28 29 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35 36 37
+20 21 20 21 20 21 20 21 20 21 20 21 20 21 20 21 20 21 20 21 20 21 20 21
+```
+
+A Game Doctor reads the 512 bytes in front of an image to decide where each region of the address space comes from. Each of the 24 map bytes names one 4 Mbit chunk of its memory, `0x20` plus the chunk number, for one region of 16 banks: the upper halves of banks `$00` to `$7F` and `$80` to `$FF`, then the lower halves of `$40` to `$7F` and `$C0` to `$FF`. ucon64 writes the same layout from tables. For a 96 Mbit whole-bank image it falls back to a 64 Mbit table that never maps the last 32 Mbit, so here the map is derived from the cartridge map instead, and every slot is checked to land on one chunk. The derived whole-bank header is byte for byte the one a Game Doctor SF7 with 128 Mbit ran Street Fighter Alpha 2 and Street Fighter Zero 2 with, as issue 37 of snes-street-fighter-alpha-2-nochip reported.
+
+The sd2snes firmware, which also runs the FXPAK Pro, never reads those 512 bytes: it seeks past them. What it reads is the length and the chipset. It maps a whole-bank image only when the file is `0xC00200` bytes and the chipset is `0x43` or `0x45`, so `for_sd2snes` writes that form, with an empty copier header.
+
 ## What a real library actually contains
 
 Measured across **7,330** cartridges, with 249 more refused for carrying no readable header:
@@ -475,7 +537,7 @@ Measured across **7,330** cartridges, with 249 more refused for carrying no read
 | Distinct declarations                                      |   489 |
 | Distinct image sizes                                       |   108 |
 | Distinct chipset bytes                                     |    36 |
-| Cartridges that would need rewriting                       | 3,799 |
+| Cartridges that would need rewriting                       | 1,197 |
 | Disagreements with the header reader about having a header |     0 |
 
 Four properties are checked on every cartridge, not on a sample:

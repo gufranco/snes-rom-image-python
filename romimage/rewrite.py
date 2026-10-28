@@ -16,6 +16,11 @@ CHECKSUM_COMPLEMENT = 0x1C
 CHECKSUM = 0x1E
 
 CHIPSET_ROM_ONLY = 0x00
+CHIPSET_RAM = 0x01
+CHIPSET_RAM_BATTERY = 0x02
+CHIPSET_LOW_NIBBLE = 0x0F
+RAM_NIBBLES = frozenset({0x01, 0x02, 0x04, 0x05})
+BATTERY_NIBBLES = frozenset({0x02, 0x05, 0x06})
 CHECKSUM_FIELD_SUM = 0x01FE
 CHECKSUM_FIELD_BYTES = 4
 CHECKSUM_FIELD_NEUTRAL = b"\xff\xff\x00\x00"
@@ -124,14 +129,23 @@ def checksum(image: bytes | bytearray, places: Sequence[int] | None = None) -> i
     return mirrored_sum(neutral) & 0xFFFF
 
 
-def declare_rom_only(image: bytes | bytearray) -> bytes:
+def without_coprocessor(chipset: int) -> int:
+    low = chipset & CHIPSET_LOW_NIBBLE
+    if low in BATTERY_NIBBLES:
+        return CHIPSET_RAM_BATTERY
+    if low in RAM_NIBBLES:
+        return CHIPSET_RAM
+    return CHIPSET_ROM_ONLY
+
+
+def declare_chipset(image: bytes | bytearray, chipset: int) -> bytes:
     places = mirrors(image)
     if not places:
         raise NoHeader("no cartridge header at any documented position")
 
     declared = bytearray(image)
     for at in places:
-        declared[at + CHIPSET] = CHIPSET_ROM_ONLY
+        declared[at + CHIPSET] = chipset
         declared[at + ROM_SIZE] = size_byte(len(image))
 
     value = checksum(declared, places)
@@ -145,6 +159,13 @@ def declare_rom_only(image: bytes | bytearray) -> bytes:
     return bytes(declared)
 
 
+def declare_rom_only(image: bytes | bytearray) -> bytes:
+    anchor = anchor_of(image)
+    if anchor is None:
+        raise NoHeader("no cartridge header at any documented position")
+    return declare_chipset(image, without_coprocessor(image[anchor + CHIPSET]))
+
+
 def needs_rewrite(image: bytes | bytearray) -> bool:
     places = mirrors(image)
     if not places:
@@ -152,7 +173,9 @@ def needs_rewrite(image: bytes | bytearray) -> bool:
 
     wanted = size_byte(len(image))
     return any(
-        image[at + CHIPSET] != CHIPSET_ROM_ONLY or image[at + ROM_SIZE] != wanted for at in places
+        image[at + CHIPSET] != without_coprocessor(image[at + CHIPSET])
+        or image[at + ROM_SIZE] != wanted
+        for at in places
     )
 
 
