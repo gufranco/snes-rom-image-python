@@ -4,9 +4,11 @@
 
 [English](README.md) | 日本語 | [简体中文](README.zh-Hans.md) | [繁體中文（香港）](README.zh-HK.md)
 
-[![CI](https://github.com/gufranco/snes-rom-image-python/actions/workflows/ci.yml/badge.svg)](https://github.com/gufranco/snes-rom-image-python/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/gufranco/snes-rom-image-python)](https://github.com/gufranco/snes-rom-image-python/releases)
-[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![ci](https://img.shields.io/github/actions/workflow/status/gufranco/snes-rom-image-python/ci.yml?branch=main&style=flat-square&label=ci)](https://github.com/gufranco/snes-rom-image-python/actions/workflows/ci.yml)
+[![release](https://img.shields.io/github/v/release/gufranco/snes-rom-image-python?style=flat-square&label=release)](https://github.com/gufranco/snes-rom-image-python/releases/latest)
+[![coverage](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square)](https://github.com/gufranco/snes-rom-image-python/actions/workflows/ci.yml)
+[![openssf scorecard](https://img.shields.io/ossf-scorecard/github.com/gufranco/snes-rom-image-python?style=flat-square&label=openssf%20scorecard)](https://scorecard.dev/viewer/?uri=github.com/gufranco/snes-rom-image-python)
+[![license](https://img.shields.io/github/license/gufranco/snes-rom-image-python?style=flat-square&label=license)](LICENSE)
 
 **489**件の宣言を再生し、失敗は**0**件、**7,330**本のカートリッジすべてで**4**つの性質を確認、計算したチェックサムは市販カートリッジ**2,780**本中**2,768**本で一致、マニュアル内で**20**件の引用を特定、テスト**951**件、ステートメントとブランチのカバレッジ**100%**、依存関係なし
 
