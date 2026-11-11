@@ -10,7 +10,7 @@
 [![openssf scorecard](https://img.shields.io/ossf-scorecard/github.com/gufranco/snes-rom-image-python?style=flat-square&label=openssf%20scorecard)](https://scorecard.dev/viewer/?uri=github.com/gufranco/snes-rom-image-python)
 [![license](https://img.shields.io/github/license/gufranco/snes-rom-image-python?style=flat-square&label=license)](LICENSE)
 
-重播 **489** 項聲明，**0** 項失敗，在全部 **7,330** 盒卡帶上逐一檢查 **4** 項屬性，計算所得的校驗和與 **2,780** 盒零售版卡帶中的 **2,768** 盒相符，在手冊中定位 **20** 段引文，**951** 個測試，**100%** 語句及分支覆蓋率，沒有依賴項
+重播 **489** 項聲明，**0** 項失敗，在全部 **7,330** 盒卡帶上逐一檢查 **4** 項屬性，計算所得的校驗和與 **2,780** 盒零售版卡帶中的 **2,768** 盒相符，在手冊中定位 **20** 段引文，**952** 個測試，**100%** 語句及分支覆蓋率，沒有依賴項
 
 ```python
 from romimage import rewrite
