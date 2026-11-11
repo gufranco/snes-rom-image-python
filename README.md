@@ -10,7 +10,7 @@ English | [日本語](README.ja.md) | [简体中文](README.zh-Hans.md) | [繁�
 [![openssf scorecard](https://img.shields.io/ossf-scorecard/github.com/gufranco/snes-rom-image-python?style=flat-square&label=openssf%20scorecard)](https://scorecard.dev/viewer/?uri=github.com/gufranco/snes-rom-image-python)
 [![license](https://img.shields.io/github/license/gufranco/snes-rom-image-python?style=flat-square&label=license)](LICENSE)
 
-**489** declarations replayed, **0** failures, **4** properties checked on every one of **7,330** cartridges, the computed checksum matches **2,768** of **2,780** retail cartridges, **20** quotes located in the manual, **951** tests, **100%** statement and branch coverage, no dependencies
+**489** declarations replayed, **0** failures, **4** properties checked on every one of **7,330** cartridges, the computed checksum matches **2,768** of **2,780** retail cartridges, **20** quotes located in the manual, **952** tests, **100%** statement and branch coverage, no dependencies
 
 ```python
 from romimage import rewrite

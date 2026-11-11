@@ -10,7 +10,7 @@
 [![openssf scorecard](https://img.shields.io/ossf-scorecard/github.com/gufranco/snes-rom-image-python?style=flat-square&label=openssf%20scorecard)](https://scorecard.dev/viewer/?uri=github.com/gufranco/snes-rom-image-python)
 [![license](https://img.shields.io/github/license/gufranco/snes-rom-image-python?style=flat-square&label=license)](LICENSE)
 
-**489**件の宣言を再生し、失敗は**0**件、**7,330**本のカートリッジすべてで**4**つの性質を確認、計算したチェックサムは市販カートリッジ**2,780**本中**2,768**本で一致、マニュアル内で**20**件の引用を特定、テスト**951**件、ステートメントとブランチのカバレッジ**100%**、依存関係なし
+**489**件の宣言を再生し、失敗は**0**件、**7,330**本のカートリッジすべてで**4**つの性質を確認、計算したチェックサムは市販カートリッジ**2,780**本中**2,768**本で一致、マニュアル内で**20**件の引用を特定、テスト**952**件、ステートメントとブランチのカバレッジ**100%**、依存関係なし
 
 ```python
 from romimage import rewrite
